@@ -24,7 +24,7 @@ var gameState = {
 
         this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
         this.gameWorld = game.add.group();
-        this.gameWorld.position.setTo(game.world.centerX, game.world.centerY)
+        this.gameWorld.position.setTo(game.world.centerX, game.world.centerY);
 
         this.layer = this.map.createLayer('Floor');
         this.layer = this.map.createLayer('Wall');
