@@ -40,8 +40,17 @@
  "tileheight":128,
  "tilesets":[
         {
+         "columns":2,
          "firstgid":1,
-         "source":"ProtoTileset.tsx"
+         "image":"tileset.png",
+         "imageheight":256,
+         "imagewidth":256,
+         "margin":0,
+         "name":"ProtoTileset",
+         "spacing":0,
+         "tilecount":4,
+         "tileheight":128,
+         "tilewidth":128
         }],
  "tilewidth":128,
  "type":"map",
