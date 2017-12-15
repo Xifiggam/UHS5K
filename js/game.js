@@ -5,9 +5,11 @@
 
 var gameState = {
     ZOOM_FACTOR: 0.005,
+    MOVE_SPEED: 4,
     map: null,
     cursors: null,
     zoomButtons: null,
+    miscButtons: null,
     layer: null,
 
     create: function () {
@@ -23,6 +25,8 @@ var gameState = {
         this.layer.resizeWorld();
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
+        this.miscButtons = game.input.keyboard.addKeys({'shake': Phaser.KeyCode.O});
+
         console.log(this.zoomButtons);
         game.input.onDown.add(this.fillTiles, this);
     },
@@ -33,17 +37,17 @@ var gameState = {
 
     inputHandling: function () {
         if (this.cursors.up.isDown) {
-            game.camera.y -= 4;
+            game.camera.y -= this.MOVE_SPEED;
         }
         else if (this.cursors.down.isDown) {
-            game.camera.y += 4;
+            game.camera.y += this.MOVE_SPEED;
         }
 
         if (this.cursors.left.isDown) {
-            game.camera.x -= 4;
+            game.camera.x -= this.MOVE_SPEED;
         }
         else if (this.cursors.right.isDown) {
-            game.camera.x += 4;
+            game.camera.x += this.MOVE_SPEED;
         }
         if (this.zoomButtons.in.isDown) {
             game.camera.scale.x += this.ZOOM_FACTOR;
@@ -51,6 +55,9 @@ var gameState = {
         } else if (this.zoomButtons.down.isDown) {
             game.camera.scale.x += -this.ZOOM_FACTOR;
             game.camera.scale.y += -this.ZOOM_FACTOR;
+        }
+        if (this.miscButtons.shake.isDown) {
+            game.camera.shake();
         }
     },
 
