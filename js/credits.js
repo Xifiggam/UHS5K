@@ -6,7 +6,7 @@ var creditsState = {
         this.addCredit('Developer', 'Lorenz Schmoliner');
         this.addCredit('Developer', 'Lukas Knoch-Girstmair');
         this.addCredit('Game Concept', 'Diana Schaffer');
-        this.addCredit('Game Desing', 'Matthias Kostwein');
+        this.addCredit('Game Design', 'Matthias Kostwein');
         this.addCredit('Producer', 'Veit Frick');
         this.addCredit('Art', 'Gabriel Napetschnig');
     },
