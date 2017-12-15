@@ -7,4 +7,12 @@ ASSETS = {
     TMW_DESERT_SPACING: 'tmw_desert',
 
     PERSON: 'person',
+    FLOOR: 'floor',
+    WALL: 'wall',
+    BED: 'bed',
+};
+
+
+TILE = {
+    SIZE: 32,
 };

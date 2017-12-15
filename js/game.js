@@ -63,7 +63,7 @@ var gameState = {
 
     fillTiles: function (arg) {
         console.log(arg);
-        // map.fill(31, layer.getTileX(sprite.x), layer.getTileY(sprite.y), 8, 8);
+        sprite = this.game.add.sprite(arg.clientX, arg.clientY, ASSETS.PERSON);
 
     }
 };
