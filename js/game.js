@@ -4,9 +4,11 @@
 
 
 var gameState = {
+    ZOOM_FACTOR: 0.005,
     map: null,
     cursors: null,
     zoomButtons: null,
+    layer: null,
 
     create: function () {
 
@@ -16,16 +18,20 @@ var gameState = {
 
         this.map.addTilesetImage('Desert', ASSETS.TMW_DESERT_SPACING);
 
-        var layer = this.map.createLayer('Ground');
+        this.layer = this.map.createLayer('Ground');
 
-        layer.resizeWorld();
+        this.layer.resizeWorld();
         this.cursors = game.input.keyboard.createCursorKeys();
-        this.zoomButtons = game.input.keyboard.addKeys({ 'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
+        this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
         console.log(this.zoomButtons);
         game.input.onDown.add(this.fillTiles, this);
     },
 
     update: function () {
+        this.inputHandling();
+    },
+
+    inputHandling: function () {
         if (this.cursors.up.isDown) {
             game.camera.y -= 4;
         }
@@ -40,16 +46,12 @@ var gameState = {
             game.camera.x += 4;
         }
         if (this.zoomButtons.in.isDown) {
-            game.camera.scale.x += 0.005;
-            game.camera.scale.y += 0.005;
+            game.camera.scale.x += this.ZOOM_FACTOR;
+            game.camera.scale.y += this.ZOOM_FACTOR;
         } else if (this.zoomButtons.down.isDown) {
-            game.camera.scale.x += -0.005;
-            game.camera.scale.y += -0.005;
+            game.camera.scale.x += -this.ZOOM_FACTOR;
+            game.camera.scale.y += -this.ZOOM_FACTOR;
         }
-    },
-    
-    inputHandling: function () {
-        
     },
 
     fillTiles: function (arg) {
