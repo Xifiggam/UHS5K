@@ -16,6 +16,16 @@ var menuState = {
 
         button.onInputOver.add(menu.over, this);
         button.onInputOut.add(menu.out, this);
+
+
+        var button = game.add.button(game.world.centerX - 95, 200, ASSETS.DUMMY_BUTTON, menu.creditsClicked, this, 2, 1, 0);
+
+        var style = { font: "25px Arial", fill: "#ff0044", align: "left" };
+        var text = game.add.text(game.world.centerX - 93, 110, "Credits", style);
+        text.anchor.set(0);
+
+        button.onInputOver.add(menu.over, this);
+        button.onInputOut.add(menu.out, this);
     }
 };
 
@@ -32,5 +42,8 @@ var menu = {
     actionOnClick: function () {
         console.log("action on click called");
         game.state.start('game');
+    },
+    creditsClicked: function () {
+        game.state.start('credits');
     }
 }
