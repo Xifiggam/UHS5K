@@ -1,4 +1,4 @@
-# UHS5K
+# Ultimate Hotel Simulator 5000
 
 start server with python in the project root
 ```python
@@ -6,32 +6,6 @@ start server with python in the project root
 ```
 
 
-# OLD README
 ## Description
-Game Development Tool to create awesome Html5 games using [Phaser](http://phaser.io/) Framework. Useful tool for those new to the world of Phaser. Speed up your work with a simple download!
+Based on boilerplate https://github.com/DallOner/Phaser-Boilerplate
 
-"An easy to install set of skeleton classes to speed-up development start time." - [Richard Darvey](https://twitter.com/photonstorm)
-
-## Features: 
-- Phaser 2.9.2. (minified).
-- Some plugins for better performance.
-- Develop in State mode: StateManager, Boot, Load & Menu.
-- Load Assets: Boilerplate Logo.
-
-## Plugins Installed:
-- [Phaser-Debug](https://github.com/englercj/phaser-debug) v1.1.9
-- [Phaser-Inspector](https://github.com/netcell/phaser-inspector) v0.1
-- [Phaser-Isometric](https://github.com/lewster32/phaser-plugin-isometric) v0.9.4
-- [Phaser-Input](https://github.com/orange-games/phaser-input) v2.0.5
-- [Phaser-SuperStorage](https://github.com/orange-games/phaser-super-storage) v1.0.4                
-
-## To Install:
-Clone the git repo:
-`git clone https://github.com/DallOner/Phaser-Boilerplate.git`
-
-Or checkout the [Tagged Release](https://github.com/DallOner/Phaser-Boilerplate/releases) you'd like to use.
-
-## Credits
-
-englercj, netcell, lewster32, Orange Games...
-### Special Thanks to all those people who have given me support and their valuable feedback
