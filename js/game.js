@@ -12,24 +12,23 @@ var gameState = {
     miscButtons: null,
     gameWorld: null,
 
-    layerFloor: null,
-    layerWall: null,
-    layerObject: null,
+    layers: [],
 
     create: function () {
 
         this.cursors = game.input.keyboard.createCursorKeys();
-        game.world.setBounds(0, 0, 40000, 40000);
+        game.world.setBounds(0, 0, 2000, 2000);
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
-
         this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
         this.gameWorld = game.add.group();
         this.gameWorld.position.setTo(game.world.centerX, game.world.centerY);
-
-        this.layer = this.map.createLayer('Floor');
-        this.layer = this.map.createLayer('Wall');
-        this.layer = this.map.createLayer('Object');
-        this.layer.resizeWorld();
+        this.createLayers();
+        this.onLayers(function(layer){
+            layer.scale.set(0.5);
+        });
+        this.onLayers(function(layer){
+            layer.resizeWorld();
+        });
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
@@ -42,6 +41,20 @@ var gameState = {
     update: function () {
         this.inputHandling();
     },
+
+    createLayers: function () {
+        this.layers.push(this.map.createLayer('Floor'));
+        this.layers.push(this.map.createLayer('Wall'));
+        this.layers.push(this.map.createLayer('Object'));
+    },
+
+    onLayers: function(func){
+        for (var i = 0; i < this.layers.length; i++) {
+            var layer = this.layers[i];
+            func(layer)
+        }
+    },
+
 
     inputHandling: function () {
         if (this.cursors.up.isDown) {
@@ -93,9 +106,10 @@ var gameState = {
     },
 
     addObject: function (point) {
+        console.log(point);
         console.log(this.map);
-        var posX = this.layer.getTileX(point.clientX) * TILE.SIZE;
-        var posY = this.layer.getTileY(point.clientY) * TILE.SIZE;
+        var posX = (this.layers[0].getTileX(point.worldX) * TILE.SIZE);
+        var posY = (this.layers[0].getTileY(point.worldY) * TILE.SIZE);
         var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
 
     }
