@@ -1,5 +1,12 @@
-<div align="center"><img src="https://github.com/DallOner/Phaser-Boilerplate/blob/master/assets/img/boilerplate-logo.png"></div>
+# UHS5K
 
+start server with python in the project root
+```python
+   python -m SimpleHTTPServer 8000
+```
+
+
+# OLD README
 ## Description
 Game Development Tool to create awesome Html5 games using [Phaser](http://phaser.io/) Framework. Useful tool for those new to the world of Phaser. Speed up your work with a simple download!
 
