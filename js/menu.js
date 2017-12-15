@@ -8,16 +8,27 @@ var menuState = {
         // game.add.plugin(PhaserSuperStorage.StoragePlugin);
         game.add.plugin(PhaserInput.Plugin);
 
-        game.add.image(95, 150, 'boiler-logo');
-        var button = game.add.button(game.world.centerX - 95, 400, ASSETS.DUMMY_BUTTON, menu.actionOnClick, this, 2, 1, 0);
+        var button = game.add.button(game.world.centerX - 95, 100, ASSETS.DUMMY_BUTTON, menu.actionOnClick, this, 2, 1, 0);
 
-        // button.onInputOver.add(over, this);
-        // button.onInputOut.add(out, this);
-        // button.onInputUp.add(up, this);
+        var style = { font: "25px Arial", fill: "#ff0044", align: "left" };
+        var text = game.add.text(game.world.centerX - 93, 110, "Start", style);
+        text.anchor.set(0);
+
+        button.onInputOver.add(menu.over, this);
+        button.onInputOut.add(menu.out, this);
     }
 };
 
+
+
 var menu = {
+
+    over: function(btn) {
+        btn.alpha = 0.8;
+    },
+    out: function(btn) {
+        btn.alpha = 1;
+    },
     actionOnClick: function () {
         console.log("action on click called");
         game.state.start('game');
