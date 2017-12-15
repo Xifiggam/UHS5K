@@ -2,6 +2,7 @@ var menuState = {
 
 
     create: function () {
+        this.MenuEntryCount = 1;
 
         game.add.plugin(Phaser.Plugin.Debug);
         // game.add.plugin(Phaser.Plugin.Inspector);
@@ -17,13 +18,17 @@ var menuState = {
         button.onInputOver.add(menu.over, this);
         button.onInputOut.add(menu.out, this);
 
+        this.addMenuEntry("Start", function () {game.state.start('game'); });
+        this.addMenuEntry("Credits", function () {game.state.start('credits'); });
 
-        var button = game.add.button(game.world.centerX - 95, 200, ASSETS.DUMMY_BUTTON, menu.creditsClicked, this, 2, 1, 0);
+    },
 
+    addMenuEntry: function (name,callback) {
+        var button = game.add.button(game.world.centerX - 95, this.MenuEntryCount*100, ASSETS.DUMMY_BUTTON, callback, this, 2, 1, 0);
         var style = { font: "25px Arial", fill: "#FFFFFF", align: "left" };
-        var text = game.add.text(game.world.centerX - 93, 210, "Credits", style);
+        var text = game.add.text(game.world.centerX - 93, this.MenuEntryCount*100 + 10, name, style);
         text.anchor.set(0);
-
+        this.MenuEntryCount += 1;
         button.onInputOver.add(menu.over, this);
         button.onInputOut.add(menu.out, this);
     }
@@ -32,18 +37,10 @@ var menuState = {
 
 
 var menu = {
-
     over: function(btn) {
         btn.alpha = 0.8;
     },
     out: function(btn) {
         btn.alpha = 1;
-    },
-    actionOnClick: function () {
-        console.log("action on click called");
-        game.state.start('game');
-    },
-    creditsClicked: function () {
-        game.state.start('credits');
     }
 }

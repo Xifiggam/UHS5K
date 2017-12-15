@@ -21,8 +21,8 @@ var creditsState = {
         taskText.anchor.setTo(0.5);
         taskText.stroke = "rgba(0,0,0,0)";
         taskText.strokeThickness = 4;
-        game.add.tween(authorText).to( { y: -300 }, 20000, Phaser.Easing.Cubic.Out, true, this.creditCount * 10000);
-        game.add.tween(taskText).to( { y: -200 }, 20000, Phaser.Easing.Cubic.Out, true, this.creditCount * 10000);
+        game.add.tween(authorText).to( { y: -300 }, 20000, Phaser.Easing.Cubic.Out, true, this.creditCount * 3000);
+        game.add.tween(taskText).to( { y: -200 }, 20000, Phaser.Easing.Cubic.Out, true, this.creditCount * 3000);
         this.creditCount ++;
     }
 };
