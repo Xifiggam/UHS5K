@@ -10,6 +10,7 @@ var gameState = {
     cursors: null,
     zoomButtons: null,
     miscButtons: null,
+    gameWorld: null,
 
     layerFloor: null,
     layerWall: null,
@@ -22,6 +23,8 @@ var gameState = {
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
 
         this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
+        this.gameWorld = game.add.group();
+        this.gameWorld.position.setTo(game.world.centerX, game.world.centerY)
 
         this.layer = this.map.createLayer('Floor');
         this.layer = this.map.createLayer('Wall');
@@ -55,11 +58,34 @@ var gameState = {
             game.camera.x += this.MOVE_SPEED;
         }
         if (this.zoomButtons.in.isDown) {
+
+            var centerIn = Phaser.Point.add(game.camera.position,
+                new Phaser.Point(game.camera.view.halfWidth, game.camera.view.halfHeight));
+
+            var oldCameraScaleIn = game.camera.scale.clone();
+
             game.camera.scale.x += this.ZOOM_FACTOR;
             game.camera.scale.y += this.ZOOM_FACTOR;
+
+
+            var cameraScaleRatioIn = Phaser.Point.divide(game.camera.scale, oldCameraScaleIn);
+            game.camera.focusOn(Phaser.Point.multiply(centerIn, cameraScaleRatioIn));
+
+
         } else if (this.zoomButtons.down.isDown) {
+
+            var center = Phaser.Point.add(game.camera.position,
+                new Phaser.Point(game.camera.view.halfWidth, game.camera.view.halfHeight));
+
+            var oldCameraScale = game.camera.scale.clone();
+
             game.camera.scale.x += -this.ZOOM_FACTOR;
             game.camera.scale.y += -this.ZOOM_FACTOR;
+
+
+            var cameraScaleRatio = Phaser.Point.divide(game.camera.scale, oldCameraScale);
+            game.camera.focusOn(Phaser.Point.multiply(center, cameraScaleRatio));
+
         }
         if (this.miscButtons.shake.isDown) {
             game.camera.shake();
