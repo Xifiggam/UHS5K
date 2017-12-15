@@ -10,25 +10,30 @@ var gameState = {
     cursors: null,
     zoomButtons: null,
     miscButtons: null,
-    layer: null,
+
+    layerFloor: null,
+    layerWall: null,
+    layerObject: null,
 
     create: function () {
 
         this.cursors = game.input.keyboard.createCursorKeys();
-        game.world.setBounds(0, 0, 2000, 2000);
-        this.map = game.add.tilemap(ASSETS.TILES_DESERT_JSON);
+        game.world.setBounds(0, 0, 40000, 40000);
+        this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
 
-        this.map.addTilesetImage('Desert', ASSETS.TMW_DESERT_SPACING);
+        this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
 
-        this.layer = this.map.createLayer('Ground');
-
+        this.layer = this.map.createLayer('Floor');
+        this.layer = this.map.createLayer('Wall');
+        this.layer = this.map.createLayer('Object');
         this.layer.resizeWorld();
+
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
         this.miscButtons = game.input.keyboard.addKeys({'shake': Phaser.KeyCode.O});
 
         console.log(this.zoomButtons);
-        game.input.onDown.add(this.fillTiles, this);
+        game.input.onDown.add(this.addObject, this);
     },
 
     update: function () {
@@ -61,9 +66,11 @@ var gameState = {
         }
     },
 
-    fillTiles: function (arg) {
-        console.log(arg);
-        sprite = this.game.add.sprite(arg.clientX, arg.clientY, ASSETS.PERSON);
+    addObject: function (point) {
+        console.log(this.map);
+        var posX = this.layer.getTileX(point.clientX) * TILE.SIZE;
+        var posY = this.layer.getTileY(point.clientY) * TILE.SIZE;
+        var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
 
     }
 };

@@ -6,6 +6,9 @@ ASSETS = {
     TILES_DESERT_JSON: 'desert_json',
     TMW_DESERT_SPACING: 'tmw_desert',
 
+    TILES_PROTO_KARTE: 'proto_karte',
+    TILESET_PROTO_KARTE: 'proto_karte_tileset',
+
     PERSON: 'person',
     FLOOR: 'floor',
     WALL: 'wall',
@@ -14,5 +17,5 @@ ASSETS = {
 
 
 TILE = {
-    SIZE: 32,
+    SIZE: 128,
 };
