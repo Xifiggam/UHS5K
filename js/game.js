@@ -1,12 +1,60 @@
 /**
  * Created by zelle on 15.12.17.
  */
+
+
 var gameState = {
+    map: null,
+    cursors: null,
+    zoomButtons: null,
 
     create: function () {
 
+        this.cursors = game.input.keyboard.createCursorKeys();
+        game.world.setBounds(0, 0, 2000, 2000);
+        this.map = game.add.tilemap(ASSETS.TILES_DESERT_JSON);
 
+        this.map.addTilesetImage('Desert', ASSETS.TMW_DESERT_SPACING);
+
+        var layer = this.map.createLayer('Ground');
+
+        layer.resizeWorld();
+        this.cursors = game.input.keyboard.createCursorKeys();
+        this.zoomButtons = game.input.keyboard.addKeys({ 'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
+        console.log(this.zoomButtons);
+        game.input.onDown.add(this.fillTiles, this);
+    },
+
+    update: function () {
+        if (this.cursors.up.isDown) {
+            game.camera.y -= 4;
+        }
+        else if (this.cursors.down.isDown) {
+            game.camera.y += 4;
+        }
+
+        if (this.cursors.left.isDown) {
+            game.camera.x -= 4;
+        }
+        else if (this.cursors.right.isDown) {
+            game.camera.x += 4;
+        }
+        if (this.zoomButtons.in.isDown) {
+            game.camera.scale.x += 0.005;
+            game.camera.scale.y += 0.005;
+        } else if (this.zoomButtons.down.isDown) {
+            game.camera.scale.x += -0.005;
+            game.camera.scale.y += -0.005;
+        }
+    },
+    
+    inputHandling: function () {
+        
+    },
+
+    fillTiles: function (arg) {
+        console.log(arg);
+        // map.fill(31, layer.getTileX(sprite.x), layer.getTileY(sprite.y), 8, 8);
 
     }
 };
-
