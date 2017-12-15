@@ -1,6 +1,6 @@
 UHS 5K Ultimate Hotel Simmulator
 
-Idee.....
+..............................Hotel......................................
 
 Start mit 1 Zimmer
 	auf mehr Zimmr erweiterbar
@@ -39,7 +39,7 @@ Kunden
 			Einzelbett
 			Doppelbett
 			Kinderbett
-			[Luxusbett]
+			Luxusbett
 		Pflanzen
 		Ausblick
 		Entertainment
@@ -74,11 +74,17 @@ Ressourcen
 Events
 	GruppeX
 		Gruppen-Hooligans (kein Geld, viel Zerstörung, sehr pos. Bewertungen)
+			Fixer Wunsch: Entertainment, Bar
 		Rock-Stars (viel Geld, zerstören, verärgern andere Gäste)
+			Fixer Wunsch: Sauna+, Bar
 		Pensionistengruppe (viel Geld, wenig Bewertungen)
+			Fixer Wunsch: Restaurant, Ausblick
 		Familiengruppe (wenig Geld, verärgert andere Gäste, unkritische Bewertungen)
+			Fixer Wunsch: Hallenbad, Kinderbett
 		Honey-Moon (viel Geld, unkritische Bewertungen)
+			Fixer Wunsch: Luxusbett, Sauna
 		Firmengruppe (viel Geld, kritische Bewertungen)
+			Fixer Wunsch:Semianrraum, WIFI
 		[Zombie-Gruppe (zahlt nichts, vertreibt andere Gäste, Beliebtheit --]
 
 
@@ -95,11 +101,44 @@ Events
 		Kulinarische Wochen
 		
 Marketing
-	
+	allgemeines Marketing
+		erhöht Kundenfrequenz
+
+	spezifisches Marketing	
+		erhöht Wahrscheinlichkeit, dass bestimmte Kundengruppe eher kommt
+
+	Werbung
+		Broschüre
+			Preis: hoch
+			impact: niedrig
+			erreicht: Familien, Pensionisten, Hooligans, Honey-Moon
+		im Web
+			Preis: niedrig
+			impact: niedrig
+			erreicht: alle ausser Pensionisten
+		individualisiertes Marketing
+			Preis: sehr hoch
+			impact: sehr hoch
+		Partnerprogramme
+			Preis: mittel
+			impact: mittel
+		Call-Center
+			Preis: hoch
+			impact: hoch
+			erreicht: Rockstars und Pensionisten
 		
 
 Diversifieer
 	Behindertengerecht
 
+
+
+........................Bewertungsplattform..........................
+
+Life-Ticker
+	immer sichtbar
+	nach jedem Besuch wird Kundenbewertung (Kunde X hat Hotel mit *** bewertet) angezeigt
+	zusätzlich aktuelle Sternanzeige
+	Zufriedenheit ist nicht sichtbar, verändert Rating aber im Hintergrund
 
 Meta-Gameziel: auf bestimmte Kudnengruppe spezialisieren
