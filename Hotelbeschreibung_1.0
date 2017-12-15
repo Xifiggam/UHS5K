@@ -1,0 +1,105 @@
+UHS 5K Ultimate Hotel Simmulator
+
+Idee.....
+
+Start mit 1 Zimmer
+	auf mehr Zimmr erweiterbar
+	dazukaufen/ bauen
+	vorgefertigte Baueinheiten zukaufbar
+	Zimmer individuell möbliebar
+	Zimmermobiliar verbesserbar, upgradebar
+	Zimmer upgraden kostet 1x viel
+	Eigenschaften
+		Preis
+		Einrichtung
+
+
+Personal
+	neu einstellen
+	Qualifikation 
+		Rezeptionist
+		Reinigungspersonal
+		Küche
+		Bar
+		Masseur
+		Geschäftsführer (+/-1 für alle Skills)
+	Skill-Levels 1-5
+
+Kunden
+	Eigenschaften
+		Zahlungsfähigkeit
+		Wünsche
+		Internetaffinität 
+	Kunden suchen sich automatisch das Zimmer aus, das am ehesten ihrem Budget und ihren Wünschen entspricht
+	zufällig generierte Kunden kommen mit untersch Wünschen
+	Wünsche 
+		zufällig generiert aus lokalen und globalen Wünschen, gewichtet je nach Marketing
+	Kunden haben bestimmte Inventarwünsche (lokal)
+		Betten
+			Einzelbett
+			Doppelbett
+			Kinderbett
+			[Luxusbett]
+		Pflanzen
+		Ausblick
+		Entertainment
+		Bad
+		Mini-Bar
+		
+	Kunden haben bestimmte Upgrade-Wünsche (global)
+		WIFI (Zimmer)
+		WIFI (nur Lobby)
+		Seminarraum
+		Wellness
+			Massage
+			Sauna
+			Sauna +
+			Hallenbad
+			Freibad
+			Fitnessstudio
+		Hotel-Bar
+		Restaurant
+
+	Kunden geben Bewertungen ab
+		besonders gut
+		besonders schlecht
+		keine Bewertung weil mittelmässig zufrieden
+		keine Bewertung weil nicht Internet-affin
+
+Ressourcen
+	Geld (Euro)
+	Sterne 1-5
+	Beliebtheitsskala (hat Einfluss auf Sterne)
+
+Events
+	GruppeX
+		Gruppen-Hooligans (kein Geld, viel Zerstörung, sehr pos. Bewertungen)
+		Rock-Stars (viel Geld, zerstören, verärgern andere Gäste)
+		Pensionistengruppe (viel Geld, wenig Bewertungen)
+		Familiengruppe (wenig Geld, verärgert andere Gäste, unkritische Bewertungen)
+		Honey-Moon (viel Geld, unkritische Bewertungen)
+		Firmengruppe (viel Geld, kritische Bewertungen)
+		[Zombie-Gruppe (zahlt nichts, vertreibt andere Gäste, Beliebtheit --]
+
+
+	Allgemeine
+		Hygienekontrolle
+		Naturkatastrophen (Hochwasser, Erdbeben - Gästeausfall)	
+		Steuererhöhung/ nachlass
+	...
+		Seminar/Konferenz
+		Fussballspiel
+		Rockkonzert
+		Feiertage
+		Kulturhauswochen
+		Kulinarische Wochen
+		
+Marketing
+	
+		
+
+Diversifieer
+	Behindertengerecht
+
+
+Meta-Gameziel: auf bestimmte Kudnengruppe spezialisieren
