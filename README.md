@@ -1,3 +1,5 @@
+# Ultimate Hotel Simulator 5000
+
 ## Description
 Based on boilerplate https://github.com/DallOner/Phaser-Boilerplate
 
