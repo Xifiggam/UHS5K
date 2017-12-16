@@ -26,6 +26,7 @@ ASSETS = {
     SINK: 'sink',
     TV: 'tv',
     CHAR_OLD: 'old',
+    CHAR_GEN: 'CHAR_GEN',
 
     BUTTON_1: 'button_1_u',
     MENU_TOP: 'menu_top_u',
@@ -51,5 +52,5 @@ TILE = {
 };
 
 GAMELOGIC = {
-    MSPERDAY: 3000,
+    MSPERDAY: 20000,
 };

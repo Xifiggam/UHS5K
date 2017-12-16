@@ -26,7 +26,11 @@ var gameState = {
         this.world = gameWorld;
         var self = this;
         this.world.customerArrivalCallback =  function(customer) {
-            self.spawnCustomerVisualAndMoveToRoom(customer);
+            self.moveToRoom(customer);
+        };
+
+        this.world.customerToLobbyCallback =  function(customer) {
+            self.spawnCharacterAndMoveToLobbyNow(customer);
         };
         this.world.customerLeaveCallback =  function(customer) {
             self.moveCustomerVisualFromRoom(customer);
@@ -147,8 +151,7 @@ var gameState = {
             game.camera.x += this.MOVE_SPEED;
         }
         if (this.miscButtons.shake.isDown) {
-            //game.camera.shake();
-            this.spawnCustomerVisualAndMoveToRoom('Room 102');
+            game.camera.shake();
             //this.postNews("the cake is a lie", 4000);
         }
     },
@@ -158,16 +161,50 @@ var gameState = {
             var lobbyX = 760;
             var lobbyY = 750;
 
-            var toLobby = game.add.tween(character.sprite).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            toLobby.chain(awaaaaay);
-            toLobby.start();
+            var nameTag = character.nameTag;
+
+            if(character.chosenRoom){
+                var toLobby = game.add.tween(character.sprite).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                var toLobbyTag = game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                var awaaaaayTag = game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                toLobby.chain(awaaaaay);
+                toLobbyTag.chain(awaaaaayTag);
+                toLobby.start();
+                toLobbyTag.start();
+            }else{
+                game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+            }
+
         }
     },
-    spawnCustomerVisualAndMoveToRoom: function(character){
+    spawnCharacterAndMoveToLobbyNow :  function(character){
+        var lobbyX = 19*32 + (Math.random()*7*32);
+        var lobbyY = 19*32 + (Math.random()*5*32);
+        var number = Math.random();
+        var asset = null;
+        if(number< 0.5){
+            asset = ASSETS.CHAR_OLD;
+        }else{
+            asset = ASSETS.CHAR_GEN;
+        }
+        var person =  game.add.sprite(760,800,asset); //somewhere in lobby
+        var style = {font: "14px Arial", fill: "#000000", align: "left"};
+        var nameTag = game.add.text(760,800,character.name, style);
+        nameTag.anchor.x = 0.5;
+        nameTag.anchor.y = 0.5;
+        person.scale.x = 1.2;
+        person.scale.y = 1.2;
+        character.sprite = person;
+        character.nameTag = nameTag;
+        game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
+        game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
+
+    },
+    moveToRoom: function(character){
         var room = null;
         var roomName = character.chosenRoom.name;
-        console.log(character);
 
         for(var i = 0; i<this.world.roomList.length;i++ ){
             var candidateRoom = this.world.roomList[i];
@@ -179,16 +216,12 @@ var gameState = {
             var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
             var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
 
-            var lobbyX = 760;
-            var lobbyY = 750;
-            var person =  game.add.sprite(760,800,ASSETS.CHAR_OLD); //somewhere in lobby
-            character.sprite = person;
-            person.scale.x = 1.2;
-            person.scale.y = 1.2;
-            var toLobby = game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            var toRoom = game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            toLobby.chain(toRoom);
-            toLobby.start();
+
+            var person = character.sprite;
+            var nameTag = character.nameTag;
+
+            game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+            game.add.tween(nameTag).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
         }
     },
     addObject: function (point) {
@@ -284,7 +317,7 @@ var gameState = {
         closex.fixedToCamera = true;
 
         function set_price() {
-            room.price = prompt("Please enter a price for the room", room.price);
+            room.price = parseInt(prompt("Please enter a price for the room", room.price));
             setPrice.text = room.price+"€";
         }
 

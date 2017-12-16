@@ -28,6 +28,7 @@ var loadState = {
         game.load.image(ASSETS.SINK, 'assets/img/sink_32x32.png');
         game.load.image(ASSETS.TV, 'assets/img/TV.png');
         game.load.image(ASSETS.CHAR_OLD, 'assets/img/char_old.png');
+        game.load.image(ASSETS.CHAR_GEN, 'assets/img/char_gen.png');
 
         game.load.tilemap(ASSETS.TILES_PROTO_KARTE, 'assets/HotelMap.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image(ASSETS.TILESET_PROTO_KARTE, 'assets/tileset.png');
