@@ -46,5 +46,5 @@ TILE = {
 };
 
 GAMELOGIC = {
-    MSPERDAY: 30000,
+    MSPERDAY: 3000,
 };

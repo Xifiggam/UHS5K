@@ -11,6 +11,8 @@ var gameWorld = {
     localUpgradesArray: [SINGLE_FEATURE_TYPE.SINGLE_BED, SINGLE_FEATURE_TYPE.DOUBLE_BED, SINGLE_FEATURE_TYPE.CHILD_BED, SINGLE_FEATURE_TYPE.LUXURY_BED, SINGLE_FEATURE_TYPE.PLANT, SINGLE_FEATURE_TYPE.VIEW, SINGLE_FEATURE_TYPE.ENTERTAINMENT, SINGLE_FEATURE_TYPE.BATH, SINGLE_FEATURE_TYPE.MINIBAR, SINGLE_FEATURE_TYPE.ACUNIT],
     money: 1000,
     stars: 1,
+    guestToDelete: null,
+    toDelete: false,
 
 
     // GLOBAL UPGRADES WITH PRICE
@@ -83,12 +85,22 @@ var gameWorld = {
             if(Math.random()<0.05){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
+                //LUKAS KOMM DICH
+                console.log("LUKAS GEHE IN DIE LOBBY DICH");
                 //customer(guest);
                 for(i=0; i<gameWorld.roomList.length; i++){
                     //console.log(gameWorld.roomList[i]);
                 }
-                console.log(guest);
             }
+        }
+        if(this.toDelete){
+            for (var i = 0; i < this.guestList.length; i++) {
+                var obj = this.guestList[i];
+                if(JSON.stringify(obj) === JSON.stringify(this.guestToDelete) ){
+                    this.guestList.splice(i,1);
+                }
+            }
+            this.toDelete=false;
         }
     },
 
@@ -226,17 +238,20 @@ function Guest (name) {
                 break;
             case "going":
                 if(this.statetime>=this.goingTime){
-                    //TODO GET RID OF THIS CUSTOMER (aka cunt)
-                    this.statetime = 0;
+                    gameWorld.toDelete = true;
+                    gameWorld.guestToDelete = this;
                 }
                 break;
             case "staying":
                 if(this.statetime>=GAMELOGIC.MSPERDAY){
+                    console.log(this.name + " " +"Room: "+this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
                     gameWorld.money += this.chosenRoom.price;
                     this.maximumPrice -= this.chosenRoom.price;
+                    console.log(this.daysToStay + " " + this.maximumPrice);
                     if(this.daysToStay <= 0 || this.maximumPrice<=0){
                         this.statusCurrent = "going";
+                        this.chosenRoom.free = true;
                         console.log("LUKAS VERTSCHÜSS DICH");
                         if(gameWorld.customerLeaveCallback){
                             gameWorld.customerLeaveCallback(this);
@@ -448,11 +463,7 @@ function init(){
     room.name = "Room 100";
     gameWorld.roomList.push(room);
 
-    console.log(gameWorld.roomList)
-    for (var i = 0; i < gameWorld.roomList.length; i++) {
-        var room_log = gameWorld.roomList[i];
-        console.log(room_log.name, room_log.free);
-    }
+    //console.log(gameWorld.roomList)
 
 }
 
@@ -538,10 +549,11 @@ function customer (guestObj) {
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
         satisfiedRequirements = 0;
     }
-    console.log(satisfactionArray)
+    //console.log(satisfactionArray)
     var roomChosen = indexOfMax(satisfactionArray);
     if(satisfactionArray[roomChosen] <= 0.1){
         guestObj.statusCurrent = "going";
+        console.log(guestObj);
         guestObj.statisfaction = 0;
     }
     else {
