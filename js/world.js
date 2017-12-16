@@ -262,6 +262,7 @@ function Guest (name) {
                         this.statusCurrent = "going";
                         if(Math.random()>0.5){
                             this.chosenRoom.statusCurrent = "dirty";
+                            //TODO Lukas callback dirty
                         }
                         else{
                             this.chosenRoom.statusCurrent = "free";
