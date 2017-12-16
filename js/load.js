@@ -15,6 +15,7 @@ var loadState = {
         game.load.image(ASSETS.TILES_PROTO_KARTE, 'assets/img/button_dummy.png');
         game.load.image(ASSETS.DUMMY_BUTTON, 'assets/img/button_dummy.png');
         game.load.image(ASSETS.STAR, 'assets/img/star.png');
+        game.load.image(ASSETS.MENU_BG, 'assets/img/menubg.png');
 
         game.load.tilemap(ASSETS.TILES_PROTO_KARTE, 'assets/ProtoKarte.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image(ASSETS.TILESET_PROTO_KARTE, 'assets/tileset.png');
