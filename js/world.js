@@ -238,6 +238,9 @@ function Guest (name) {
                     if(this.daysToStay <= 0 || this.maximumPrice<=0){
                         this.statusCurrent = "going";
                         console.log("LUKAS VERTSCHÜSS DICH");
+                        if(gameWorld.customerLeaveCallback){
+                            gameWorld.customerLeaveCallback(this);
+                        }
                         //TODO HIER STERNE BEWERTUNGSCHANCE UND SO
                     }
                     this.statetime = 0;
@@ -544,10 +547,13 @@ function customer (guestObj) {
     else {
         gameWorld.roomList[roomChosen].changeRoomBool();
         guestObj.statusCurrent = "staying";
-        //LUKAS KOMM DICH
         console.log("LUKAS KOMM DICH");
         guestObj.chosenRoom = gameWorld.roomList[roomChosen];
         guestObj.statisfaction = satisfactionArray[roomChosen];
+        //LUKAS KOMM DICH
+        if(gameWorld.customerArrivalCallback && guestObj.chosenRoom){
+            gameWorld.customerArrivalCallback(guestObj);
+        }
     }
     //return [roomChosen, satisfactionArray[roomChosen]];
 }

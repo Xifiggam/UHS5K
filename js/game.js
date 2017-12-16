@@ -23,7 +23,13 @@ var gameState = {
 
     create: function () {
         this.world = gameWorld;
-
+        var self = this;
+        this.world.customerArrivalCallback =  function(customer) {
+            self.spawnCustomerVisualAndMoveToRoom(customer);
+        };
+        this.world.customerLeaveCallback =  function(customer) {
+            self.moveCustomerVisualFromRoom(customer);
+        };
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -46,6 +52,7 @@ var gameState = {
         game.input.onDown.add(this.addObject, this);
         game.input.onDown.add(this.openRoomMenuIfAny, this);
     },
+
 
     update: function () {
         this.inputHandling();
@@ -102,8 +109,11 @@ var gameState = {
             toLobby.start();
         }
     },
-    spawnCustomerVisualAndMoveToRoom: function(roomName, character){
+    spawnCustomerVisualAndMoveToRoom: function(character){
         var room = null;
+        var roomName = character.chosenRoom.name;
+        console.log(character);
+
         for(var i = 0; i<this.world.roomList.length;i++ ){
             var candidateRoom = this.world.roomList[i];
             if(candidateRoom.name === roomName){
