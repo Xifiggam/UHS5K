@@ -36,4 +36,5 @@ SINGLE_FEATURE_TYPE = {
 
 TILE = {
     SIZE: 32,
+
 };

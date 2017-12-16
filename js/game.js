@@ -196,6 +196,7 @@ var gameState = {
         this.layers.push(this.map.createLayer('Object'));
         this.objectLayer = this.layers[2];
         this.wallLayer = this.layers[1];
+        this.floorLayer = this.layers[0];
     },
 
     onLayers: function (func) {
@@ -249,11 +250,16 @@ var gameState = {
         return null;
     },
 
+    close_build_menu: function () {
+        this.roomMenuHud.destroy();
+        this.roomMenuHud = null;
+    },
+
     createBuildMenu: function (room) {
         var featureCount = 0;
         var self = this;
 
-        if(self.roomMenuHud){
+        if (self.roomMenuHud || self.buildMarker != null) {
             return;
         }
 
@@ -264,8 +270,8 @@ var gameState = {
                 style.fill = "gray"
             }
             function click_button() {
-                console.log("test");
-                self.activeBuildCursor(3, 1, false, feature_type, room);
+                self.close_build_menu();
+                self.activateBuildCursor(feature_type, room);
             }
 
             var baseOffsetTop = featureCount * 50;
@@ -274,7 +280,6 @@ var gameState = {
             button.scale.y = 0.9;
             button.inputEnabled = !bought;
             button.fixedToCamera = true;
-            console.log(!bought);
 
             var featureName = game.add.text(offsetLeft + padding + 10, 130 + baseOffsetTop, name, style);
             featureName.fixedToCamera = true;
@@ -289,50 +294,43 @@ var gameState = {
         }
 
 
-
-        function close_clicked() {
-            self.roomMenuHud.destroy();
-            self.roomMenuHud = null;
-        }
-
-            this.roomMenuHud = game.add.group();
-            var offsetLeft = game.width / 2;
-            var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_BG);
-            sprite.scale.x = offsetLeft - 10;
-            sprite.scale.y = game.height - 20;
-            sprite.fixedToCamera = true;
+        this.roomMenuHud = game.add.group();
+        var offsetLeft = game.width / 2;
+        var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_BG);
+        sprite.scale.x = offsetLeft - 10;
+        sprite.scale.y = game.height - 20;
+        sprite.fixedToCamera = true;
 
 
+        var style = {font: "25px Arial", fill: "#000000", align: "left"};
+        var padding = 20;
 
-            var style = {font: "25px Arial", fill: "#000000", align: "left"};
-            var padding = 20;
-
-        var btnClose = game.add.button(game.width -50, 20, ASSETS.DUMMY_BUTTON, close_clicked, this, 2, 1, 0);
+        var btnClose = game.add.button(game.width - 50, 20, ASSETS.DUMMY_BUTTON, self.close_build_menu, this, 2, 1, 0);
         btnClose.fixedToCamera = true;
-        var closex = game.add.text(game.width -40, 20, "X", style);
+        var closex = game.add.text(game.width - 40, 20, "X", style);
         closex.fixedToCamera = true;
 
 
         var title = game.add.text(offsetLeft + padding, 20, room.name, style);
-            title.fixedToCamera = true;
+        title.fixedToCamera = true;
 
-            this.roomMenuHud.add(sprite);
-            this.roomMenuHud.add(title);
-            var features = room.getFeatures();
+        this.roomMenuHud.add(sprite);
+        this.roomMenuHud.add(title);
+        var features = room.getFeatures();
 
         this.roomMenuHud.add(btnClose);
         this.roomMenuHud.add(closex);
 
         addFeatureOption("Single bed", this.world.SINGLEBED_PRICE, features[0], false, SINGLE_FEATURE_TYPE.SINGLE_BED);
-            addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
-            addFeatureOption("Child bed", this.world.CHILDBED_PRICE, features[2],false, SINGLE_FEATURE_TYPE.CHILD_BED);
-            addFeatureOption("Luxury bed", this.world.LUXURYBED_PRICE, features[3],false,SINGLE_FEATURE_TYPE.LUXURY_BED);
-            addFeatureOption("Plant", this.world.PLANT_PRICE, features[4],SINGLE_FEATURE_TYPE.PLANT);
-            addFeatureOption("View", this.world.VIEW_PRICE, features[5], true,SINGLE_FEATURE_TYPE.VIEW);
-            addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE, features[6],false,SINGLE_FEATURE_TYPE.ENTERTAINMENT);
-            addFeatureOption("Bath", this.world.BATH_PRICE, features[7],SINGLE_FEATURE_TYPE.BATH);
-            addFeatureOption("Minibar", this.world.MINIBAR_PRICE, features[8], true,SINGLE_FEATURE_TYPE.MINIBAR);
-            addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], true, SINGLE_FEATURE_TYPE.ACUNIT);
+        addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
+        addFeatureOption("Child bed", this.world.CHILDBED_PRICE, features[2], false, SINGLE_FEATURE_TYPE.CHILD_BED);
+        addFeatureOption("Luxury bed", this.world.LUXURYBED_PRICE, features[3], false, SINGLE_FEATURE_TYPE.LUXURY_BED);
+        addFeatureOption("Plant", this.world.PLANT_PRICE, features[4], SINGLE_FEATURE_TYPE.PLANT);
+        addFeatureOption("View", this.world.VIEW_PRICE, features[5], true, SINGLE_FEATURE_TYPE.VIEW);
+        addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE, features[6], false, SINGLE_FEATURE_TYPE.ENTERTAINMENT);
+        addFeatureOption("Bath", this.world.BATH_PRICE, features[7], SINGLE_FEATURE_TYPE.BATH);
+        addFeatureOption("Minibar", this.world.MINIBAR_PRICE, features[8], true, SINGLE_FEATURE_TYPE.MINIBAR);
+        addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], true, SINGLE_FEATURE_TYPE.ACUNIT);
 
     },
     openRoomMenuIfAny: function (point) {
@@ -403,22 +401,25 @@ var gameState = {
         }
     },
 
-
-    activeBuildCursor: function (width, height, collision, type, room) {
-        this.buildMarker = game.add.graphics();
+    activateBuildCursor: function (type, room) {
+        var width = 1;
+        var height = 1;
         this.buildSpriteGroup = game.add.group();
         if (type == SINGLE_FEATURE_TYPE.SINGLE_BED || type == SINGLE_FEATURE_TYPE.DOUBLE_BED) {
-            var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
-            var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
-            var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
-            this.buildSpriteGroup.add(bed_head_sprite);
-            this.buildSpriteGroup.add(bed_middle_sprite);
-            this.buildSpriteGroup.add(bed_end_sprite);
+            this.addBedSpriteToGroup(this.buildSpriteGroup);
+            width = 3;
         } else {
-            console.error("type for build cursor not found " + type);
+            console.warn('will open build cursor without asset');
         }
+        this.activeBuildCursor(width, height, false, type, room);
 
+    },
+
+
+
+    activeBuildCursor: function (width, height, collision, type, room) {
         var color = collision ? 0xFF0000 : 0x000000;
+        this.buildMarker = game.add.graphics();
         this.buildMarker.lineStyle(2, color, 1);
         this.buildMarker.collision = collision;
         this.buildMarker.drawRect(0, 0, TILE.SIZE * width, TILE.SIZE * height);
@@ -426,6 +427,7 @@ var gameState = {
         this.buildMarker.u_height = height;
         this.buildMarker.u_type = type;
         this.buildMarker.u_room = room;
+
     },
 
     deactivateBuildCursor: function () {
@@ -439,8 +441,10 @@ var gameState = {
     updateBuildCursor: function () {
         if (this.buildMarker !== null) {
 
-            var x = this.objectLayer.getTileX(game.input.activePointer.worldX) * TILE.SIZE;
-            var y = this.objectLayer.getTileY(game.input.activePointer.worldY) * TILE.SIZE;
+            var tileX = this.objectLayer.getTileX(game.input.activePointer.worldX);
+            var x = tileX * TILE.SIZE;
+            var tileY = this.objectLayer.getTileY(game.input.activePointer.worldY);
+            var y = tileY * TILE.SIZE;
             var collide = false;
             if (this.getRoom(game.input.activePointer) !== this.buildMarker.u_room) {
                 console.log("not in room");
@@ -458,16 +462,15 @@ var gameState = {
             if (collide) {
                 if (!this.buildMarker.collision) {
                     this.buildMarker.destroy();
-                    this.buildSpriteGroup.destroy();
                     this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, true, this.buildMarker.u_type, this.buildMarker.u_room);
                 }
             } else {
                 if (this.buildMarker.collision) {
                     this.buildMarker.destroy();
-                    this.buildSpriteGroup.destroy();
                     this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, false, this.buildMarker.u_type, this.buildMarker.u_room);
                 }
             }
+            console.log(x, y);
             this.buildMarker.x = x;
             this.buildMarker.y = y;
             for (var it_group_child = 0; it_group_child < this.buildSpriteGroup.children.length; it_group_child++) {
@@ -478,8 +481,35 @@ var gameState = {
             if (game.input.mousePointer.isDown && !collide) {
                 var room = this.buildMarker.u_room;
                 this.world.upgradeRoom(this.buildMarker.u_room, this.buildMarker.u_type);
+                if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
+                    var currentTile = this.map.getTile(tileX, tileY, this.floorLayer);
+                    this.map.putTile(currentTile, tileX, tileY, this.objectLayer);
+                    this.map.putTile(currentTile, tileX + 1, tileY, this.objectLayer);
+                    this.map.putTile(currentTile, tileX + 2, tileY, this.objectLayer);
+                    var bedGroup = game.add.group();
+                    this.addBedSpriteToGroup(bedGroup);
+                    for (var bed_part_it = 0; bed_part_it < bedGroup.children.length; bed_part_it++) {
+                        var bed_part = bedGroup.children[bed_part_it];
+                        bed_part.x = x + TILE.SIZE * bed_part_it;
+                        bed_part.y = y;
+                    }
+
+                }
+
                 this.deactivateBuildCursor();
             }
         }
+    },
+
+
+    addBedSpriteToGroup: function(group){
+        var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
+        var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
+        var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
+        group.add(bed_head_sprite);
+        group.add(bed_middle_sprite);
+        group.add(bed_end_sprite);
     }
 };
+
+

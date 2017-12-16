@@ -11,7 +11,6 @@ var loadState = {
         var loadingLabel = game.add.text(80, 150, 'loading...', {font: '30px Courier', fill: '#fff'});
 
         //Load your images, spritesheets, bitmaps...
-        game.load.image('boiler-logo', 'assets/img/boilerplate-logo.png');
         game.load.image(ASSETS.DUMMY_BUTTON, 'assets/img/button_dummy.png');
         game.load.image(ASSETS.STAR, 'assets/img/star.png');
         game.load.image(ASSETS.MENU_BG, 'assets/img/menubg.png');
