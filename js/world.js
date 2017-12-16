@@ -297,7 +297,7 @@ function Customer (guestObj) {
         }
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
     }
-    var roomChosen = indexOfMaxValue(satisfactionArray);
+    var roomChosen = indexOfMax(satisfactionArray);
     this.roomList[roomChosen].changeRoomBool();
     guestObj.statusCurrent = "staying";
     return [roomChosen, satisfactionArray[roomChosen]];
@@ -308,6 +308,7 @@ function indexOfMax(arr) {
         return -1;
     }
 
+    var max = arr[0];
     var max = arr[0];
     var maxIndex = 0;
 
