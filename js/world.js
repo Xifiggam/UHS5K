@@ -350,8 +350,8 @@ function Worker (type) {
             if(this.statetime >= this.cleanTaskTime){
                 this.statusCurrent = "idle";
                 this.workTaskRoom.statusCurrent = "free";
-                if(gameWorld.doCleaningCallback){
-                    gameWorld.doCleaningCallback(this.workTaskRoom);
+                if(gameWorld.updateRoomStatusCallback){
+                    gameWorld.updateRoomStatusCallback(this.workTaskRoom);
                 }
                 this.workTaskRoom = null;
                 this.statetime = 0;
