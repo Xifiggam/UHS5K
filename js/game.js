@@ -633,6 +633,10 @@ var gameState = {
 
     openBuyMenu: function(click_callback, button_texts, button_types){
         var self = this;
+        if(this.buyMenuHud != null){
+            self.closeBuyMenu();
+        }
+        
         this.buyMenuHud = game.add.group();
         var offsetLeft = game.width / 2;
         var offsetTop = 10;
@@ -667,7 +671,7 @@ var gameState = {
         this.buyMenuHud.add(closeButtonText);
 
 
-        if(button_texts.length != button_types.length){
+        if(button_texts.length != button_types.length ){
             console.log('error cannot render buttons types and texts not matching')
         } else {
             for (var button_render_it = 0; button_render_it < button_texts.length; button_render_it++) {
