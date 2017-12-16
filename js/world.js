@@ -15,39 +15,19 @@ var gameWorld = {
     toDelete: false,
 
 
-    // GLOBAL UPGRADES WITH PRICE
-    wifi_room: false,
-    WIFI_ROOM_PRICE: 1000,
-
-    wifi_lobby: false,
-    WIFI_LOBBY_PRICE: 100,
-
-    seminarRoom: false,
-    SEMINARROOM_PRICE: 1000,
-
-    massageParlor: false,
-    MASSAGEPARLOR_PRICE: 1000,
-
-    sauna: false,
-    SAUNA_PRICE: 1000,
-
-    saunaPlus: false,
-    SAUNAPLUS_PRICE: 2000,
-
-    pool: false,
-    POOL_PRICE: 1000,
-
-    outdoorPool: false,
-    OUTDOORPOOL_PRICE: 2000,
-
-    fitnessStudio: false,
-    FITNESSSTUDIO_PRICE: 1000,
-
-    hotelBar: false,
-    HOTELBAR_PRICE: 1000,
-
-    restaurant: false,
-    RESTAURANT_PRICE: 1000,
+    GLOBAL_FEATURE_TYPE: {
+        WIFI_ROOM: new GlobalFeatureType('wifi_room', 1000),
+        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 100),
+        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 100),
+        MASSAGE_PARLOR: new GlobalFeatureType('massageParlor', 1000),
+        SAUNA: new GlobalFeatureType('sauna', 1000),
+        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 2000),
+        POOL: new GlobalFeatureType('pool', 2000),
+        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 2000),
+        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 1000),
+        HOTEL_BAR: new GlobalFeatureType('hotelBar', 1000),
+        RESTAURANT: new GlobalFeatureType('restaurant', 1000)
+    },
 
     // Room Upgrade Prices
     SINGLEBED_PRICE: 250,
@@ -108,52 +88,22 @@ var gameWorld = {
         }
     },
 
+    getGlobalFeatureForValue: function(feature){
+        console.log('search feature', feature);
+        var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
+        for(var i=0; i<obj_values.length; i++) {
+            if (this.GLOBAL_FEATURE_TYPE[obj_values[i]].name === feature) {
+                return this.GLOBAL_FEATURE_TYPE[obj_values[i]];
+            }
+        }
+        return null;
+    },
+
     buyGlobalUpgrade: function (feature) {
-        switch(feature) {
-            case "wifi_room":
-                this.wifi_room=true;
-                this.money = this.money - this.WIFI_ROOM_PRICE;
-                break;
-            case "wifi_lobby":
-                this.wifi_lobby=true;
-                this.money = this.money - this.WIFI_LOBBY_PRICE;
-                break;
-            case "seminarRoom":
-                this.seminarRoom=true;
-                this.money = this.money = this.SEMINARROOM_PRICE;
-                break;
-            case "massageParlor":
-                this.massageParlor=true;
-                this.money=this.money-this.MASSAGEPARLOR_PRICE;
-                break;
-            case "sauna":
-                this.sauna=true;
-                this.money=this.money-this.SAUNA_PRICE;
-                break;
-            case "saunaPlus":
-                this.saunaPlus=true;
-                this.money=this.money-this.SAUNAPLUS_PRICE;
-                break;
-            case "pool":
-                this.pool=true;
-                this.money=this.money-this.POOL_PRICE;
-                break;
-            case "outdoorPool":
-                this.outdoorPool=true;
-                this.money=this.money-this.OUTDOORPOOL_PRICE;
-                break;
-            case "fitnessStudio":
-                this.fitnessStudio=true;
-                this.money=this.money-this.FITNESSSTUDIO_PRICE;
-                break;
-            case "hotelBar":
-                this.hotelBar=true;
-                this.money=this.money-this.HOTELBAR_PRICE;
-                break;
-            case "restaurant":
-                this.restaurant=true;
-                this.money=this.money-this.RESTAURANT_PRICE;
-                break;
+        var feature_obj = this.getGlobalFeatureForValue(feature);
+        if(feature_obj != null){
+           this.money = this.money - feature_obj.price;
+           console.log('feature found' + feature, feature_obj);
         }
     },
     
@@ -703,4 +653,10 @@ function generateName(quantity){
         }
     }
     return names;
+}
+
+function GlobalFeatureType(name, price){
+    this.name = name;
+    this.active = false;
+    this.price = price;
 }

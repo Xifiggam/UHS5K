@@ -82,7 +82,9 @@ var gameState = {
         this.buttonsHud.add(buyRoomsText);
 
         button_start_x += 200;
-        var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){self.openBuyMenu();}, this, 2, 1, 0);
+        var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
+            self.openBuyMenu();
+        }, this, 2, 1, 0);
         buyStaffButton.scale.x = 3;
         buyStaffButton.scale.y = 1.5;
         buyStaffButton.fixedToCamera = true;
@@ -92,7 +94,18 @@ var gameState = {
         this.buttonsHud.add(buyStaff);
 
         button_start_x += 200;
-        var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){self.openBuyMenu();}, this, 2, 1, 0);
+        var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
+            self.openBuyMenu(function(global_upgrade){
+                console.log(self.world.getGlobalFeatureForValue(global_upgrade));
+                if(self.world.getGlobalFeatureForValue(global_upgrade).price <= self.world.money){
+                    self.world.buyGlobalUpgrade(global_upgrade);
+                } else {
+                    //TODO: add waringin dialogue
+                    console.log('cannot buy not enough money');
+                }
+
+            }, this.world.globalUpgradesArray, this.world.globalUpgradesArray);
+        }, this, 2, 1, 0);
         buyUpgradeButton.scale.x = 3.6;
         buyUpgradeButton.scale.y = 1.5;
         buyUpgradeButton.fixedToCamera = true;
@@ -677,10 +690,13 @@ var gameState = {
             for (var button_render_it = 0; button_render_it < button_texts.length; button_render_it++) {
                 var button_text = button_texts[button_render_it];
                 var button_type = button_types[button_render_it];
-                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function(){
-                    self.closeBuyMenu();
-                    click_callback(button_type);
-                }, this, 2, 1, 0);
+                var callback = function(button_type_t){
+                    return function () {
+                        self.closeBuyMenu();
+                        click_callback(button_type_t);
+                    };
+                };
+                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, callback(button_type) , this, 2, 1, 0);
                 buyUpgradeButton.scale.y = TILE.SIZE*1.1;
                 buyUpgradeButton.scale.x = TILE.SIZE*8;
                 buyUpgradeButton.alpha = 0;
