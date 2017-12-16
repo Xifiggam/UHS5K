@@ -7,6 +7,7 @@ ASSETS = {
     TMW_DESERT_SPACING: 'tmw_desert',
 
     TILES_PROTO_KARTE: 'proto_karte',
+    STAR: 'star',
     TILESET_PROTO_KARTE: 'proto_karte_tileset',
 
     PERSON: 'person',

@@ -11,7 +11,7 @@ var gameState = {
     zoomButtons: null,
     miscButtons: null,
     newsHudMenu : null,
-
+    stars: [],
     layers: [],
 
     create: function () {
@@ -27,6 +27,7 @@ console.log("now");
 
 
         this.createNewsHud();
+        this.setupStarsHud();
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
@@ -80,6 +81,8 @@ console.log("now");
         var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
         sprite.scale.setTo(0.25,0.25);
 
+        this.starsVisible(Math.random()*5);
+
     },
 
     createNewsHud: function () {
@@ -111,8 +114,20 @@ console.log("now");
         fadeInTween.start();
     },
 
-    setupStarsHud: function (count) {
-        var sprite = game.add.sprite(game.width - 20);
+    setupStarsHud: function () {
+        var starCount = 5;
+        var starOffset = 60;
+        for (var i = 0; i < starCount; i++) {
+            var star = game.add.sprite(game.width - i* starOffset, 10, ASSETS.STAR);
+            this.stars.push(star);
+            star.fixedToCamera = true;
+        }
+    },
+    starsVisible: function (count) {
 
+        for (var i = 0; i < this.stars.length; i++) {
+            var star = this.stars[i];
+            star.alpha = count < i;// <= this is my favourite line of code.
+        }
     }
 };
