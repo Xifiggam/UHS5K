@@ -265,15 +265,17 @@ var gameState = {
                 //TODO
             }
 
-            var button = game.add.button(offsetLeft + padding, 120 + featureCount * 100, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
+            var baseOffsetTop = featureCount * 50;
+            var button = game.add.button(offsetLeft + padding, 120 + baseOffsetTop, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
             button.scale.x = 6;
+            button.scale.y = 0.9;
             button.inputEnabled = !bought;
             button.fixedToCamera = true;
 
-            var featureName = game.add.text(offsetLeft + padding + 10, 130 + featureCount * 100, name, style);
+            var featureName = game.add.text(offsetLeft + padding + 10, 130 + baseOffsetTop, name, style);
             featureName.fixedToCamera = true;
 
-            var price = game.add.text(offsetLeft + padding + 130, 130 + featureCount * 100, value + "€", style);
+            var price = game.add.text(offsetLeft + padding + 160, 130 + baseOffsetTop, value + "€", style);
             price.fixedToCamera = true;
 
             self.roomMenuHud.add(button);
@@ -304,17 +306,16 @@ var gameState = {
             var features = room.getFeatures();
 
             // [singleBed,doubleBed,childBed,luxuryBed,plant,view,entertainment,bath,minibar,acUnit]
-            alert(features);
-            addFeatureOption("Single bed", 1000,features[0]);
-            addFeatureOption("Double bed", 1000,features[1]);
-            addFeatureOption("Child bed", 1000,features[2]);
-            addFeatureOption("Luxury bed", 1000,features[3]);
-            addFeatureOption("Plant", 1000,features[4]);
-            addFeatureOption("View", 1000,features[5],true);
-            addFeatureOption("Entertainment", 1000,features[6]);
-            addFeatureOption("Bath", 1000,features[7]);
-            addFeatureOption("Minibar", 1000,features[8],true);
-            addFeatureOption("AC Unit", 1000,features[9],true);
+            addFeatureOption("Single bed", this.world.SINGLEBED_PRICE,features[0]);
+            addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE,features[1]);
+            addFeatureOption("Child bed", this.world.CHILDBED_PRICE,features[2]);
+            addFeatureOption("Luxury bed", this.world.LUXURYBED_PRICE,features[3]);
+            addFeatureOption("Plant", this.world.PLANT_PRICE,features[4]);
+            addFeatureOption("View", this.world.VIEW_PRICE,features[5],true);
+            addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE,features[6]);
+            addFeatureOption("Bath", this.world.BATH_PRICE,features[7]);
+            addFeatureOption("Minibar", this.world.MINIBAR_PRICE,features[8],true);
+            addFeatureOption("AC Unit", this.world.ACUNIT_PRICE,features[9],true);
 
         }
     },
