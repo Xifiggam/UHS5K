@@ -24,11 +24,19 @@ var gameState = {
         this.world = gameWorld;
 
         var room = new Room();
-        room.posX = 10;
-        room.posY = 10;
-        room.length = 10;
-        room.height = 10;
+        room.posX = 4;
+        room.posY = 19;
+        room.length = 6;
+        room.height = 6;
         room.name = "Room 101";
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 11;
+        room.posY = 19;
+        room.length = 6;
+        room.height = 6;
+        room.name = "Room 102";
         this.world.roomList.push(room);
 
 
