@@ -117,21 +117,38 @@ var gameState = {
             var lobbyX = 760;
             var lobbyY = 750;
 
-            var toLobby = game.add.tween(character.sprite).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            toLobby.chain(awaaaaay);
-            toLobby.start();
+            var nameTag = character.nameTag;
+
+            if(character.chosenRoom){
+                var toLobby = game.add.tween(character.sprite).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                var toLobbyTag = game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                var awaaaaayTag = game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
+                toLobby.chain(awaaaaay);
+                toLobbyTag.chain(awaaaaayTag);
+                toLobby.start();
+                toLobbyTag.start();
+            }else{
+                var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+                var awaaaaayTag = game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+            }
+
         }
     },
     spawnCharacterAndMoveToLobbyNow :  function(character){
-        var lobbyX = 760;
-        var lobbyY = 750;
+        var lobbyX = 19*32 + (Math.random()*7*32);
+        var lobbyY = 19*32 + (Math.random()*5*32);
         var person =  game.add.sprite(760,800,ASSETS.CHAR_OLD); //somewhere in lobby
+        var style = {font: "14px Arial", fill: "#000000", align: "left"};
+        var nameTag = game.add.text(760,800,character.name, style);
+        nameTag.anchor.x = 0.5;
+        nameTag.anchor.y = 0.5;
         person.scale.x = 1.2;
         person.scale.y = 1.2;
         character.sprite = person;
-        var toLobby = game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-        toLobby.start();
+        character.nameTag = nameTag;
+        game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
+        game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
 
     },
     moveToRoom: function(character){
@@ -150,9 +167,10 @@ var gameState = {
 
 
             var person = character.sprite;
+            var nameTag = character.nameTag;
 
-            var toRoom = game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-            toRoom.start();
+            game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+            game.add.tween(nameTag).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
         }
     },
     addObject: function (point) {
@@ -248,7 +266,7 @@ var gameState = {
         closex.fixedToCamera = true;
 
         function set_price() {
-            room.price = prompt("Please enter a price for the room", room.price);
+            room.price = parseInt(prompt("Please enter a price for the room", room.price));
             setPrice.text = room.price+"€";
         }
 
