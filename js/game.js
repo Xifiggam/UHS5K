@@ -18,6 +18,7 @@ var gameState = {
 
     buildMarker: null,
     buildTile: null,
+    buildSpriteGroup: null,
 
 
     create: function () {
@@ -182,7 +183,6 @@ var gameState = {
 
         game.input.onDown.add(this.addObject, this);
         game.input.onDown.add(this.openRoomMenuIfAny, this);
-        this.activeBuildCursor(2, 1, false);
     },
 
     update: function () {
@@ -262,7 +262,7 @@ var gameState = {
             }
 
             function click() {
-                //TODO
+                self.activeBuildCursor(3, 1, false, "bed");
             }
 
             var baseOffsetTop = featureCount * 50;
@@ -388,15 +388,30 @@ var gameState = {
     },
 
 
-    activeBuildCursor: function (width, height, collision) {
+    activeBuildCursor: function (width, height, collision, type) {
         this.buildMarker = game.add.graphics();
+        this.buildSpriteGroup = game.add.group();
+        if(type == "bed"){
+                var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
+                var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_head_sprite, Phaser.RIGHT_CENTER, 0);
+                var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
+                this.buildSpriteGroup.add(bed_head_sprite);
+                this.buildSpriteGroup.add(bed_middle_sprite);
+                this.buildSpriteGroup.add(bed_end_sprite);
+        }
+
         var color = collision ? 0xFF0000 : 0x000000;
         this.buildMarker.lineStyle(2, color, 1);
         this.buildMarker.collision = collision;
         this.buildMarker.drawRect(0, 0, TILE.SIZE * width, TILE.SIZE * height);
         this.buildMarker.u_width = width;
         this.buildMarker.u_height = height;
+        this.buildMarker.u_type = type;
+    },
 
+    deactivateBuildCursor: function(){
+        this.buildMarker.destroy();
+        this.buildMarker = null;
     },
 
 
@@ -418,25 +433,27 @@ var gameState = {
             if (collide) {
                 if (!this.buildMarker.collision) {
                     this.buildMarker.destroy();
-                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, true);
+                    this.buildSpriteGroup.destroy();
+                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, true, this.buildMarker.u_type);
                 }
             } else {
                 if (this.buildMarker.collision) {
                     this.buildMarker.destroy();
-                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, false);
+                    this.buildSpriteGroup.destroy();
+                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, false, this.buildMarker.u_type);
                 }
             }
             this.buildMarker.x = x;
             this.buildMarker.y = y;
-            if (game.input.mousePointer.isDown) {
-
-
-                //     else
-                // {
-                //     if (this.map.getTile(this.objectLayer.getTileX(this.buildMarker.x), this.objectLayer.getTileY(this.buildMarker.y)).index != this.buildTile.index)
-                //     {
-                //         this.map.putTile(this.buildTile, this.objectLayer.getTileX(this.buildMarker.x), this.objectLayer.getTileY(this.buildMarker.y));
-                //     }
+            for (var it_group_child = 0; it_group_child < this.buildSpriteGroup.children.length; it_group_child++) {
+                var group_child = this.buildSpriteGroup.children[it_group_child];
+                console.log(group_child);
+                group_child.x = x + TILE.SIZE * it_group_child;
+                group_child.y = y;
+            }
+            if (game.input.mousePointer.isDown && !collide) {
+                //TODO: build here
+                this.deactivateBuildCursor();
             }
         }
     }
