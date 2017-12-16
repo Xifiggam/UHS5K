@@ -59,6 +59,7 @@ var gameState = {
         this.updateBuildCursor();
         this.world.update(game.time.elapsed);
         this.updateStarsHudFromWorld();
+        this.updateMoneyHudFromWorld();
     },
 
     createLayers: function () {
