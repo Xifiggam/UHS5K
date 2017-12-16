@@ -333,7 +333,10 @@ function Worker (type) {
                     obj.statusCurrent = "cleaning";
                     this.workTaskRoom = obj;
                     this.statetime = 0;
-                    //TODO Lukas Entry for cleaning
+                    if(gameWorld.doCleaningCallback){
+                        gameWorld.doCleaningCallback(this);
+                    }
+
                     break;
                 }
 

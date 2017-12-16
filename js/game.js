@@ -35,6 +35,10 @@ var gameState = {
         this.world.customerLeaveCallback =  function(customer) {
             self.moveCustomerVisualFromRoom(customer);
         };
+
+        this.world.doCleaningCallback =  function(worker) {
+            self.updateWorker(worker);
+        };
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -179,8 +183,35 @@ var gameState = {
 
         }
     },
-    moveStaff: function(worker){
-        worker.
+    updateWorker: function(worker){
+        if(worker.workTaskRoom){
+            var room = worker.workTaskRoom;
+            {
+                var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
+                var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
+
+
+                var person = worker.sprite;
+                var nameTag = worker.nameTag;
+
+                game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+                game.add.tween(nameTag).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+            }
+        }
+    },
+
+    addWorker: function(worker){
+
+        var person =  game.add.sprite(760,800,ASSETS.CHAR_WORKER); //somewhere in lobby
+        var style = {font: "14px Arial", fill: "#000000", align: "left"};
+        var nameTag = game.add.text(760,800,worker.name, style);
+        nameTag.anchor.x = 0.5;
+        nameTag.anchor.y = 0.5;
+        person.scale.x = 1.2;
+        person.scale.y = 1.2;
+        worker.sprite = person;
+        worker.nameTag = nameTag;
+        this.updateWorker(worker);
     },
 
     spawnCharacterAndMoveToLobbyNow :  function(character){
