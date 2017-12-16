@@ -19,6 +19,11 @@ ASSETS = {
     BED_HEAD: 'bed_head',
     BED_MIDDLE: 'bed_middle',
     BED_END: 'bed_end',
+    PLANT: 'plant',
+    SHOWER: 'shower',
+    TOILET: 'toilet',
+    SINK: 'sink',
+    TV: 'tv',
 };
 
 SINGLE_FEATURE_TYPE = {
@@ -37,4 +42,8 @@ SINGLE_FEATURE_TYPE = {
 TILE = {
     SIZE: 32,
 
+};
+
+GAMELOGIC = {
+    MSPERDAY: 30000,
 };
