@@ -59,8 +59,14 @@ var gameWorld = {
     MINIBAR_PRICE: 400,
     ACUNIT_PRICE: 800,
 
+    init: false,
+
 
     update: function (deltaTime) {
+        if(!this.init){
+            init();
+            this.init = true;
+        }
         alength = this.roomList.length;
         for (i = 0; i < alength; i++) {
             this.roomList[i].update(deltaTime);
@@ -72,6 +78,17 @@ var gameWorld = {
         alength = this.guestList.length;
         for (i = 0; i < alength; i++) {
             this.guestList[i].update(deltaTime);
+        }
+        if(alength<this.roomList.length){
+            if(Math.random()<0.05){
+                var guest = new Guest(generateName(1));
+                gameWorld.guestList.push(guest);
+                customer(guest);
+                for(i=0; i<gameWorld.roomList.length; i++){
+                    //console.log(gameWorld.roomList[i]);
+                }
+                console.log(guest);
+            }
         }
     },
 
@@ -173,15 +190,20 @@ var gameWorld = {
 
 
 
+
 };
 
 function Guest (name) {
     this.name = name;
+    this.chosenRoom = null;
+    this.statisfaction = 0;
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
-    this.requirementArrayChoose = this.globalUpgradesArray.concat(this.localUpgradesArray);
+    this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
-        this.requirementArray.concat(this.requirementArrayChoose[Math.floor(Math.random() * myArray.length)]);
+        x = Math.floor(Math.random() * this.requirementArrayChoose.length)
+        this.requirementArray.push(this.requirementArrayChoose[x]);
+        this.requirementArrayChoose.splice(x, 1);
     }
     this.maximumPrice = Math.floor((Math.random() * 1000) + 100);
     this.xCoordinate = 0;
@@ -232,24 +254,191 @@ function Worker (job) {
     };
 }
 
+
+function init(){
+
+    var room = new Room();
+    room.posX = 4;
+    room.posY = 19;
+    room.length = 6;
+    room.height = 6;
+    room.singleBed = true;
+    room.doubleBed = true;
+    room.childBed = true;
+    room.luxuryBed = true;
+    room.plant = true;
+    room.view = true;
+    room.entertainment = true;
+    room.bath = true;
+    room.minibar = true;
+    room.acUnit = true;
+    room.name = "Room 101";
+    gameWorld.roomList.push(room);
+    
+    var room = new Room();
+    room.posX = 11;
+    room.posY = 19;
+    room.length = 5;
+    room.height = 6;
+    room.singleBed = true;
+    room.doubleBed = true;
+    room.childBed = true;
+    room.luxuryBed = true;
+    room.plant = true;
+    room.view = true;
+    room.entertainment = true;
+    room.bath = true;
+    room.minibar = true;
+    room.acUnit = true;
+    room.name = "Room 102";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 33;
+    room.posY = 19;
+    room.length = 5;
+    room.height = 6;
+    room.name = "Room 103";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 39;
+    room.posY = 19;
+    room.length = 7;
+    room.height = 6;
+    room.name = "Room 104";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 4;
+    room.posY = 13;
+    room.length = 4;
+    room.height = 5;
+    room.name = "Room 105";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 4;
+    room.posY = 7;
+    room.length = 4;
+    room.height = 5;
+    room.name = "Room Blue";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 4;
+    room.posY = 1;
+    room.length = 6;
+    room.height = 5;
+    room.name = "Room Red";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 11;
+    room.posY = 1;
+    room.length = 7;
+    room.height = 5;
+    room.name = "Suite \"Lukas\"";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 11;
+    room.posY = 9;
+    room.length = 5;
+    room.height = 7;
+    room.name = "Suite \"Gabe\"";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 17;
+    room.posY = 9;
+    room.length = 6;
+    room.height = 7;
+    room.name = "Suite \"Zelle\"";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 19;
+    room.posY = 1;
+    room.length = 11;
+    room.height = 5;
+    room.name = "Suite \"Phoe\"";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 26;
+    room.posY = 9;
+    room.length = 6;
+    room.height = 7;
+    room.name = "Suite \"Veit\"";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 31;
+    room.posY = 1;
+    room.length = 7;
+    room.height = 5;
+    room.name = "Honeymoon Suite";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 39;
+    room.posY = 1;
+    room.length = 7;
+    room.height = 5;
+    room.name = "Baum des Lebens";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 41;
+    room.posY = 7;
+    room.length = 5;
+    room.height = 5;
+    room.name = "\"Spielzimmer\"";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 41;
+    room.posY = 13;
+    room.length = 5;
+    room.height = 5;
+    room.name = "Room 8541";
+    gameWorld.roomList.push(room);
+
+    var room = new Room();
+    room.posX = 33;
+    room.posY = 9;
+    room.length = 5;
+    room.height = 7;
+    room.name = "Room 100";
+    gameWorld.roomList.push(room);
+
+    console.log(gameWorld.roomList)
+    for (var i = 0; i < gameWorld.roomList.length; i++) {
+        var room_log = gameWorld.roomList[i];
+        console.log(room_log.name, room_log.free);
+    }
+
+}
+
 function Room () {
-        var posX = 0;
-        var posY = 0;
-        var length = 0;
-        var heigth = 0;
-        var roomNumber;
-        var free = true;
-        var price = 50;
-        var singleBed = false;
-        var doubleBed = false;
-        var childBed = false;
-        var luxuryBed = false;
-        var plant = false;
-        var view = false;
-        var entertainment = false;
-        var bath = false;
-        var minibar = false;
-        var acUnit = false;
+        this.posX = 0;
+        this.posY = 0;
+        this.length = 0;
+        this.height = 0;
+        this.name = "No Room Name";
+        this.free = true;
+        this.price = 50;
+        this.singleBed = false;
+        this.doubleBed = false;
+        this.childBed = false;
+        this.luxuryBed = false;
+        this.plant = false;
+        this.view = false;
+        this.entertainment = false;
+        this.bath = false;
+        this.minibar = false;
+        this.acUnit = false;
 
     this.getFeatures = function(){
         console.log(this);
@@ -257,19 +446,34 @@ function Room () {
         return [this.singleBed,this.doubleBed,this.childBed,this.luxuryBed,this.plant,this.view,this.entertainment,this.bath,this.minibar,this.acUnit];
     };
 
+    this.returnRoomFeaturesAsArray = function(){
+        var returnArray = [];
+        if(this.singleBed){returnArray.push(SINGLE_FEATURE_TYPE.SINGLE_BED);}
+        if(this.doubleBed){returnArray.push(SINGLE_FEATURE_TYPE.DOUBLE_BED);}
+        if(this.childBed){returnArray.push(SINGLE_FEATURE_TYPE.CHILD_BED);}
+        if(this.luxuryBed){returnArray.push(SINGLE_FEATURE_TYPE.LUXURY_BED);}
+        if(this.plant){returnArray.push(SINGLE_FEATURE_TYPE.PLANT);}
+        if(this.view){returnArray.push(SINGLE_FEATURE_TYPE.VIEW);}
+        if(this.entertainment){returnArray.push(SINGLE_FEATURE_TYPE.ENTERTAINMENT);}
+        if(this.bath){returnArray.push(SINGLE_FEATURE_TYPE.BATH);}
+        if(this.minibar){returnArray.push(SINGLE_FEATURE_TYPE.MINIBAR);}
+        if(this.acUnit){returnArray.push(SINGLE_FEATURE_TYPE.ACUNIT);}
+        return returnArray;
+    };
+
     this.getRoomStatus = function(){
-      return free;
+      return this.free;
     };
 
     this.getRoomPrice = function(){
-        return price;
+        return this.price;
     };
 
     this.changeRoomBool = function(){
-        if (free===true){
-            free=false;
-        } else if (free===false){
-            free=true;
+        if (this.free===true){
+            this.free=false;
+        } else if (this.free===false){
+            this.free=true;
         }
     };
     
@@ -280,28 +484,38 @@ function Room () {
 
 
 //FUNCTION TAKES GUEST -> CHECKS HIS NEEDS AND GIVES BACK THE ROOM HE WANTS TO STAY IN AND HIS SATISFACTION. IT ALSO SETS THE ROOM TO BUSY.
-function Customer (guestObj) {
+function customer (guestObj) {
 
     var customerSatisfaction = 0; // 0 to 1 -> Erfüllte/Gestellte Wünsche
     var satisfiedRequirements = 0;
     var satisfactionArray = [];
-    for (k=0; i<this.roomList.length;k++) {
-        if ((this.roomList[k].getRoomStatus() === true) && (this.roomList[k].getRoomPrice()<=guestObj.maximumPrice)) {
+    for (k=0; k<gameWorld.roomList.length;k++) {
+        if ((gameWorld.roomList[k].getRoomStatus() === true) && (gameWorld.roomList[k].getRoomPrice()<=guestObj.maximumPrice)) {
             for (i = 0; i < guestObj.requirementArray.length; i++) {
-                for (j = 0; i < guestObj.requirementArrayChoose; j++) {
-                    if (guestObj.requirementArray[i] === guestObj.requirementArrayChoose[j]) {
-                        satisfiedRequirements++;
+                for (j = 0; j < gameWorld.roomList[k].returnRoomFeaturesAsArray().length; j++) {
+                     if (guestObj.requirementArray[i] === gameWorld.roomList[k].returnRoomFeaturesAsArray()[j]) {
+                         satisfiedRequirements++;
                     }
                 }
 
             }
         }
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
+        satisfiedRequirements = 0;
     }
+    console.log(satisfactionArray)
     var roomChosen = indexOfMax(satisfactionArray);
-    this.roomList[roomChosen].changeRoomBool();
-    guestObj.statusCurrent = "staying";
-    return [roomChosen, satisfactionArray[roomChosen]];
+    if(satisfactionArray[roomChosen] <= 0.1){
+        guestObj.statusCurrent = "going";
+        guestObj.statisfaction = 0;
+    }
+    else {
+        gameWorld.roomList[roomChosen].changeRoomBool();
+        guestObj.statusCurrent = "staying";
+        guestObj.chosenRoom = gameWorld.roomList[roomChosen];
+        guestObj.statisfaction = satisfactionArray[roomChosen];
+    }
+    //return [roomChosen, satisfactionArray[roomChosen]];
 }
 
 function indexOfMax(arr) {
@@ -309,7 +523,6 @@ function indexOfMax(arr) {
         return -1;
     }
 
-    var max = arr[0];
     var max = arr[0];
     var maxIndex = 0;
 
@@ -321,4 +534,81 @@ function indexOfMax(arr) {
     }
 
     return maxIndex;
+}
+
+
+
+
+function generateName(quantity){
+    var firstNames = [
+        'Vinicius',
+        'Talita',
+        'Maria',
+        'João',
+        'José',
+        'Marcos',
+        'Donald',
+        'Severius',
+        'John',
+        'Jack',
+        'Jimmy',
+        'Martha',
+        'Bruce',
+        'Clark',
+        'Gal',
+        'Gloria',
+        'Vix',
+        'Sterling', 'Obi', 'Lukas'
+
+    ];
+        var middleNames = [
+        'Costa',
+        'Araújo',
+        'Rodrigues',
+        'Pereira',
+        'Soares',
+        'Linda',
+        'Hidalgo',
+        'Ruth',
+        'Roald',
+        'Linus',
+        'Mallory', 'Wan', 'Zelle'
+
+    ];
+        var lastNames = [
+        'Pires',
+        'Alves',
+        'Álvares',
+        'Moreira',
+        'Ferreira',
+        'Wayne',
+        'Kent',
+        'Trump',
+        'Dahl',
+        'Kenobi',
+        'Skywalker',
+        'Archer',
+            'Schuerzenbacher'
+
+    ];
+
+    var maxNames = firstNames.length * middleNames.length * lastNames.length;
+    if (quantity > maxNames) {
+        throw "Quantity greater than possible matches. Possible matches: "+maxNames;
+    }
+    var names = [];
+    while ( names.length < quantity ) {
+        var name = "";
+        var first = Math.floor( Math.random() * firstNames.length );
+        name+= firstNames[first];
+        var middle = Math.floor( Math.random() * middleNames.length );
+        name+= " "+middleNames[middle];
+        var last = Math.floor( Math.random() * lastNames.length );
+        name+= " "+lastNames[last];
+
+        if (names.indexOf(name)==-1) {
+            names.push(name);
+        }
+    }
+    return names;
 }
