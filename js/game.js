@@ -28,6 +28,7 @@ console.log("now");
 
         this.createNewsHud();
         this.setupStarsHud();
+        this.setupMoneyHud(1000);
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
@@ -82,6 +83,7 @@ console.log("now");
         sprite.scale.setTo(0.25,0.25);
 
         this.starsVisible(Math.random()*5);
+        this.setupMoneyHud(Math.random()*1000);
 
     },
 
@@ -122,6 +124,16 @@ console.log("now");
             this.stars.push(star);
             star.fixedToCamera = true;
         }
+    },
+    setupMoneyHud: function (money) {
+        if(this.moneyText){
+            this.moneyText.destroy();
+        }
+        var style = { font: "25px Arial", fill: "#000000", align: "left" };
+        this.moneyText = game.add.text(game.width -28, 45, money +" €", style);
+        this.moneyText.anchor.x = 1;
+        this.moneyText.anchor.y = 0;
+        this.moneyText.fixedToCamera = true;
     },
     starsVisible: function (count) {
 
