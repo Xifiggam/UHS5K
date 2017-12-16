@@ -82,7 +82,7 @@ var gameWorld = {
             this.guestList[i].update(deltaTime);
         }
         if(alength<this.roomList.length){
-            if(Math.random()<0.05){
+            if(Math.random()<0.002){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
                 //LUKAS KOMM DICH
@@ -563,7 +563,7 @@ function customer (guestObj) {
     }
     //console.log(satisfactionArray)
     var roomChosen = indexOfMax(satisfactionArray);
-    if(satisfactionArray[roomChosen] <= 0.1){
+    if(satisfactionArray[roomChosen] <= 0.3){
         guestObj.statusCurrent = "going";
         console.log(guestObj);
         guestObj.statisfaction = 0;
