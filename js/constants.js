@@ -43,3 +43,7 @@ TILE = {
     SIZE: 32,
 
 };
+
+GAMELOGIC = {
+    MSPERDAY: 30000,
+};

@@ -83,7 +83,7 @@ var gameWorld = {
             if(Math.random()<0.05){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
-                customer(guest);
+                //customer(guest);
                 for(i=0; i<gameWorld.roomList.length; i++){
                     //console.log(gameWorld.roomList[i]);
                 }
@@ -195,13 +195,17 @@ var gameWorld = {
 
 function Guest (name) {
     this.name = name;
+    this.statetime = 0;
     this.chosenRoom = null;
     this.statisfaction = 0;
+    this.comingTime = Math.random()*3000;
+    this.goingTime = Math.random()*3000;
+    this.maxNights =  Math.floor((Math.random() * 1000) + 100);
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
-        x = Math.floor(Math.random() * this.requirementArrayChoose.length)
+        x = Math.floor(Math.random() * this.requirementArrayChoose.length);
         this.requirementArray.push(this.requirementArrayChoose[x]);
         this.requirementArrayChoose.splice(x, 1);
     }
@@ -212,7 +216,28 @@ function Guest (name) {
     this.statusCurrent = "coming";
 
     this.update = function(deltaTime) {
-        //Update Function
+        this.statetime+=deltaTime;
+        switch(statusCurrent){
+            case "coming":
+                if(this.statetime>=this.comingTime){
+                    customer(this);
+                    this.statetime = 0;
+                }
+                break;
+            case "going":
+                if(this.statetime>=this.goingTime){
+                    //TODO GET RID OF THIS CUSTOMER (aka cunt)
+                    this.statetime = 0;
+                }
+                break;
+            case "staying":
+                if(this.statetime>=this.stayingTime){
+                    //TODO GET RID OF THIS CUSTOMER (aka cunt)
+                    this.statetime = 0;
+                }
+                break;
+
+        }
     };
 }
 
