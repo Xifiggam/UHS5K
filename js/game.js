@@ -67,11 +67,11 @@ var gameState = {
             for (var room_it = 0; room_it < self.world.roomList.length; room_it++) {
                 var room = self.world.roomList[room_it];
                 if(!room.activated){
-                    button_texts.push(room.name);
-                    button_type.push(room);
+                    button_texts.push(room.name  + ' - ' + room.price_to_buy  + '€');
+                    button_type.push(room_it);
                 }
             }
-            self.openBuyMenu(function(room_cl){console.log('clicked', room_cl)}, button_texts, button_type);
+            self.openBuyMenu(function(room_cl){self.activateRoom(room_cl)}, button_texts, button_type);
 
         }, this, 2, 1, 0);
         buyRoomButton.scale.x = 3;
@@ -79,14 +79,17 @@ var gameState = {
         buyRoomButton.fixedToCamera = true;
         var buyRoomsText = game.add.text(button_start_x+35, button_start_y+12, "BUY ROOMS", text_style);
         buyRoomsText.fixedToCamera = true;
+        this.buttonsHud.add(buyRoomsText);
 
         button_start_x += 200;
         var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){self.openBuyMenu();}, this, 2, 1, 0);
         buyStaffButton.scale.x = 3;
         buyStaffButton.scale.y = 1.5;
         buyStaffButton.fixedToCamera = true;
+        this.buttonsHud.add(buyStaffButton);
         var buyStaff = game.add.text(button_start_x+35, button_start_y+12, "HIRE STAFF", text_style);
         buyStaff.fixedToCamera = true;
+        this.buttonsHud.add(buyStaff);
 
         button_start_x += 200;
         var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){self.openBuyMenu();}, this, 2, 1, 0);
@@ -95,8 +98,8 @@ var gameState = {
         buyUpgradeButton.fixedToCamera = true;
         var buyUpgradeText = game.add.text(button_start_x+35, button_start_y+12, "BUY UPGRADES", text_style);
         buyUpgradeText.fixedToCamera = true;
-
         this.buttonsHud.add(buyUpgradeButton);
+        this.buttonsHud.add(buyUpgradeText);
 
 
         //day/night
@@ -629,10 +632,12 @@ var gameState = {
     },
 
     openBuyMenu: function(click_callback, button_texts, button_types){
+        var self = this;
         this.buyMenuHud = game.add.group();
         var offsetLeft = game.width / 2;
         var offsetTop = 10;
         var sprite_top = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
+
         sprite_top.fixedToCamera = true;
         this.buyMenuHud.add(sprite_top);
         offsetTop += TILE.SIZE;
@@ -647,15 +652,42 @@ var gameState = {
         sprite_bottom.anchor.setTo(1, 1);
         sprite_bottom.angle = 180;
         this.buyMenuHud.add(sprite_bottom);
+
+        var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
+        var closeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function(){self.closeBuyMenu();}, this, 2, 1, 0);
+        closeButton.scale.y = 25;
+        closeButton.scale.x = 25;
+        closeButton.alpha = 0;
+        closeButton.alignIn(sprite_top, Phaser.TOP_RIGHT, -15,-15);
+        closeButton.fixedToCamera = true;
+        this.buyMenuHud.add(closeButton);
+        var closeButtonText = game.add.text(offsetLeft+35, button_offset, 'X', text_style);
+        closeButtonText.alignIn(closeButton, Phaser.CENTER);
+        closeButtonText.fixedToCamera = true;
+        this.buyMenuHud.add(closeButtonText);
+
+
         if(button_texts.length != button_types.length){
             console.log('error cannot render buttons types and texts not matching')
         } else {
             for (var button_render_it = 0; button_render_it < button_texts.length; button_render_it++) {
                 var button_text = button_texts[button_render_it];
-                var button_type = button_texts[button_render_it];
-                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, click_callback, this, 2, 1, 0);
+                var button_type = button_types[button_render_it];
+                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function(){
+                    self.closeBuyMenu();
+                    click_callback(button_type);
+                }, this, 2, 1, 0);
+                buyUpgradeButton.scale.y = TILE.SIZE*1.1;
+                buyUpgradeButton.scale.x = TILE.SIZE*8;
+                buyUpgradeButton.alpha = 0;
                 buyUpgradeButton.fixedToCamera = true;
-                buyMenuHud.add(buyUpgradeButton);
+                this.buyMenuHud.add(buyUpgradeButton);
+
+
+                var buyUpgradeText = game.add.text(offsetLeft+35, button_offset, button_text, text_style);
+                buyUpgradeText.fixedToCamera = true;
+                this.buyMenuHud.add(buyUpgradeText);
+                button_offset += TILE.SIZE*1.2;
             }
 
 
