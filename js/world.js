@@ -186,7 +186,7 @@ function Guest (name) {
     this.xCoordinate = 0;
     this.yCoordinate = 0;
     this.statusArray = ["coming", "going", "staying"];
-    this.statusCurrent;
+    this.statusCurrent = "coming";
 
     this.update = function(deltaTime) {
         //Update Function
@@ -262,13 +262,23 @@ function Room () {
 
     this.getRoomPrice = function(){
         return price;
-    }
+    };
+
+    this.changeRoomBool = function(){
+        if (free===true){
+            free=false;
+        } else if (free===false){
+            free=true;
+        }
+    };
     
     this.update = function (deltaTime) {
         //Update Function
     };
 }
 
+
+//FUNCTION TAKES GUEST -> CHECKS HIS NEEDS AND GIVES BACK THE ROOM HE WANTS TO STAY IN AND HIS SATISFACTION. IT ALSO SETS THE ROOM TO BUSY.
 function Customer (guestObj) {
 
     var customerSatisfaction = 0; // 0 to 1 -> Erfüllte/Gestellte Wünsche
@@ -288,6 +298,8 @@ function Customer (guestObj) {
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
     }
     var roomChosen = indexOfMaxValue(satisfactionArray);
+    this.roomList[roomChosen].changeRoomBool();
+    guestObj.statusCurrent = "staying";
     return [roomChosen, satisfactionArray[roomChosen]];
 }
 
