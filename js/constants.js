@@ -26,6 +26,10 @@ ASSETS = {
     SINK: 'sink',
     TV: 'tv',
     CHAR_OLD: 'old',
+
+    BUTTON_1: 'button_1_u',
+    MENU_TOP: 'menu_top_u',
+    MENU_CENTER: 'menu_center_u',
 };
 
 SINGLE_FEATURE_TYPE = {
