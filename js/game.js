@@ -18,6 +18,16 @@ var gameState = {
 
     create: function () {
         this.world = gameWorld;
+
+        var room = new Room();
+        room.posX = 10;
+        room.posY = 10;
+        room.length = 10;
+        room.height = 10;
+        room.name = "Room 101";
+        this.world.roomList.push(room);
+
+
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -85,7 +95,18 @@ var gameState = {
     },
 
     getRoom: function (point) {
-        return { name: "Test Raum"};
+        var posX = (this.layers[0].getTileX(point.worldX));
+        var posY = (this.layers[0].getTileY(point.worldY));
+        for(var i = 0; i< this.world.roomList.length;i++){
+            var room = this.world.roomList[i];
+            if(posX <= room.posX + room.length && posX >= room.posX){
+                if(posY <= room.posY + room.height && posY >= room.posY){
+                    return room;
+                }
+            }
+        }
+        console.log(posX,posY);
+        return null;
     },
 
     createBuildMenu: function (room) {
