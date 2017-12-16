@@ -35,6 +35,10 @@ var loadState = {
 
         game.stage.setBackgroundColor('#0000');
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
+        game.add.plugin(Phaser.Plugin.Debug);
+        // game.add.plugin(Phaser.Plugin.Inspector);
+        // game.add.plugin(PhaserSuperStorage.StoragePlugin);
+        game.add.plugin(PhaserInput.Plugin);
         game.state.start('game');
     }
 };

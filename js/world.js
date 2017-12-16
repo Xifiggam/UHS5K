@@ -144,44 +144,44 @@ var gameWorld = {
     upgradeRoom: function (Room, feature) {
         console.log(Room, feature);
         switch(feature) {
-            case "singleBed":
+            case SINGLE_FEATURE_TYPE.SINGLE_BED:
                 Room.singleBed = true;
                 this.money = this.money - this.SINGLEBED_PRICE;
                 break;
-            case "doubleBed":
+            case SINGLE_FEATURE_TYPE.DOUBLE_BED:
                 Room.doubleBed = true;
                 this.money = this.money - this.DOUBLEBED_PRICE;
                 break;
-            case "childBed":
+            case SINGLE_FEATURE_TYPE.CHILD_BED:
                 Room.childBed = true;
                 this.money = this.money - this.CHILDBED_PRICE;
                 break;
-            case "luxuryBed":
+            case SINGLE_FEATURE_TYPE.LUXURY_BED:
                 Room.luxuryBed = true;
                 this.money = this.money - this.LUXURYBED_PRICE;
                 break;
-            case "plant":
+            case SINGLE_FEATURE_TYPE.PLANT:
                 Room.plant = true;
                 this.money = this.money - this.PLANT_PRICE;
                 break;
-            case "view":
+            case SINGLE_FEATURE_TYPE.VIEW:
                 Room.view = true;
                 this.money = this.money - this.VIEW_PRICE;
                 break;
-            case "entertainment":
+            case SINGLE_FEATURE_TYPE.ENTERTAINMENT:
                 Room.entertainment = true;
                 this.money = this.money - this.ENTERTAINMENT_PRICE;
                 break;
-            case "bath":
+            case SINGLE_FEATURE_TYPE.BATH:
                 Room.bath = true;
                 this.money = this.money - this.BATH_PRICE;
                 break;
-            case "minibar":
+            case SINGLE_FEATURE_TYPE.MINIBAR:
                 Room.minibar = true;
                 this.money = this.money - this.MINIBAR_PRICE;
                 break;
-            case "acUnit":
-                Room.acUnits = true;
+            case SINGLE_FEATURE_TYPE.ACUNIT:
+                Room.acUnit = true;
                 this.money = this.money - this.ACUNIT_PRICE;
                 break;
         }
@@ -200,7 +200,7 @@ function Guest (name) {
     this.statisfaction = 0;
     this.comingTime = Math.random()*3000;
     this.goingTime = Math.random()*3000;
-    this.maxNights =  Math.floor((Math.random() * 1000) + 100);
+    this.daysToStay =  Math.floor((Math.random() * 10) + 1);
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
@@ -231,8 +231,15 @@ function Guest (name) {
                 }
                 break;
             case "staying":
-                if(this.statetime>=this.stayingTime){
-                    //TODO GET RID OF THIS CUSTOMER (aka cunt)
+                if(this.statetime>=GAMELOGIC.MSPERDAY){
+                    this.daysToStay--;
+                    gameWorld.money += this.chosenRoom.price;
+                    this.maximumPrice -= this.chosenRoom.price;
+                    if(this.daysToStay <= 0 || this.maximumPrice<=0){
+                        this.statusCurrent = "going";
+                        console.log("LUKAS VERTSCHÜSS DICH");
+                        //TODO HIER STERNE BEWERTUNGSCHANCE UND SO
+                    }
                     this.statetime = 0;
                 }
                 break;
@@ -537,6 +544,8 @@ function customer (guestObj) {
     else {
         gameWorld.roomList[roomChosen].changeRoomBool();
         guestObj.statusCurrent = "staying";
+        //LUKAS KOMM DICH
+        console.log("LUKAS KOMM DICH");
         guestObj.chosenRoom = gameWorld.roomList[roomChosen];
         guestObj.statisfaction = satisfactionArray[roomChosen];
     }
