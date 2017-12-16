@@ -87,7 +87,7 @@ var gameWorld = {
                 for(i=0; i<gameWorld.roomList.length; i++){
                     //console.log(gameWorld.roomList[i]);
                 }
-                console.log(guest);
+                // console.log(guest);
             }
         }
     },
@@ -438,13 +438,14 @@ function init(){
     room.name = "Room 100";
     gameWorld.roomList.push(room);
 
-    console.log(gameWorld.roomList)
+    // console.log(gameWorld.roomList)
     for (var i = 0; i < gameWorld.roomList.length; i++) {
         var room_log = gameWorld.roomList[i];
-        console.log(room_log.name, room_log.free);
+        // console.log(room_log.name, room_log.free);
     }
 
 }
+
 
 function Room () {
         this.posX = 0;
@@ -464,9 +465,10 @@ function Room () {
         this.bath = false;
         this.minibar = false;
         this.acUnit = false;
+        this.activated = false;
+        this.price_to_buy = 10;
 
     this.getFeatures = function(){
-        console.log(this);
 
         return [this.singleBed,this.doubleBed,this.childBed,this.luxuryBed,this.plant,this.view,this.entertainment,this.bath,this.minibar,this.acUnit];
     };
@@ -505,6 +507,10 @@ function Room () {
     this.update = function (deltaTime) {
         //Update Function
     };
+
+    this.buy = function () {
+        this.activated = true;
+    }
 }
 
 
@@ -528,7 +534,7 @@ function customer (guestObj) {
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
         satisfiedRequirements = 0;
     }
-    console.log(satisfactionArray)
+    // console.log(satisfactionArray)
     var roomChosen = indexOfMax(satisfactionArray);
     if(satisfactionArray[roomChosen] <= 0.1){
         guestObj.statusCurrent = "going";

@@ -313,6 +313,23 @@ var gameState = {
         }
     },
 
+    activateRoom: function(index){
+        var roomToActivate = this.world.roomList[index];
+        if(!roomToActivate.activated) {
+            var copyTile = this.map.getTile(3, 0, this.wallLayer);
+            for(var x = roomToActivate.posX; x < roomToActivate.length + roomToActivate.posX + 1; x++){
+                gameState.map.putTile(copyTile, x, roomToActivate.posY-1, this.wallLayer);
+                gameState.map.putTile(copyTile, x, roomToActivate.posY+roomToActivate.height+1, this.wallLayer);
+            }
+            for(var y = roomToActivate.posY ; y < roomToActivate.height + roomToActivate.posY + 1; y++) {
+                gameState.map.putTile(copyTile, roomToActivate.posX-1, y, this.wallLayer);
+                gameState.map.putTile(copyTile, roomToActivate.posX + roomToActivate.length + 1, y, this.wallLayer);
+            }
+        } else {
+            console.error('could not activate room already activated');
+        }
+    },
+
     activateBuildCursor: function (type, room) {
         var width = 1;
         var height = 1;
@@ -363,8 +380,6 @@ var gameState = {
         this.activeBuildCursor(width, height, false, type, room);
 
     },
-
-
 
     activeBuildCursor: function (width, height, collision, type, room) {
         var color = collision ? 0xFF0000 : 0x000000;
