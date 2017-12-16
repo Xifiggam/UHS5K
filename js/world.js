@@ -233,8 +233,8 @@ function Guest (name) {
 
 // gets ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Onanating Officer"] and randomly generates price and quality
 function Worker (type) {
-    this.statusArray = ["working", "idle", "tohire"];
-    this.statusCurrent = "tohire";
+    this.statusArray = [WORKER_STATE.TO_HIRE, WORKER_STATE.IDLE,  WORKER_STATE.WORKING];
+    this.statusCurrent = WORKER_STATE.TO_HIRE;
     this.paymentIntervallCounter =0;
     this.xCoordinate = 0;
     this.yCoordinate = 0;
@@ -269,7 +269,7 @@ function Worker (type) {
 
     this.update = function(deltaTime) {
         this.statetime+=deltaTime;
-        if(this.statusCurrent != "tohire"){
+        if(this.statusCurrent != WORKER_STATE.TO_HIRE){
             this.paymentIntervallCounter+=deltaTime;
             if(this.paymentIntervallCounter>=GAMELOGIC.MSPERDAY)
             {
@@ -277,11 +277,11 @@ function Worker (type) {
                 this.paymentIntervallCounter = 0;
             }
         }
-        if(this.statusCurrent === "idle" && this.type === "cleaning"){
+        if(this.statusCurrent === WORKER_STATE.IDLE && this.type === "cleaning"){
             for (var i = 0; i < gameWorld.roomList.length; i++) {
                 var obj = gameWorld.roomList[i];
                 if(obj.statusCurrent === "dirty"){
-                    this.statusCurrent = "working";
+                    this.statusCurrent = WORKER_STATE.WORKING;
                     obj.statusCurrent = "cleaning";
                     this.workTaskRoom = obj;
                     this.statetime = 0;

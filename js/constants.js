@@ -46,7 +46,11 @@ SINGLE_FEATURE_TYPE = {
     ACUNIT: "acUnit"
 };
 
-
+WORKER_STATE = {
+    TO_HIRE: 'tohire',
+    IDLE: 'idle',
+    WORKING: 'working',
+};
 
 TILE = {
     SIZE: 32,

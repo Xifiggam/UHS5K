@@ -83,7 +83,19 @@ var gameState = {
 
         button_start_x += 200;
         var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
-            self.openBuyMenu();
+            var worker_texts = [];
+            var worker_objects = [];
+            for (var worker_it = 0; worker_it < self.world.workerList.length; worker_it++) {
+                var worker_obj = self.world.workerList[worker_it];
+                if(worker_obj.statusCurrent === WORKER_STATE.TO_HIRE){
+                    worker_texts.push(worker_obj.name);
+                    worker_objects.push(worker_obj);
+                }
+            }
+            self.openBuyMenu(function(worker_cl_obj){
+                worker_cl_obj.statusCurrent = WORKER_STATE.IDLE;
+                self.addWorker(worker_cl_obj);
+            }, worker_texts, worker_objects);
         }, this, 2, 1, 0);
         buyStaffButton.scale.x = 3;
         buyStaffButton.scale.y = 1.5;
