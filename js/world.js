@@ -2,81 +2,116 @@
  * Created by Veit on the Death S.
  */
 
+var gameWorld = {
 
-var gameState = {
-    ZOOM_FACTOR: 0.005,
-    MOVE_SPEED: 4,
-    map: null,
-    cursors: null,
-    zoomButtons: null,
-    miscButtons: null,
-    gameWorld: null,
+    guestList: [],
+    roomList: [],
+    workerList: [],
 
-    layers: [],
+    money: 1000,
+    stars: 1,
 
-    create: function () {
-console.log("now");
-        this.cursors = game.input.keyboard.createCursorKeys();
-
-        this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
-        this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
-        this.gameWorld = game.add.group();
-        this.gameWorld.position.setTo(game.world.centerX, game.world.centerY);
-        this.createLayers();
-        this.onLayers(function(layer){
-            layer.resizeWorld();
-        });
-
-        this.cursors = game.input.keyboard.createCursorKeys();
-        this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
-        this.miscButtons = game.input.keyboard.addKeys({'shake': Phaser.KeyCode.O});
-
-        game.input.onDown.add(this.addObject, this);
-    },
-
-    update: function () {
-        this.inputHandling();
-    },
-
-    createLayers: function () {
-        this.layers.push(this.map.createLayer('Floor'));
-        this.layers.push(this.map.createLayer('Wall'));
-        this.layers.push(this.map.createLayer('Object'));
-    },
-
-    onLayers: function(func){
-        for (var i = 0; i < this.layers.length; i++) {
-            var layer = this.layers[i];
-            func(layer)
+    update: function (deltaTime) {
+        alength = this.roomList.length;
+        for (i = 0; i < alength; i++) {
+            this.roomList[i].update(deltaTime);
+        }
+        alength = this.workerList.length;
+        for (i = 0; i < alength; i++) {
+            this.workerList[i].update(deltaTime);
+        }
+        alength = this.guestList.length;
+        for (i = 0; i < alength; i++) {
+            this.guestList[i].update(deltaTime);
         }
     },
-
-
-    inputHandling: function () {
-        if (this.cursors.up.isDown) {
-            game.camera.y -= this.MOVE_SPEED;
+    
+    
+    upgradeRoom: function (Room, feature) {
+        switch(feature) {
+            case singleBed:
+                Room.singleBed = true;
+                this.money = this.money - 1000;
+                break;
+            case doubleBed:
+                Room.doubleBed = true;
+                this.money = this.money - 1000;
+                break;
+            case childBed:
+                Room.childBed = true;
+                this.money = this.money - 1000;
+                break;
+            case luxuryBed:
+                Room.luxuryBed = true;
+                this.money = this.money - 1000;
+                break;
+            case plant:
+                Room.plant = true;
+                this.money = this.money - 1000;
+                break;
+            case view:
+                Room.view = true;
+                this.money = this.money - 1000;
+                break;
+            case entertainment:
+                Room.entertainment = true;
+                this.money = this.money - 1000;
+                break;
+            case bath:
+                Room.bath = true;
+                this.money = this.money - 1000;
+                break;
+            case minibar:
+                Room.minibar = true;
+                this.money = this.money - 1000;
+                break;
+            case acUnit:
+                Room.acUnits = true;
+                this.money = this.money - 1000;
+                break;
         }
-        else if (this.cursors.down.isDown) {
-            game.camera.y += this.MOVE_SPEED;
-        }
-        if (this.cursors.left.isDown) {
-            game.camera.x -= this.MOVE_SPEED;
-        }
-        else if (this.cursors.right.isDown) {
-            game.camera.x += this.MOVE_SPEED;
-        }
-        if (this.miscButtons.shake.isDown) {
-            game.camera.shake();
-        }
-    },
-
-    addObject: function (point) {
-        console.log(point);
-        console.log(this.map);
-        var posX = (this.layers[0].getTileX(point.worldX) * TILE.SIZE);
-        var posY = (this.layers[0].getTileY(point.worldY) * TILE.SIZE);
-        var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
-        sprite.scale.setTo(0.25,0.25);
-
     }
+
+
+
+
 };
+
+function Guest () {
+    this.update = function(deltaTime) {
+        //Update Function
+    };
+}
+
+
+function Worker () {
+    this.update = function (deltaTime) {
+        //Update Function
+    };
+}
+
+function Room () {
+        var posX = 0;
+        var posY = 0;
+        var length = 0;
+        var heigth = 0;
+        var singleBed = false;
+        var doubleBed = false;
+        var childBed = false;
+        var luxuryBed = false;
+        var plant = false;
+        var view = false;
+        var entertainment = false;
+        var bath = false;
+        var minibar = false;
+        var acUnit = false;
+
+    this.getFeatures = function(){
+        return [singleBed,doubleBed,childBed,luxuryBed,plant,view,entertainment,bath,minibar,acUnit];
+    };
+    
+    this.update = function (deltaTime) {
+        //Update Function
+    };
+}
+
