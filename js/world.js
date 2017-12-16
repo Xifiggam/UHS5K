@@ -210,9 +210,11 @@ function Guest (name) {
                     console.log(this.daysToStay + " " + this.maximumPrice);
                     if(this.daysToStay <= 0 || this.maximumPrice<=0){
                         this.statusCurrent = "going";
-                        if(Math.random()>0.5){
+                        if(Math.random()>0.2){
                             this.chosenRoom.statusCurrent = "dirty";
-                            //TODO Lukas callback dirty
+                            if(gameWorld.updateRoomStatusCallback){
+                                gameWorld.updateRoomStatusCallback(this.chosenRoom);
+                            }
                         }
                         else{
                             this.chosenRoom.statusCurrent = "free";
@@ -265,7 +267,7 @@ function Worker (type) {
         //     break;
     }
     this.quality = Math.floor((Math.random() * 5) + 1);
-    this.cleanTaskTime = (10 - this.quality)*1000;
+    this.cleanTaskTime = (10 - this.quality)*2500;
 
     this.update = function(deltaTime) {
         this.statetime+=deltaTime;
@@ -285,7 +287,10 @@ function Worker (type) {
                     obj.statusCurrent = "cleaning";
                     this.workTaskRoom = obj;
                     this.statetime = 0;
-                    //TODO Lukas Entry for cleaning
+                    if(gameWorld.doCleaningCallback){
+                        gameWorld.doCleaningCallback(this);
+                    }
+
                     break;
                 }
 
@@ -295,8 +300,14 @@ function Worker (type) {
             if(this.statetime >= this.cleanTaskTime){
                 this.statusCurrent = "idle";
                 this.workTaskRoom.statusCurrent = "free";
+                if(gameWorld.updateRoomStatusCallback){
+                    gameWorld.updateRoomStatusCallback(this.workTaskRoom);
+                }
+                this.workTaskRoom = null;
                 this.statetime = 0;
-                //TODO LUKAS zurück
+                if(gameWorld.doCleaningCallback){
+                    gameWorld.doCleaningCallback(this);
+                }
             }
         }
 
@@ -461,11 +472,6 @@ function init(){
     room.height = 7;
     room.name = "Room 100";
     gameWorld.roomList.push(room);
-
-    var worker = new Worker("cleaning");
-    worker.statusCurrent = "idle";
-    gameWorld.workerList.push(worker);
-    console.log(worker);
 
 }
 
