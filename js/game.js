@@ -39,6 +39,11 @@ var gameState = {
         this.world.doCleaningCallback =  function(worker) {
             self.updateWorker(worker);
         };
+
+        this.world.updateRoomStatusCallback =  function(room) {
+            self.updateRoomDirtyState(room);
+        };
+
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -49,6 +54,11 @@ var gameState = {
         });
         this.createNewsHud();
 
+        var worker = new Worker("cleaning");
+        worker.statusCurrent = "idle";
+        gameWorld.workerList.push(worker);
+        console.log(worker);
+        this.addWorker(worker);
 
         this.initStarsHud();
         this.updateMoneyHudFromWorld();
@@ -111,7 +121,7 @@ var gameState = {
         // nightSprite.fixedToCamera = true;
         // var tween = game.add.tween(nightSprite).to({alpha:0.5},GAMELOGIC.MSPERDAY);
         // tween.start();
-
+        //
     },
 
 
@@ -184,6 +194,7 @@ var gameState = {
         }
     },
     updateWorker: function(worker){
+        console.log(worker.workTaskRoom);
         if(worker.workTaskRoom){
             var room = worker.workTaskRoom;
             {
@@ -197,12 +208,39 @@ var gameState = {
                 game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
                 game.add.tween(nameTag).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
             }
+        }else{//move to lobby
+            var lobbyX = 19*32 + (Math.random()*7*32);
+            var lobbyY = 19*32 + (Math.random()*5*32);
+
+
+            var person = worker.sprite;
+            var nameTag = worker.nameTag;
+
+            game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+            game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut,true);
         }
+    },
+    updateRoomDirtyState: function(room){
+
+        var asset= null;
+        if(room.statusCurrent ==  "free" && room.sprite){
+            room.sprite.destroy();
+        }
+        if(room.statusCurrent == 'dirty'){
+            var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
+            var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
+            room.sprite = game.add.sprite(roomCenterX,roomCenterY,ASSETS.DIRT);
+        }
+
     },
 
     addWorker: function(worker){
-
-        var person =  game.add.sprite(760,800,ASSETS.CHAR_WORKER); //somewhere in lobby
+        var number = Math.random();
+        var asset = ASSETS.CHAR_WORKER_F;
+        if(number< 0.5){
+            asset = ASSETS.CHAR_WORKER_M;
+        }
+        var person =  game.add.sprite(760,800,asset); //somewhere in lobby
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
         var nameTag = game.add.text(760,800,worker.name, style);
         nameTag.anchor.x = 0.5;
@@ -211,6 +249,7 @@ var gameState = {
         person.scale.y = 1.2;
         worker.sprite = person;
         worker.nameTag = nameTag;
+
         this.updateWorker(worker);
     },
 

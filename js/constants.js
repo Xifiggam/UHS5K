@@ -16,6 +16,7 @@ ASSETS = {
     WALL: 'wall',
     BED: 'bed',
     NIGHT : 'asdf',
+    DIRT : 'dirt',
 
     BED_HEAD: 'bed_head',
     BED_MIDDLE: 'bed_middle',
