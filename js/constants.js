@@ -15,6 +15,10 @@ ASSETS = {
     FLOOR: 'floor',
     WALL: 'wall',
     BED: 'bed',
+
+    BED_HEAD: 'bed_head',
+    BED_MIDDLE: 'bed_middle',
+    BED_END: 'bed_end',
 };
 
 

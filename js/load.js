@@ -16,6 +16,10 @@ var loadState = {
         game.load.image(ASSETS.STAR, 'assets/img/star.png');
         game.load.image(ASSETS.MENU_BG, 'assets/img/menubg.png');
 
+        game.load.image(ASSETS.BED_HEAD, 'assets/img/bed_head_32x32.png');
+        game.load.image(ASSETS.BED_END, 'assets/img/bed_end_32x32.png');
+        game.load.image(ASSETS.BED_MIDDLE, 'assets/img/bed_middle_32x32.png');
+
         game.load.tilemap(ASSETS.TILES_PROTO_KARTE, 'assets/HotelMap.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image(ASSETS.TILESET_PROTO_KARTE, 'assets/tileset.png');
         game.load.image(ASSETS.PERSON, 'assets/img/person.png');
