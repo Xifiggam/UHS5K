@@ -35,8 +35,8 @@ var gameState = {
         this.createNewsHud();
 
 
-        this.setupStarsHud();
-        this.setupMoneyHud(1000);
+        this.initStarsHud();
+        this.updateMoneyHudFromWorld();
 
 
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -51,6 +51,7 @@ var gameState = {
         this.inputHandling();
         this.updateBuildCursor();
         this.world.update(game.time.elapsed);
+        this.updateStarsHudFromWorld();
     },
 
     createLayers: function () {
@@ -85,10 +86,34 @@ var gameState = {
         }
         if (this.miscButtons.shake.isDown) {
             //game.camera.shake();
-            this.postNews("the cake is a lie", 4000);
+            this.spawnCustomerVisualAndMoveToRoom('Room 102');
+            //this.postNews("the cake is a lie", 4000);
         }
     },
 
+    spawnCustomerVisualAndMoveToRoom: function(roomName){
+        var room = null;
+        for(var i = 0; i<this.world.roomList.length;i++ ){
+            var candidateRoom = this.world.roomList[i];
+            if(candidateRoom.name === roomName){
+                room = candidateRoom;
+            }
+        }
+        if(room){
+            var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
+            var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
+
+            var lobbyX = 760;
+            var lobbyY = 750;
+           var person =  game.add.sprite(760,800,ASSETS.PERSON); //somewhere in lobby
+            person.scale.x = 0.25;
+            person.scale.y = 0.25;
+            var toLobby = game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
+            var toRoom = game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut, false);
+            toLobby.chain(toRoom);
+            toLobby.start();
+        }
+    },
     addObject: function (point) {
         // console.log(point);
         // console.log(this.map);
@@ -191,7 +216,7 @@ var gameState = {
         btnSetPrice.scale.x = 2.5;
         console.log(room);
         var setPrice = game.add.text(game.width - 240, 20, room.price+"€", style);
-        closex.fixedToCamera = true;
+        setPrice.fixedToCamera = true;
 
 
         var title = game.add.text(offsetLeft + padding, 20, room.name, style);
@@ -259,7 +284,7 @@ var gameState = {
         fadeInTween.start();
     },
 
-    setupStarsHud: function () {
+    initStarsHud: function () {
         var starCount = 5;
         var starOffset = 60;
         for (var i = 0; i < starCount; i++) {
@@ -269,22 +294,22 @@ var gameState = {
         }
     }
     ,
-    setupMoneyHud: function (money) {
+    updateMoneyHudFromWorld: function () {
         if (this.moneyText) {
             this.moneyText.destroy();
         }
         var style = {font: "25px Arial", fill: "#000000", align: "left"};
-        this.moneyText = game.add.text(game.width - 28, 45, money + " €", style);
+        this.moneyText = game.add.text(game.width - 28, 45, this.world.money + " €", style);
         this.moneyText.anchor.x = 1;
         this.moneyText.anchor.y = 0;
         this.moneyText.fixedToCamera = true;
     },
 
-    starsVisible: function (count) {
+    updateStarsHudFromWorld: function () {
 
         for (var i = 0; i < this.stars.length; i++) {
             var star = this.stars[i];
-            star.alpha = count < i;// <= this is my favourite line of code.
+            star.alpha = this.world.stars < i;// <= this is my favourite line of code.
         }
     },
 
@@ -411,8 +436,7 @@ var gameState = {
             if (game.input.mousePointer.isDown && !collide) {
                 var room = this.buildMarker.u_room;
                 this.world.upgradeRoom(this.buildMarker.u_room, this.buildMarker.u_type);
-                this.setupMoneyHud(this.world.money);
-
+                this.updateMoneyHudFromWorld();
                 var sprite_group = game.add.group();
                 if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
                     this.addBedSpriteToGroup(sprite_group);
