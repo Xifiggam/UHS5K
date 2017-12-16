@@ -481,6 +481,7 @@ var gameState = {
             if (game.input.mousePointer.isDown && !collide) {
                 var room = this.buildMarker.u_room;
                 this.world.upgradeRoom(this.buildMarker.u_room, this.buildMarker.u_type);
+                this.setupMoneyHud(this.world.money);
                 if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
                     var currentTile = this.map.getTile(tileX, tileY, this.floorLayer);
                     this.map.putTile(currentTile, tileX, tileY, this.objectLayer);
