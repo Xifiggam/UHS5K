@@ -21,6 +21,18 @@ ASSETS = {
     BED_END: 'bed_end',
 };
 
+SINGLE_FEATURE_TYPE = {
+    SINGLE_BED: "singleBed",
+    DOUBLE_BED: "doubleBed",
+    CHILD_BED: "childBed",
+    LUXURY_BED: "luxuryBed",
+    PLANT: "plant",
+    VIEW: "view",
+    ENTERTAINMENT: "entertainment",
+    BATH: "bath",
+    MINIBAR: "minibar",
+    ACUNIT: "acUnit"
+};
 
 TILE = {
     SIZE: 32,

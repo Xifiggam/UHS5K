@@ -188,6 +188,7 @@ var gameState = {
     update: function () {
         this.inputHandling();
         this.updateBuildCursor();
+        this.world.update();
     },
 
     createLayers: function () {
@@ -253,7 +254,7 @@ var gameState = {
         var featureCount = 0;
         var self = this;
 
-        function addFeatureOption(name, value, bought, notPlaceable) {
+        function addFeatureOption(name, value, bought, notPlaceable, feature_type) {
 
             var style = {font: "20px Arial", fill: "#000000", align: "left"};
 
@@ -262,7 +263,7 @@ var gameState = {
             }
 
             function click() {
-                self.activeBuildCursor(3, 1, false, "bed");
+                self.activeBuildCursor(3, 1, false, feature_type);
             }
 
             var button = game.add.button(offsetLeft + padding, 120 + featureCount * 100, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -304,8 +305,8 @@ var gameState = {
             var features = room.getFeatures();
 
             // [singleBed,doubleBed,childBed,luxuryBed,plant,view,entertainment,bath,minibar,acUnit]
-            addFeatureOption("Single bed", 1000,features[0]);
-            addFeatureOption("Double bed", 1000,features[1]);
+            addFeatureOption("Single bed", 1000,features[0], false, SINGLE_FEATURE_TYPE.SINGLE_BED);
+            addFeatureOption("Double bed", 1000,features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
             addFeatureOption("Child bed", 1000,features[2]);
             addFeatureOption("Luxury bed", 1000,features[3]);
             addFeatureOption("Plant", 1000,features[4]);
@@ -389,14 +390,17 @@ var gameState = {
     activeBuildCursor: function (width, height, collision, type) {
         this.buildMarker = game.add.graphics();
         this.buildSpriteGroup = game.add.group();
-        if(type == "bed"){
+        if(type == SINGLE_FEATURE_TYPE.SINGLE_BED || type == SINGLE_FEATURE_TYPE.DOUBLE_BED){
                 var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
                 var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_head_sprite, Phaser.RIGHT_CENTER, 0);
                 var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
                 this.buildSpriteGroup.add(bed_head_sprite);
                 this.buildSpriteGroup.add(bed_middle_sprite);
                 this.buildSpriteGroup.add(bed_end_sprite);
+        } else {
+            console.error("type for build cursor not found "+type);
         }
+        console.log(type);
         
         var color = collision ? 0xFF0000 : 0x000000;
         this.buildMarker.lineStyle(2, color, 1);
@@ -445,7 +449,6 @@ var gameState = {
             this.buildMarker.y = y;
             for (var it_group_child = 0; it_group_child < this.buildSpriteGroup.children.length; it_group_child++) {
                 var group_child = this.buildSpriteGroup.children[it_group_child];
-                console.log(group_child);
                 group_child.x = x + TILE.SIZE * it_group_child;
                 group_child.y = y;
             }
