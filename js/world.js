@@ -87,6 +87,9 @@ var gameWorld = {
                 gameWorld.guestList.push(guest);
                 //LUKAS KOMM DICH
                 console.log("LUKAS GEHE IN DIE LOBBY DICH");
+                if(gameWorld.customerToLobbyCallback){
+                    gameWorld.customerToLobbyCallback(guest);
+                }
                 //customer(guest);
                 for(i=0; i<gameWorld.roomList.length; i++){
                     //console.log(gameWorld.roomList[i]);
