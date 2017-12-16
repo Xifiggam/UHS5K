@@ -200,8 +200,7 @@ function Guest (name) {
     this.statisfaction = 0;
     this.comingTime = Math.random()*3000;
     this.goingTime = Math.random()*3000;
-    this.stayingTime = 30000; //1 Tag ist 30 Sekunden
-    this.maxNights =  Math.floor(
+    this.maxNights =  Math.floor((Math.random() * 1000) + 100);
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
@@ -232,6 +231,10 @@ function Guest (name) {
                 }
                 break;
             case "staying":
+                if(this.statetime>=this.stayingTime){
+                    //TODO GET RID OF THIS CUSTOMER (aka cunt)
+                    this.statetime = 0;
+                }
                 break;
 
         }
