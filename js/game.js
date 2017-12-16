@@ -10,8 +10,8 @@ var gameState = {
     cursors: null,
     zoomButtons: null,
     miscButtons: null,
-    gameWorld: null,
-
+    newsHudMenu : null,
+    stars: [],
     layers: [],
 
     create: function () {
@@ -20,12 +20,15 @@ console.log("now");
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
         this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
-        this.gameWorld = game.add.group();
-        this.gameWorld.position.setTo(game.world.centerX, game.world.centerY);
         this.createLayers();
         this.onLayers(function(layer){
             layer.resizeWorld();
         });
+
+
+        this.createNewsHud();
+        this.setupStarsHud();
+        this.setupMoneyHud(1000);
 
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
@@ -66,7 +69,8 @@ console.log("now");
             game.camera.x += this.MOVE_SPEED;
         }
         if (this.miscButtons.shake.isDown) {
-            game.camera.shake();
+            //game.camera.shake();
+            this.postNews("the cake is a lie",4000);
         }
     },
 
@@ -78,5 +82,64 @@ console.log("now");
         var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
         sprite.scale.setTo(0.25,0.25);
 
+        this.starsVisible(Math.random()*5);
+        this.setupMoneyHud(Math.random()*1000);
+
+    },
+
+    createNewsHud: function () {
+        this.newsHudMenu = game.add.group();
+
+        function click() {
+            console.log("blub");
+        }
+
+        var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
+        button.scale.setTo(10,1.1);
+        button.fixedToCamera = true;
+
+        var style = { font: "25px Arial", fill: "#FFFFFF", align: "left" };
+        var text = game.add.text(15, 15, "News", style);
+        text.anchor.set(0);
+        text.fixedToCamera = true;
+    },
+    postNews: function (text,delay) {
+        var style = { font: "14px Arial", fill: "#FFFFFF", align: "left" };
+        var text = game.add.text(15, 45, text, style);
+        text.anchor.set(0);
+        text.alpha = 0;
+        text.fixedToCamera = true;
+        var fadeInTween = game.add.tween(text).to( { alpha: 1 }, 2000);
+        var fadeoutTween =game.add.tween(text).to( { alpha: 0 }, 2000);
+        fadeoutTween.delay(delay);
+        fadeInTween.chain(fadeoutTween);
+        fadeInTween.start();
+    },
+
+    setupStarsHud: function () {
+        var starCount = 5;
+        var starOffset = 60;
+        for (var i = 0; i < starCount; i++) {
+            var star = game.add.sprite(game.width - i* starOffset, 10, ASSETS.STAR);
+            this.stars.push(star);
+            star.fixedToCamera = true;
+        }
+    },
+    setupMoneyHud: function (money) {
+        if(this.moneyText){
+            this.moneyText.destroy();
+        }
+        var style = { font: "25px Arial", fill: "#000000", align: "left" };
+        this.moneyText = game.add.text(game.width -28, 45, money +" €", style);
+        this.moneyText.anchor.x = 1;
+        this.moneyText.anchor.y = 0;
+        this.moneyText.fixedToCamera = true;
+    },
+    starsVisible: function (count) {
+
+        for (var i = 0; i < this.stars.length; i++) {
+            var star = this.stars[i];
+            star.alpha = count < i;// <= this is my favourite line of code.
+        }
     }
 };
