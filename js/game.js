@@ -34,11 +34,145 @@ var gameState = {
         var room = new Room();
         room.posX = 11;
         room.posY = 19;
-        room.length = 6;
+        room.length = 5;
         room.height = 6;
         room.name = "Room 102";
         room.singleBed = true;
         this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 33;
+        room.posY = 19;
+        room.length = 5;
+        room.height = 6;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 39;
+        room.posY = 19;
+        room.length = 7;
+        room.height = 6;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 4;
+        room.posY = 13;
+        room.length = 4;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 4;
+        room.posY = 7;
+        room.length = 4;
+        room.height = 5;
+        room.name = "Room 101";
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 4;
+        room.posY = 1;
+        room.length = 6;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 11;
+        room.posY = 1;
+        room.length = 7;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 11;
+        room.posY = 9;
+        room.length = 5;
+        room.height = 7;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 17;
+        room.posY = 9;
+        room.length = 6;
+        room.height = 7;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 19;
+        room.posY = 1;
+        room.length = 11;
+        room.height = 5;
+        room.name = "Room 101";
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 26;
+        room.posY = 9;
+        room.length = 6;
+        room.height = 7;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 31;
+        room.posY = 1;
+        room.length = 7;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 39;
+        room.posY = 1;
+        room.length = 7;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 41;
+        room.posY = 7;
+        room.length = 5;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 41;
+        room.posY = 13;
+        room.length = 5;
+        room.height = 5;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
+        var room = new Room();
+        room.posX = 33;
+        room.posY = 9;
+        room.length = 5;
+        room.height = 7;
+        room.name = "Room 102";
+        room.singleBed = true;
+        this.world.roomList.push(room);
+
 
 
         this.cursors = game.input.keyboard.createCursorKeys();
