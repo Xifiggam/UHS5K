@@ -129,8 +129,8 @@ var gameState = {
                 toLobby.start();
                 toLobbyTag.start();
             }else{
-                var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
-                var awaaaaayTag = game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
             }
 
         }
@@ -138,7 +138,14 @@ var gameState = {
     spawnCharacterAndMoveToLobbyNow :  function(character){
         var lobbyX = 19*32 + (Math.random()*7*32);
         var lobbyY = 19*32 + (Math.random()*5*32);
-        var person =  game.add.sprite(760,800,ASSETS.CHAR_OLD); //somewhere in lobby
+        var number = Math.random();
+        var asset = null;
+        if(number< 0.5){
+            asset = ASSETS.CHAR_OLD;
+        }else{
+            asset = ASSETS.CHAR_GEN;
+        }
+        var person =  game.add.sprite(760,800,asset); //somewhere in lobby
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
         var nameTag = game.add.text(760,800,character.name, style);
         nameTag.anchor.x = 0.5;

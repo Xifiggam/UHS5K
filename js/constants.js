@@ -26,6 +26,7 @@ ASSETS = {
     SINK: 'sink',
     TV: 'tv',
     CHAR_OLD: 'old',
+    CHAR_GEN: 'CHAR_GEN',
 };
 
 SINGLE_FEATURE_TYPE = {
