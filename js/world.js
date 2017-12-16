@@ -244,6 +244,9 @@ function Guest (name) {
                 if(this.statetime>=this.goingTime){
                     gameWorld.toDelete = true;
                     gameWorld.guestToDelete = this;
+                    if(gameWorld.customerLeaveCallback){
+                        gameWorld.customerLeaveCallback(this);
+                    }
                 }
                 break;
             case "staying":
