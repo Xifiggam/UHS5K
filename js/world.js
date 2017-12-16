@@ -200,7 +200,7 @@ function Guest (name) {
     this.statisfaction = 0;
     this.comingTime = Math.random()*3000;
     this.goingTime = Math.random()*3000;
-    this.maxNights =  Math.floor((Math.random() * 1000) + 100);
+    this.daysToStay =  Math.floor((Math.random() * 10) + 1);
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
@@ -231,8 +231,15 @@ function Guest (name) {
                 }
                 break;
             case "staying":
-                if(this.statetime>=this.stayingTime){
-                    //TODO GET RID OF THIS CUSTOMER (aka cunt)
+                if(this.statetime>=GAMELOGIC.MSPERDAY){
+                    this.daysToStay--;
+                    gameWorld.money += this.chosenRoom.price;
+                    this.maximumPrice -= this.chosenRoom.price;
+                    if(this.daysToStay <= 0 || this.maximumPrice<=0){
+                        this.statusCurrent = "going";
+                        console.log("LUKAS VERTSCHÜSS DICH");
+                        //TODO HIER STERNE BEWERTUNGSCHANCE UND SO
+                    }
                     this.statetime = 0;
                 }
                 break;
@@ -537,6 +544,8 @@ function customer (guestObj) {
     else {
         gameWorld.roomList[roomChosen].changeRoomBool();
         guestObj.statusCurrent = "staying";
+        //LUKAS KOMM DICH
+        console.log("LUKAS KOMM DICH");
         guestObj.chosenRoom = gameWorld.roomList[roomChosen];
         guestObj.statisfaction = satisfactionArray[roomChosen];
     }
