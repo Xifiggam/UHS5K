@@ -262,6 +262,7 @@ function Guest (name) {
                         this.statusCurrent = "going";
                         if(Math.random()>0.5){
                             this.chosenRoom.statusCurrent = "dirty";
+                            //TODO Lukas callback dirty
                         }
                         else{
                             this.chosenRoom.statusCurrent = "free";
@@ -287,9 +288,10 @@ function Worker (type) {
     this.paymentIntervallCounter =0;
     this.xCoordinate = 0;
     this.yCoordinate = 0;
-    this.name = name; //TODO!!
+    this.name = generateName(1);
     this.statetime = 0;
     this.workTaskRoom = null;
+    this.quality = Math.floor(Math.random() * 5) + 1;
 
     this.type = type;
     switch (this.type) {
@@ -513,7 +515,10 @@ function init(){
     room.name = "Room 100";
     gameWorld.roomList.push(room);
 
-    //console.log(gameWorld.roomList)
+    var worker = new Worker("cleaning");
+    worker.statusCurrent = "idle";
+    gameWorld.workerList.push(worker);
+    console.log(worker);
 
 }
 
