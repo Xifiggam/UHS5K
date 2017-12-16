@@ -4,11 +4,14 @@ function Guest (type) {
     this.type = type;
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = this.globalUpgradesArray.concat(this.localUpgradesArray);
-    this requirementArray
-    for (i = 0; i < noOfRequirements; i++) {
-
+    this.requirementArray = [];
+    for (i = 0; i < this.noOfRequirements; i++) {
+        this.requirementArray.concat(this.requirementArrayChoose[Math.floor(Math.random() * myArray.length)]);
     }
+    this.maximumPrice = Math.floor((Math.random() * 1000) + 100);
+
 }
+
 
 // Upgrades that are available globally for the Hotel. Customers can have "requirements" drawn from this.
 GobalUpgrades = {
