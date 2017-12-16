@@ -14,6 +14,7 @@ var loadState = {
         game.load.image(ASSETS.DUMMY_BUTTON, 'assets/img/button_dummy.png');
         game.load.image(ASSETS.STAR, 'assets/img/star.png');
         game.load.image(ASSETS.MENU_BG, 'assets/img/menubg.png');
+        game.load.image(ASSETS.NIGHT, 'assets/img/night.png');
 
         game.load.image(ASSETS.BED_HEAD, 'assets/img/bed_head_32x32.png');
         game.load.image(ASSETS.BED_END, 'assets/img/bed_end_32x32.png');
