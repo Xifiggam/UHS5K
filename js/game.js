@@ -59,12 +59,6 @@ var gameState = {
         });
 
 
-
-        var worker = new Worker("cleaning");
-        worker.statusCurrent = WORKER_STATE.TO_HIRE;
-        gameWorld.workerList.push(worker);
-
-
         this.cursors = game.input.keyboard.createCursorKeys();
         this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
         this.miscButtons = game.input.keyboard.addKeys({'shake': Phaser.KeyCode.O});
@@ -96,7 +90,8 @@ var gameState = {
 
         }, this, 2, 1, 0);
         buyRoomButton.scale.x = 3;
-        buyRoomButton.scale.y = 1.5;
+        var scalY = 1.8;
+        buyRoomButton.scale.y = scalY;
         buyRoomButton.fixedToCamera = true;
         this.menuHud.add(buyRoomButton);
         var buyRoomsText = game.add.text(button_start_x+35, button_start_y+12, "BUY ROOMS", text_style);
@@ -110,7 +105,7 @@ var gameState = {
             for (var worker_it = 0; worker_it < self.world.workerList.length; worker_it++) {
                 var worker_obj = self.world.workerList[worker_it];
                 if(worker_obj.statusCurrent === WORKER_STATE.TO_HIRE){
-                    worker_texts.push(worker_obj.name);
+                    worker_texts.push(worker_obj.name+" - eff:"+worker_obj.quality+" - "+worker_obj.price+"€/d");
                     worker_objects.push(worker_obj);
                 }
             }
@@ -120,7 +115,7 @@ var gameState = {
             }, worker_texts, worker_objects);
         }, this, 2, 1, 0);
         buyStaffButton.scale.x = 3;
-        buyStaffButton.scale.y = 1.5;
+        buyStaffButton.scale.y = scalY;
         buyStaffButton.fixedToCamera = true;
         this.menuHud.add(buyStaffButton);
         var buyStaff = game.add.text(button_start_x+35, button_start_y+12, "HIRE STAFF", text_style);
@@ -141,7 +136,7 @@ var gameState = {
             }, this.world.globalUpgradesArray, this.world.globalUpgradesArray);
         }, this, 2, 1, 0);
         buyUpgradeButton.scale.x = 3.6;
-        buyUpgradeButton.scale.y = 1.5;
+        buyUpgradeButton.scale.y = scalY;
         buyUpgradeButton.fixedToCamera = true;
         var buyUpgradeText = game.add.text(button_start_x+35, button_start_y+12, "BUY UPGRADES", text_style);
         buyUpgradeText.fixedToCamera = true;
@@ -283,6 +278,7 @@ var gameState = {
         var nameTag = game.add.text(760,800,worker.name, style);
         nameTag.anchor.x = 0.5;
         nameTag.anchor.y = 0.5;
+        this.entityGroup.add(nameTag);
         person.scale.x = 1.2;
         person.scale.y = 1.2;
         worker.sprite = person;
@@ -372,7 +368,7 @@ var gameState = {
         var featureCount = 0;
         var self = this;
 
-        if (self.roomMenuHud || self.buildMarker != null || self.buyMenuHud != null) {
+        if (self.roomMenuHud || self.buildMarker != null || self.buyMenuHud != null || !room.activated) {
             return;
         }
 
@@ -565,6 +561,7 @@ var gameState = {
     activateRoom: function(index){
         var roomToActivate = this.world.roomList[index];
         if(!roomToActivate.activated) {
+            roomToActivate.activated = true;
             var copyTile = this.map.getTile(3, 0, this.wallLayer);
             for(var x = roomToActivate.posX; x < roomToActivate.length + roomToActivate.posX + 1; x++){
                 gameState.map.putTile(copyTile, x, roomToActivate.posY-1, this.wallLayer);
@@ -726,6 +723,7 @@ var gameState = {
                 } else {
                     console.error('type not found for placement');
                 }
+                this.backroundObjectGroup.add(sprite_group);
                 //write tile as blocker for building
                 var currentTile = this.map.getTile(tileX, tileY, this.floorLayer);
                 for (var it_bl_tile_x = 0; it_bl_tile_x < this.buildMarker.u_width; it_bl_tile_x++) {
@@ -779,11 +777,13 @@ var gameState = {
         var sprite_top = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
 
         sprite_top.fixedToCamera = true;
+        sprite_top.scale.x = 1.5;
         this.buyMenuHud.add(sprite_top);
         offsetTop += TILE.SIZE;
         var button_offset = offsetTop;
         var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
         sprite_center.scale.y = 10;
+        sprite_center.scale.x = 1.5;
         offsetTop += TILE.SIZE * 20;
         sprite_center.fixedToCamera = true;
         this.buyMenuHud.add(sprite_center);
@@ -791,6 +791,7 @@ var gameState = {
         sprite_bottom.fixedToCamera = true;
         sprite_bottom.anchor.setTo(1, 1);
         sprite_bottom.angle = 180;
+        sprite_bottom.scale.x = 1.5;
         this.buyMenuHud.add(sprite_bottom);
 
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};

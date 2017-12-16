@@ -322,16 +322,7 @@ function init(){
     room.posY = 19;
     room.length = 6;
     room.height = 6;
-    room.singleBed = true;
-    room.doubleBed = true;
-    room.childBed = true;
-    room.luxuryBed = true;
-    room.plant = true;
-    room.view = true;
-    room.entertainment = true;
-    room.bath = true;
-    room.minibar = true;
-    room.acUnit = true;
+    room.activated = true;
     room.name = "Room 101";
     gameWorld.roomList.push(room);
     
@@ -340,16 +331,7 @@ function init(){
     room.posY = 19;
     room.length = 5;
     room.height = 6;
-    room.singleBed = true;
-    room.doubleBed = true;
-    room.childBed = true;
-    room.luxuryBed = true;
-    room.plant = true;
-    room.view = true;
-    room.entertainment = true;
-    room.bath = true;
-    room.minibar = true;
-    room.acUnit = true;
+    room.activated = true;
     room.name = "Room 102";
     gameWorld.roomList.push(room);
 
@@ -472,6 +454,33 @@ function init(){
     room.height = 7;
     room.name = "Room 100";
     gameWorld.roomList.push(room);
+
+
+
+    var worker1 = new Worker("cleaning");
+    worker1.statusCurrent = WORKER_STATE.TO_HIRE;
+    gameWorld.workerList.push(worker1);
+
+
+    var worker2 = new Worker("cleaning");
+    worker2.statusCurrent = WORKER_STATE.TO_HIRE;
+    gameWorld.workerList.push(worker2);
+
+
+    var worker3 = new Worker("cleaning");
+    worker3.statusCurrent = WORKER_STATE.TO_HIRE;
+    gameWorld.workerList.push(worker3);
+
+
+    var worker4 = new Worker("cleaning");
+    worker4.statusCurrent = WORKER_STATE.TO_HIRE;
+    gameWorld.workerList.push(worker4);
+
+
+    var worker5 = new Worker("cleaning");
+    worker5.statusCurrent = WORKER_STATE.TO_HIRE;
+    gameWorld.workerList.push(worker5);
+
 
 }
 
