@@ -1,0 +1,12 @@
+{ "columns":8,
+ "image":"..\/..\/..\/..\/Dropbox\/Gaaaaaaabe\/klujam2017\/pngs\/tileset.png",
+ "imageheight":160,
+ "imagewidth":256,
+ "margin":0,
+ "name":"HotelTileSet",
+ "spacing":0,
+ "tilecount":40,
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset"
+}

@@ -2,81 +2,241 @@
  * Created by Veit on the Death S.
  */
 
+var gameWorld = {
 
-var gameState = {
-    ZOOM_FACTOR: 0.005,
-    MOVE_SPEED: 4,
-    map: null,
-    cursors: null,
-    zoomButtons: null,
-    miscButtons: null,
-    gameWorld: null,
+    guestList: [],
+    roomList: [],
+    workerList: [],
 
-    layers: [],
+    money: 1000,
+    stars: 1,
+    // GLOBAL UPGRADES WITH PRICE
+    wifi_room: false,
+    WIFI_ROOM_PRICE: 1000,
 
-    create: function () {
-console.log("now");
-        this.cursors = game.input.keyboard.createCursorKeys();
+    wifi_lobby: false,
+    WIFI_LOBBY_PRICE: 100,
 
-        this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
-        this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
-        this.gameWorld = game.add.group();
-        this.gameWorld.position.setTo(game.world.centerX, game.world.centerY);
-        this.createLayers();
-        this.onLayers(function(layer){
-            layer.resizeWorld();
-        });
+    seminarRoom: false,
+    SEMINARROOM_PRICE: 1000,
 
-        this.cursors = game.input.keyboard.createCursorKeys();
-        this.zoomButtons = game.input.keyboard.addKeys({'in': Phaser.KeyCode.L, 'down': Phaser.KeyCode.K});
-        this.miscButtons = game.input.keyboard.addKeys({'shake': Phaser.KeyCode.O});
+    massageParlor: false,
+    MASSAGEPARLOR_PRICE: 1000,
 
-        game.input.onDown.add(this.addObject, this);
-    },
+    sauna: false,
+    SAUNA_PRICE: 1000,
 
-    update: function () {
-        this.inputHandling();
-    },
+    saunaPlus: false,
+    SAUNAPLUS_PRICE: 2000,
 
-    createLayers: function () {
-        this.layers.push(this.map.createLayer('Floor'));
-        this.layers.push(this.map.createLayer('Wall'));
-        this.layers.push(this.map.createLayer('Object'));
-    },
+    pool: false,
+    POOL_PRICE: 1000,
 
-    onLayers: function(func){
-        for (var i = 0; i < this.layers.length; i++) {
-            var layer = this.layers[i];
-            func(layer)
+    outdoorPool: false,
+    OUTDOORPOOL_PRICE: 2000,
+
+    fitnessStudio: false,
+    FITNESSSTUDIO_PRICE: 1000,
+
+    hotelBar: false,
+    HOTELBAR_PRICE: 1000,
+
+    restaurant: false,
+    RESTAURANT_PRICE: 1000,
+
+    update: function (deltaTime) {
+        alength = this.roomList.length;
+        for (i = 0; i < alength; i++) {
+            this.roomList[i].update(deltaTime);
+        }
+        alength = this.workerList.length;
+        for (i = 0; i < alength; i++) {
+            this.workerList[i].update(deltaTime);
+        }
+        alength = this.guestList.length;
+        for (i = 0; i < alength; i++) {
+            this.guestList[i].update(deltaTime);
         }
     },
 
-
-    inputHandling: function () {
-        if (this.cursors.up.isDown) {
-            game.camera.y -= this.MOVE_SPEED;
-        }
-        else if (this.cursors.down.isDown) {
-            game.camera.y += this.MOVE_SPEED;
-        }
-        if (this.cursors.left.isDown) {
-            game.camera.x -= this.MOVE_SPEED;
-        }
-        else if (this.cursors.right.isDown) {
-            game.camera.x += this.MOVE_SPEED;
-        }
-        if (this.miscButtons.shake.isDown) {
-            game.camera.shake();
+    buyGlobalUpgrade: function (feature) {
+        switch(feature) {
+            case "wifi_room":
+                this.wifi_room=true;
+                this.money = this.money - this.WIFI_ROOM_PRICE;
+                break;
+            case "wifi_lobby":
+                this.wifi_lobby=true;
+                this.money = this.money - this.WIFI_LOBBY_PRICE;
+                break;
+            case "seminarRoom":
+                this.seminarRoom=true;
+                this.money = this.money = this.SEMINARROOM_PRICE;
+                break;
+            case "massageParlor":
+                this.massageParlor=true;
+                this.money=this.money-this.MASSAGEPARLOR_PRICE;
+                break;
+            case "sauna":
+                this.sauna=true;
+                this.money=this.money-this.SAUNA_PRICE;
+                break;
+            case "saunaPlus":
+                this.saunaPlus=true;
+                this.money=this.money-this.SAUNAPLUS_PRICE;
+                break;
+            case "pool":
+                this.pool=true;
+                this.money=this.money-this.POOL_PRICE;
+                break;
+            case "outdoorPool":
+                this.outdoorPool=true;
+                this.money=this.money-this.OUTDOORPOOL_PRICE;
+                break;
+            case "fitnessStudio":
+                this.fitnessStudio=true;
+                this.money=this.money-this.FITNESSSTUDIO_PRICE;
+                break;
+            case "hotelBar":
+                this.hotelBar=true;
+                this.money=this.money-this.HOTELBAR_PRICE;
+                break;
+            case "restaurant":
+                this.restaurant=true;
+                this.money=this.money-this.RESTAURANT_PRICE;
+                break;
         }
     },
+    
+    upgradeRoom: function (Room, feature) {
+        switch(feature) {
+            case "singleBed":
+                Room.singleBed = true;
+                this.money = this.money - 1000;
+                break;
+            case "doubleBed":
+                Room.doubleBed = true;
+                this.money = this.money - 1000;
+                break;
+            case "childBed":
+                Room.childBed = true;
+                this.money = this.money - 1000;
+                break;
+            case "luxuryBed":
+                Room.luxuryBed = true;
+                this.money = this.money - 1000;
+                break;
+            case "plant":
+                Room.plant = true;
+                this.money = this.money - 1000;
+                break;
+            case "view":
+                Room.view = true;
+                this.money = this.money - 1000;
+                break;
+            case "entertainment":
+                Room.entertainment = true;
+                this.money = this.money - 1000;
+                break;
+            case "bath":
+                Room.bath = true;
+                this.money = this.money - 1000;
+                break;
+            case "minibar":
+                Room.minibar = true;
+                this.money = this.money - 1000;
+                break;
+            case "acUnit":
+                Room.acUnits = true;
+                this.money = this.money - 1000;
+                break;
+        }
+    }
 
-    addObject: function (point) {
-        console.log(point);
-        console.log(this.map);
-        var posX = (this.layers[0].getTileX(point.worldX) * TILE.SIZE);
-        var posY = (this.layers[0].getTileY(point.worldY) * TILE.SIZE);
-        var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
-        sprite.scale.setTo(0.25,0.25);
+
+
+
+};
+
+function Guest (name) {
+    this.name = name;
+    this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
+    this.requirementArrayChoose = this.globalUpgradesArray.concat(this.localUpgradesArray);
+    this.requirementArray = [];
+    for (i = 0; i < this.noOfRequirements; i++) {
+        this.requirementArray.concat(this.requirementArrayChoose[Math.floor(Math.random() * myArray.length)]);
+    }
+    this.maximumPrice = Math.floor((Math.random() * 1000) + 100);
+    this.xCoordinate = 0;
+    this.yCoordinate = 0;
+    this.statusArray = ["coming", "going", "staying"];
+    this.statusCurrent;
+
+    this.update = function(deltaTime) {
+        //Update Function
+    };
+}
+
+// gets ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Operating Officer"] and randomly generates price and quality
+function Worker (job) {
+    this.job = type;
+    switch (type) {
+        case "receptionist":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
+            break;
+        case "cleaning":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 100) + 50)*this.quality);
+            break;
+        case "kitchen":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
+            break;
+        case "bar":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
+            break;
+        case "masseur":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
+            break;
+        case "Chief Operating Officer":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 300) + 50)*this.quality);
+            break;
+        default:
 
     }
-};
+    this.xCoordinate = 0;
+    this.yCoordinate = 0;
+    this.update = function (deltaTime) {
+        //Update Function
+    };
+}
+
+function Room () {
+        var posX = 0;
+        var posY = 0;
+        var length = 0;
+        var heigth = 0;
+        var singleBed = false;
+        var doubleBed = false;
+        var childBed = false;
+        var luxuryBed = false;
+        var plant = false;
+        var view = false;
+        var entertainment = false;
+        var bath = false;
+        var minibar = false;
+        var acUnit = false;
+
+    this.getFeatures = function(){
+        return [singleBed,doubleBed,childBed,luxuryBed,plant,view,entertainment,bath,minibar,acUnit];
+    };
+    
+    this.update = function (deltaTime) {
+        //Update Function
+    };
+}
+
