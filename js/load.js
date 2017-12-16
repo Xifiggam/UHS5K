@@ -12,6 +12,7 @@ var loadState = {
 
         //Load your images, spritesheets, bitmaps...
         game.load.image('boiler-logo', 'assets/img/boilerplate-logo.png');
+        game.load.image('star', 'assets/img/star.png');
         game.load.image(ASSETS.DUMMY_BUTTON, 'assets/img/button_dummy.png');
 
         game.load.tilemap(ASSETS.TILES_PROTO_KARTE, 'assets/ProtoKarte.json', null, Phaser.Tilemap.TILED_JSON);
