@@ -24,6 +24,7 @@ ASSETS = {
     TOILET: 'toilet',
     SINK: 'sink',
     TV: 'tv',
+    CHAR_OLD: 'old',
 };
 
 SINGLE_FEATURE_TYPE = {
