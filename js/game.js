@@ -24,143 +24,6 @@ var gameState = {
     create: function () {
         this.world = gameWorld;
 
-        var room = new Room();
-        room.posX = 4;
-        room.posY = 19;
-        room.length = 6;
-        room.height = 6;
-        room.name = "Room 101";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 11;
-        room.posY = 19;
-        room.length = 5;
-        room.height = 6;
-        room.name = "Room 102";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 33;
-        room.posY = 19;
-        room.length = 5;
-        room.height = 6;
-        room.name = "Room 103";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 39;
-        room.posY = 19;
-        room.length = 7;
-        room.height = 6;
-        room.name = "Room 104";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 4;
-        room.posY = 13;
-        room.length = 4;
-        room.height = 5;
-        room.name = "Room 105";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 4;
-        room.posY = 7;
-        room.length = 4;
-        room.height = 5;
-        room.name = "Room Blue";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 4;
-        room.posY = 1;
-        room.length = 6;
-        room.height = 5;
-        room.name = "Room Red";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 11;
-        room.posY = 1;
-        room.length = 7;
-        room.height = 5;
-        room.name = "Suite \"Lukas\"";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 11;
-        room.posY = 9;
-        room.length = 5;
-        room.height = 7;
-        room.name = "Suite \"Gabe\"";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 17;
-        room.posY = 9;
-        room.length = 6;
-        room.height = 7;
-        room.name = "Suite \"Zelle\"";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 19;
-        room.posY = 1;
-        room.length = 11;
-        room.height = 5;
-        room.name = "Suite \"Phoe\"";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 26;
-        room.posY = 9;
-        room.length = 6;
-        room.height = 7;
-        room.name = "Suite \"Veit\"";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 31;
-        room.posY = 1;
-        room.length = 7;
-        room.height = 5;
-        room.name = "Honeymoon Suite";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 39;
-        room.posY = 1;
-        room.length = 7;
-        room.height = 5;
-        room.name = "Baum des Lebens";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 41;
-        room.posY = 7;
-        room.length = 5;
-        room.height = 5;
-        room.name = "\"Spielzimmer\"";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 41;
-        room.posY = 13;
-        room.length = 5;
-        room.height = 5;
-        room.name = "Room 8541";
-        this.world.roomList.push(room);
-
-        var room = new Room();
-        room.posX = 33;
-        room.posY = 9;
-        room.length = 5;
-        room.height = 7;
-        room.name = "Room 100";
-        this.world.roomList.push(room);
-
-
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -316,6 +179,18 @@ var gameState = {
         var closex = game.add.text(game.width - 40, 20, "X", style);
         closex.fixedToCamera = true;
 
+        function set_price() {
+            room.price = prompt("Please enter a price for the room", room.price);
+            setPrice.text = room.price+"€";
+        }
+
+        var btnSetPrice = game.add.button(game.width - 250, 20, ASSETS.DUMMY_BUTTON, set_price, this, 2, 1, 0);
+        btnSetPrice.fixedToCamera = true;
+        btnSetPrice.scale.x = 2.5;
+        console.log(room);
+        var setPrice = game.add.text(game.width - 240, 20, room.price+"€", style);
+        closex.fixedToCamera = true;
+
 
         var title = game.add.text(offsetLeft + padding, 20, room.name, style);
         title.fixedToCamera = true;
@@ -326,6 +201,10 @@ var gameState = {
 
         this.roomMenuHud.add(btnClose);
         this.roomMenuHud.add(closex);
+
+        this.roomMenuHud.add(btnSetPrice);
+        this.roomMenuHud.add(setPrice);
+
 
         addFeatureOption("Single bed", this.world.SINGLEBED_PRICE, features[0], false, SINGLE_FEATURE_TYPE.SINGLE_BED);
         addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
@@ -530,6 +409,7 @@ var gameState = {
             if (game.input.mousePointer.isDown && !collide) {
                 var room = this.buildMarker.u_room;
                 this.world.upgradeRoom(this.buildMarker.u_room, this.buildMarker.u_type);
+                this.setupMoneyHud(this.world.money);
 
                 var sprite_group = game.add.group();
                 if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
