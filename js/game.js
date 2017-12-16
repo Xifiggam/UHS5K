@@ -253,6 +253,10 @@ var gameState = {
         var featureCount = 0;
         var self = this;
 
+        if(self.roomMenuHud){
+            return;
+        }
+
         function addFeatureOption(name, value, bought, notPlaceable, feature_type) {
             var style = {font: "20px Arial", fill: "#000000", align: "left"};
 
@@ -284,10 +288,13 @@ var gameState = {
             featureCount += 1;
         }
 
-        if (this.roomMenuHud) {
-            this.roomMenuHud.destroy();
-            this.roomMenuHud = null;
-        } else {
+
+
+        function close_clicked() {
+            self.roomMenuHud.destroy();
+            self.roomMenuHud = null;
+        }
+
             this.roomMenuHud = game.add.group();
             var offsetLeft = game.width / 2;
             var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_BG);
@@ -295,28 +302,38 @@ var gameState = {
             sprite.scale.y = game.height - 20;
             sprite.fixedToCamera = true;
 
+
+
             var style = {font: "25px Arial", fill: "#000000", align: "left"};
             var padding = 20;
 
-            var title = game.add.text(offsetLeft + padding, 20, room.name, style);
+        var btnClose = game.add.button(game.width -50, 20, ASSETS.DUMMY_BUTTON, close_clicked, this, 2, 1, 0);
+        btnClose.fixedToCamera = true;
+        var closex = game.add.text(game.width -40, 20, "X", style);
+        closex.fixedToCamera = true;
+
+
+        var title = game.add.text(offsetLeft + padding, 20, room.name, style);
             title.fixedToCamera = true;
 
-            this.roomMenuHud.add(sprite)
+            this.roomMenuHud.add(sprite);
             this.roomMenuHud.add(title);
             var features = room.getFeatures();
 
-            addFeatureOption("Single bed", this.world.SINGLEBED_PRICE, features[0], false, SINGLE_FEATURE_TYPE.SINGLE_BED);
-            addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
-            addFeatureOption("Child bed", this.world.CHILDBED_PRICE, features[2]);
-            addFeatureOption("Luxury bed", this.world.LUXURYBED_PRICE, features[3]);
-            addFeatureOption("Plant", this.world.PLANT_PRICE, features[4]);
-            addFeatureOption("View", this.world.VIEW_PRICE, features[5], true);
-            addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE, features[6]);
-            addFeatureOption("Bath", this.world.BATH_PRICE, features[7]);
-            addFeatureOption("Minibar", this.world.MINIBAR_PRICE, features[8], true);
-            addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], true);
+        this.roomMenuHud.add(btnClose);
+        this.roomMenuHud.add(closex);
 
-        }
+        addFeatureOption("Single bed", this.world.SINGLEBED_PRICE, features[0], false, SINGLE_FEATURE_TYPE.SINGLE_BED);
+            addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
+            addFeatureOption("Child bed", this.world.CHILDBED_PRICE, features[2],false, SINGLE_FEATURE_TYPE.CHILD_BED);
+            addFeatureOption("Luxury bed", this.world.LUXURYBED_PRICE, features[3],false,SINGLE_FEATURE_TYPE.LUXURY_BED);
+            addFeatureOption("Plant", this.world.PLANT_PRICE, features[4],SINGLE_FEATURE_TYPE.PLANT);
+            addFeatureOption("View", this.world.VIEW_PRICE, features[5], true,SINGLE_FEATURE_TYPE.VIEW);
+            addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE, features[6],false,SINGLE_FEATURE_TYPE.ENTERTAINMENT);
+            addFeatureOption("Bath", this.world.BATH_PRICE, features[7],SINGLE_FEATURE_TYPE.BATH);
+            addFeatureOption("Minibar", this.world.MINIBAR_PRICE, features[8], true,SINGLE_FEATURE_TYPE.MINIBAR);
+            addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], true, SINGLE_FEATURE_TYPE.ACUNIT);
+
     },
     openRoomMenuIfAny: function (point) {
         var room = this.getRoom(point);
