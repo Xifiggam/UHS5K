@@ -144,44 +144,44 @@ var gameWorld = {
     upgradeRoom: function (Room, feature) {
         console.log(Room, feature);
         switch(feature) {
-            case "singleBed":
+            case SINGLE_FEATURE_TYPE.SINGLE_BED:
                 Room.singleBed = true;
                 this.money = this.money - this.SINGLEBED_PRICE;
                 break;
-            case "doubleBed":
+            case SINGLE_FEATURE_TYPE.DOUBLE_BED:
                 Room.doubleBed = true;
                 this.money = this.money - this.DOUBLEBED_PRICE;
                 break;
-            case "childBed":
+            case SINGLE_FEATURE_TYPE.CHILD_BED:
                 Room.childBed = true;
                 this.money = this.money - this.CHILDBED_PRICE;
                 break;
-            case "luxuryBed":
+            case SINGLE_FEATURE_TYPE.LUXURY_BED:
                 Room.luxuryBed = true;
                 this.money = this.money - this.LUXURYBED_PRICE;
                 break;
-            case "plant":
+            case SINGLE_FEATURE_TYPE.PLANT:
                 Room.plant = true;
                 this.money = this.money - this.PLANT_PRICE;
                 break;
-            case "view":
+            case SINGLE_FEATURE_TYPE.VIEW:
                 Room.view = true;
                 this.money = this.money - this.VIEW_PRICE;
                 break;
-            case "entertainment":
+            case SINGLE_FEATURE_TYPE.ENTERTAINMENT:
                 Room.entertainment = true;
                 this.money = this.money - this.ENTERTAINMENT_PRICE;
                 break;
-            case "bath":
+            case SINGLE_FEATURE_TYPE.BATH:
                 Room.bath = true;
                 this.money = this.money - this.BATH_PRICE;
                 break;
-            case "minibar":
+            case SINGLE_FEATURE_TYPE.MINIBAR:
                 Room.minibar = true;
                 this.money = this.money - this.MINIBAR_PRICE;
                 break;
-            case "acUnit":
-                Room.acUnits = true;
+            case SINGLE_FEATURE_TYPE.ACUNIT:
+                Room.acUnit = true;
                 this.money = this.money - this.ACUNIT_PRICE;
                 break;
         }
