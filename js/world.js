@@ -125,6 +125,7 @@ var gameWorld = {
     },
     
     upgradeRoom: function (Room, feature) {
+        console.log(Room, feature);
         switch(feature) {
             case "singleBed":
                 Room.singleBed = true;

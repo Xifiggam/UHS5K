@@ -387,13 +387,13 @@ var gameState = {
     },
 
 
-    activeBuildCursor: function (width, height, collision, type) {
+    activeBuildCursor: function (width, height, collision, type, room) {
         this.buildMarker = game.add.graphics();
         this.buildSpriteGroup = game.add.group();
         if(type == SINGLE_FEATURE_TYPE.SINGLE_BED || type == SINGLE_FEATURE_TYPE.DOUBLE_BED){
-                var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
-                var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_head_sprite, Phaser.RIGHT_CENTER, 0);
-                var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
+                var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
+                var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
+                var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
                 this.buildSpriteGroup.add(bed_head_sprite);
                 this.buildSpriteGroup.add(bed_middle_sprite);
                 this.buildSpriteGroup.add(bed_end_sprite);
@@ -401,7 +401,7 @@ var gameState = {
             console.error("type for build cursor not found "+type);
         }
         console.log(type);
-        
+
         var color = collision ? 0xFF0000 : 0x000000;
         this.buildMarker.lineStyle(2, color, 1);
         this.buildMarker.collision = collision;
@@ -409,11 +409,14 @@ var gameState = {
         this.buildMarker.u_width = width;
         this.buildMarker.u_height = height;
         this.buildMarker.u_type = type;
+        this.buildMarker.u_room = room;
     },
 
     deactivateBuildCursor: function(){
         this.buildMarker.destroy();
         this.buildMarker = null;
+        this.buildSpriteGroup.destroy();
+        this.buildSpriteGroup = null;
     },
 
 
@@ -423,6 +426,9 @@ var gameState = {
             var x = this.objectLayer.getTileX(game.input.activePointer.worldX) * TILE.SIZE;
             var y = this.objectLayer.getTileY(game.input.activePointer.worldY) * TILE.SIZE;
             var collide = false;
+            if(this.getRoom(game.input.activePointer) !== this.buildMarker.u_room) {
+                collide = true; // not in room
+            }
             for (var width = x; width < (this.buildMarker.u_width * TILE.SIZE + x ); width += TILE.SIZE) {
                 for (var height = y; height < (this.buildMarker.u_height * TILE.SIZE + y); height += TILE.SIZE) {
                     collide = collide || this.map.getTile(this.objectLayer.getTileX(width), this.objectLayer.getTileY(height), this.objectLayer) != null;
@@ -436,13 +442,13 @@ var gameState = {
                 if (!this.buildMarker.collision) {
                     this.buildMarker.destroy();
                     this.buildSpriteGroup.destroy();
-                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, true, this.buildMarker.u_type);
+                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, true, this.buildMarker.u_type, this.buildMarker.u_room);
                 }
             } else {
                 if (this.buildMarker.collision) {
                     this.buildMarker.destroy();
                     this.buildSpriteGroup.destroy();
-                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, false, this.buildMarker.u_type);
+                    this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, false, this.buildMarker.u_type, this.buildMarker.u_room);
                 }
             }
             this.buildMarker.x = x;
@@ -453,7 +459,8 @@ var gameState = {
                 group_child.y = y;
             }
             if (game.input.mousePointer.isDown && !collide) {
-                //TODO: build here
+                var room = this.buildMarker.u_room;
+                this.world.upgradeRoom(this.buildMarker.u_room, this.buildMarker.u_type);
                 this.deactivateBuildCursor();
             }
         }
