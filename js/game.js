@@ -35,7 +35,7 @@ var gameState = {
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
-        this.map.addTilesetImage('ProtoTileset', ASSETS.TILESET_PROTO_KARTE);
+        this.map.addTilesetImage('HotelTileSet', ASSETS.TILESET_PROTO_KARTE);
         this.createLayers();
         this.onLayers(function (layer) {
             layer.resizeWorld();
