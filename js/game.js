@@ -11,11 +11,13 @@ var gameState = {
     zoomButtons: null,
     miscButtons: null,
     newsHudMenu : null,
+    roomMenuHud:null,
+    world:null,
     stars: [],
     layers: [],
 
     create: function () {
-console.log("now");
+        this.world = gameWorld;
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -35,6 +37,7 @@ console.log("now");
         this.miscButtons = game.input.keyboard.addKeys({'shake': Phaser.KeyCode.O});
 
         game.input.onDown.add(this.addObject, this);
+        game.input.onDown.add(this.openRoomMenuIfAny, this);
     },
 
     update: function () {
@@ -75,16 +78,75 @@ console.log("now");
     },
 
     addObject: function (point) {
-        console.log(point);
-        console.log(this.map);
         var posX = (this.layers[0].getTileX(point.worldX) * TILE.SIZE);
         var posY = (this.layers[0].getTileY(point.worldY) * TILE.SIZE);
         var sprite = this.game.add.sprite(posX, posY, ASSETS.PERSON);
         sprite.scale.setTo(0.25,0.25);
+    },
 
-        this.starsVisible(Math.random()*5);
-        this.setupMoneyHud(Math.random()*1000);
+    getRoom: function (point) {
+        return { name: "Test Raum"};
+    },
 
+    createBuildMenu: function (room) {
+        var featureCount = 0;
+        var self=this;
+        function addFeatureOption(name, value) {
+
+            var style = { font: "20px Arial", fill: "#000000", align: "left" };
+
+            function click() {
+                //TODO
+            }
+
+            var button = game.add.button(offsetLeft + padding  , 120 +featureCount*100, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
+            button.scale.x = 6;
+            button.fixedToCamera = true;
+
+            var featureName = game.add.text(offsetLeft + padding + 10 , 130 +featureCount*100, name, style);
+            featureName.fixedToCamera = true;
+
+            var price = game.add.text(offsetLeft + padding + 100 , 130 +featureCount*100, value+"€", style);
+            price.fixedToCamera = true;
+
+            self.roomMenuHud.add(button);
+            self.roomMenuHud.add(featureName);
+            self.roomMenuHud.add(price);
+            featureCount += 1;
+        }
+
+        if(this.roomMenuHud ){
+            this.roomMenuHud.destroy();
+            this.roomMenuHud = null;
+        }else{
+            this.roomMenuHud = game.add.group();
+            var offsetLeft = game.width/2;
+            var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_BG);
+            sprite.scale.x = offsetLeft -10;
+            sprite.scale.y = game.height - 20;
+            sprite.fixedToCamera = true;
+
+            var style = { font: "25px Arial", fill: "#000000", align: "left" };
+            var padding = 20;
+
+            var title  = game.add.text(offsetLeft + padding , 20, room.name, style);
+            title.fixedToCamera = true;
+
+            this.roomMenuHud.add(sprite)
+            this.roomMenuHud.add(title);
+
+            addFeatureOption("Test",1000);
+            addFeatureOption("Test",1000);
+            addFeatureOption("Test",1000);
+            addFeatureOption("Test",1000);
+        }
+    },
+    openRoomMenuIfAny: function(point){
+        var room = this.getRoom(point);
+        console.log(room);
+        if(room){
+            this.createBuildMenu(room);
+        }
     },
 
     createNewsHud: function () {

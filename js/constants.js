@@ -3,6 +3,7 @@
  */
 ASSETS = {
     DUMMY_BUTTON: 'dummy_button',
+    MENU_BG: 'menu_bg',
     TILES_DESERT_JSON: 'desert_json',
     TMW_DESERT_SPACING: 'tmw_desert',
 
