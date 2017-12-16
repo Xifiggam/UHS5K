@@ -38,7 +38,6 @@ var gameState = {
         room.length = 5;
         room.height = 6;
         room.name = "Room 102";
-        room.singleBed = true;
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -46,8 +45,7 @@ var gameState = {
         room.posY = 19;
         room.length = 5;
         room.height = 6;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Room 103";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -55,8 +53,7 @@ var gameState = {
         room.posY = 19;
         room.length = 7;
         room.height = 6;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Room 104";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -64,8 +61,7 @@ var gameState = {
         room.posY = 13;
         room.length = 4;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Room 105";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -73,7 +69,7 @@ var gameState = {
         room.posY = 7;
         room.length = 4;
         room.height = 5;
-        room.name = "Room 101";
+        room.name = "Room Blue";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -81,8 +77,7 @@ var gameState = {
         room.posY = 1;
         room.length = 6;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Room Red";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -90,8 +85,7 @@ var gameState = {
         room.posY = 1;
         room.length = 7;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Suite \"Lukas\"";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -99,8 +93,7 @@ var gameState = {
         room.posY = 9;
         room.length = 5;
         room.height = 7;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Suite \"Gabe\"";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -108,8 +101,7 @@ var gameState = {
         room.posY = 9;
         room.length = 6;
         room.height = 7;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Suite \"Zelle\"";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -117,7 +109,7 @@ var gameState = {
         room.posY = 1;
         room.length = 11;
         room.height = 5;
-        room.name = "Room 101";
+        room.name = "Suite \"Phoe\"";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -125,8 +117,7 @@ var gameState = {
         room.posY = 9;
         room.length = 6;
         room.height = 7;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Suite \"Veit\"";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -134,8 +125,7 @@ var gameState = {
         room.posY = 1;
         room.length = 7;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Honeymoon Suite";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -143,8 +133,7 @@ var gameState = {
         room.posY = 1;
         room.length = 7;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Baum des Lebens";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -152,8 +141,7 @@ var gameState = {
         room.posY = 7;
         room.length = 5;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "\"Spielzimmer\"";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -161,8 +149,7 @@ var gameState = {
         room.posY = 13;
         room.length = 5;
         room.height = 5;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Room 8541";
         this.world.roomList.push(room);
 
         var room = new Room();
@@ -170,8 +157,7 @@ var gameState = {
         room.posY = 9;
         room.length = 5;
         room.height = 7;
-        room.name = "Room 102";
-        room.singleBed = true;
+        room.name = "Room 100";
         this.world.roomList.push(room);
 
 

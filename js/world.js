@@ -7,9 +7,12 @@ var gameWorld = {
     guestList: [],
     roomList: [],
     workerList: [],
-
+    globalUpgradesArray: ["wifi_room", "wifi_lobby", "seminarRoom", "massageParlor", "sauna", "saunaPlus", "pool", "outdoorPool", "fitnessStudio", "hotelBar", "restaurant"],
+    localUpgradesArray: ["singleBed", "doubleBed", "childBed", "luxuryBed", "plant", "view", "entertainment", "bath", "minibar", "acUnit"],
     money: 1000,
     stars: 1,
+
+
     // GLOBAL UPGRADES WITH PRICE
     wifi_room: false,
     WIFI_ROOM_PRICE: 1000,
@@ -43,6 +46,19 @@ var gameWorld = {
 
     restaurant: false,
     RESTAURANT_PRICE: 1000,
+
+    // Room Upgrade Prices
+    SINGLEBED_PRICE: 250,
+    DOUBLEBED_PRICE: 500,
+    CHILDBED_PRICE: 200,
+    LUXURYBED_PRICE: 500,
+    PLANT_PRICE: 100,
+    VIEW_PRICE: 1000,
+    ENTERTAINMENT_PRICE: 700,
+    BATH_PRICE: 700,
+    MINIBAR_PRICE: 400,
+    ACUNIT_PRICE: 800,
+
 
     update: function (deltaTime) {
         alength = this.roomList.length;
@@ -112,43 +128,43 @@ var gameWorld = {
         switch(feature) {
             case "singleBed":
                 Room.singleBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.SINGLEBED_PRICE;
                 break;
             case "doubleBed":
                 Room.doubleBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.DOUBLEBED_PRICE;
                 break;
             case "childBed":
                 Room.childBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.CHILDBED_PRICE;
                 break;
             case "luxuryBed":
                 Room.luxuryBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.LUXURYBED_PRICE;
                 break;
             case "plant":
                 Room.plant = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.PLANT_PRICE;
                 break;
             case "view":
                 Room.view = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.VIEW_PRICE;
                 break;
             case "entertainment":
                 Room.entertainment = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.ENTERTAINMENT_PRICE;
                 break;
             case "bath":
                 Room.bath = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.BATH_PRICE;
                 break;
             case "minibar":
                 Room.minibar = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.MINIBAR_PRICE;
                 break;
             case "acUnit":
                 Room.acUnits = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.ACUNIT_PRICE;
                 break;
         }
     }
@@ -220,6 +236,9 @@ function Room () {
         var posY = 0;
         var length = 0;
         var heigth = 0;
+        var roomNumber;
+        var free = true;
+        var price = 50;
         var singleBed = false;
         var doubleBed = false;
         var childBed = false;
@@ -236,9 +255,56 @@ function Room () {
 
         return [this.singleBed,this.doubleBed,this.childBed,this.luxuryBed,this.plant,this.view,this.entertainment,this.bath,this.minibar,this.acUnit];
     };
+
+    this.getRoomStatus = function(){
+      return free;
+    };
+
+    this.getRoomPrice = function(){
+        return price;
+    }
     
     this.update = function (deltaTime) {
         //Update Function
     };
 }
 
+function Customer (guestObj) {
+
+    var customerSatisfaction = 0; // 0 to 1 -> Erfüllte/Gestellte Wünsche
+    var satisfiedRequirements = 0;
+    var satisfactionArray = [];
+    for (k=0; i<this.roomList.length;k++) {
+        if ((this.roomList[k].getRoomStatus() === true) && (this.roomList[k].getRoomPrice()<=guestObj.maximumPrice)) {
+            for (i = 0; i < guestObj.requirementArray.length; i++) {
+                for (j = 0; i < guestObj.requirementArrayChoose; j++) {
+                    if (guestObj.requirementArray[i] === guestObj.requirementArrayChoose[j]) {
+                        satisfiedRequirements++;
+                    }
+                }
+
+            }
+        }
+        satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
+    }
+    var roomChosen = indexOfMaxValue(satisfactionArray);
+    return [roomChosen, satisfactionArray[roomChosen]];
+}
+
+function indexOfMax(arr) {
+    if (arr.length === 0) {
+        return -1;
+    }
+
+    var max = arr[0];
+    var maxIndex = 0;
+
+    for (var i = 1; i < arr.length; i++) {
+        if (arr[i] > max) {
+            maxIndex = i;
+            max = arr[i];
+        }
+    }
+
+    return maxIndex;
+}

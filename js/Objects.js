@@ -15,6 +15,13 @@ function Guest (type) {
     this.statusCurrent;
 }
 
+function Customer (guestObj) {
+
+    guestObj.requirementArray
+
+
+}
+
 
 // Upgrades that are available globally for the Hotel. Customers can have "requirements" drawn from this.
 GobalUpgrades = {
@@ -163,21 +170,50 @@ var RandomNames = {
         'Maria',
         'João',
         'José',
-        'Marcos'
+        'Marcos',
+        'Donald',
+        'Severius',
+        'John',
+        'Jack',
+        'Jimmy',
+        'Martha',
+        'Bruce',
+        'Clark',
+        'Gal',
+        'Gloria',
+        'Vix',
+        'Sterling',
+
     ],
     middleNames: [
         'Costa',
         'Araújo',
         'Rodrigues',
         'Pereira',
-        'Soares'
+        'Soares',
+        'Linda',
+        'Hidalgo',
+        'Ruth',
+        'Roald',
+        'Linus'
+        'Mallory',
+
     ],
     lastNames: [
         'Pires',
         'Alves',
         'Álvares',
         'Moreira',
-        'Ferreira'
+        'Ferreira',
+        'Wayne',
+        'Kent',
+        'Trump',
+        'Dahl',
+        'Kenobi',
+        'Skywalker',
+        'Archer'
+
+
     ],
     generate:function(quantity){
         var maxNames = this.firstNames.length * this.middleNames.length * this.lastNames.length;
