@@ -188,7 +188,7 @@ var gameState = {
     update: function () {
         this.inputHandling();
         this.updateBuildCursor();
-        this.world.update();
+        this.world.update(game.time.elapsed);
     },
 
     createLayers: function () {
@@ -263,7 +263,7 @@ var gameState = {
             }
 
             function click() {
-                self.activeBuildCursor(3, 1, false, feature_type);
+                self.activeBuildCursor(3, 1, false, feature_type, room);
             }
 
             var button = game.add.button(offsetLeft + padding, 120 + featureCount * 100, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -427,6 +427,7 @@ var gameState = {
             var y = this.objectLayer.getTileY(game.input.activePointer.worldY) * TILE.SIZE;
             var collide = false;
             if(this.getRoom(game.input.activePointer) !== this.buildMarker.u_room) {
+                console.log("not in room");
                 collide = true; // not in room
             }
             for (var width = x; width < (this.buildMarker.u_width * TILE.SIZE + x ); width += TILE.SIZE) {
