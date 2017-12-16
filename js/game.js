@@ -51,6 +51,16 @@ var gameState = {
 
         game.input.onDown.add(this.addObject, this);
         game.input.onDown.add(this.openRoomMenuIfAny, this);
+
+        //day/night
+        // var nightSprite = game.add.sprite(0,0,ASSETS.NIGHT);
+        // nightSprite.scale.x = game.width;
+        // nightSprite.scale.y = game.height;
+        // nightSprite.alpha = 0;
+        // nightSprite.fixedToCamera = true;
+        // var tween = game.add.tween(nightSprite).to({alpha:0.5},GAMELOGIC.MSPERDAY);
+        // tween.start();
+
     },
 
 
