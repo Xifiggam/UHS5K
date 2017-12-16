@@ -217,7 +217,7 @@ function Guest (name) {
 
     this.update = function(deltaTime) {
         this.statetime+=deltaTime;
-        switch(statusCurrent){
+        switch(this.statusCurrent){
             case "coming":
                 if(this.statetime>=this.comingTime){
                     customer(this);
