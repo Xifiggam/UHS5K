@@ -377,7 +377,7 @@ var gameState = {
         }
 
         function addFeatureOption(name, value, bought, notPlaceable, feature_type) {
-            var style = {font: "20px Arial", fill: "#000000", align: "left"};
+            var style = {font: "20px Arial", fill: "#ffffff", align: "left"};
 
             if (bought) {
                 style.fill = "gray"
@@ -399,6 +399,7 @@ var gameState = {
             var button = game.add.button(offsetLeft + padding, 120 + baseOffsetTop, ASSETS.DUMMY_BUTTON, click_button, this, 2, 1, 0);
             button.scale.x = 6;
             button.scale.y = 0.9;
+            button.alpha = 0;
             button.inputEnabled = !bought;
             button.fixedToCamera = true;
 
@@ -418,18 +419,23 @@ var gameState = {
         this.roomMenuHud = game.add.group();
         this.menuHud.add(this.roomMenuHud);
         var offsetLeft = game.width / 2;
-        var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_BG);
-        sprite.scale.x = offsetLeft - 10;
-        sprite.scale.y = game.height - 20;
+        var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_TOP);
+        sprite.scale.x = 2;
         sprite.fixedToCamera = true;
+        var sprite_bg = game.add.sprite(offsetLeft, 10  + TILE.SIZE * 2, ASSETS.MENU_CENTER);
+        sprite_bg.scale.x = 2;
+        sprite_bg.scale.y = 10;
+        sprite_bg.fixedToCamera = true;
 
 
-        var style = {font: "25px Arial", fill: "#000000", align: "left"};
+        var style = {font: "25px Arial", fill: "#ffffff", align: "left"};
         var padding = 20;
-
         var btnClose = game.add.button(game.width - 50, 20, ASSETS.DUMMY_BUTTON, self.close_build_menu, this, 2, 1, 0);
+        btnClose.alignIn(sprite, Phaser.TOP_RIGHT, 0, 0);
+        btnClose.alpha = 0;
         btnClose.fixedToCamera = true;
         var closex = game.add.text(game.width - 40, 20, "X", style);
+        closex.alignIn(btnClose, Phaser.CENTER, 0, 0);
         closex.fixedToCamera = true;
 
         function set_price() {
@@ -438,17 +444,28 @@ var gameState = {
         }
 
         var btnSetPrice = game.add.button(game.width - 250, 20, ASSETS.DUMMY_BUTTON, set_price, this, 2, 1, 0);
-        btnSetPrice.fixedToCamera = true;
         btnSetPrice.scale.x = 2.5;
+        btnSetPrice.alpha = 0;
+        btnSetPrice.alignIn(sprite, Phaser.TOP_RIGHT, -100, 0);
+        btnSetPrice.fixedToCamera = true;
         console.log(room);
         var setPrice = game.add.text(game.width - 240, 20, room.price+"€", style);
+        setPrice.alignIn(btnSetPrice, Phaser.CENTER, 0, 0);
         setPrice.fixedToCamera = true;
 
 
         var title = game.add.text(offsetLeft + padding, 20, room.name, style);
         title.fixedToCamera = true;
+        var sprite_end = game.add.sprite(offsetLeft, 10, ASSETS.MENU_TOP);
+        sprite_end.scale.x = 2;
+        sprite_end.anchor.setTo(1, 1);
+        sprite_end.angle = 180;
+        sprite_end.alignTo(sprite_bg, Phaser.BOTTOM_LEFT, sprite.width, -1*sprite_end.height);
+        sprite_end.fixedToCamera = true;
+        this.roomMenuHud.add(sprite_end);
 
         this.roomMenuHud.add(sprite);
+        this.roomMenuHud.add(sprite_bg);
         this.roomMenuHud.add(title);
         var features = room.getFeatures();
 
