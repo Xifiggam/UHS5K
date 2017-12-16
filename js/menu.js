@@ -4,10 +4,7 @@ var menuState = {
     create: function () {
         this.MenuEntryCount = 1;
 
-        game.add.plugin(Phaser.Plugin.Debug);
-        // game.add.plugin(Phaser.Plugin.Inspector);
-        // game.add.plugin(PhaserSuperStorage.StoragePlugin);
-        game.add.plugin(PhaserInput.Plugin);
+        
 
         var button = game.add.button(game.world.centerX - 95, 100, ASSETS.DUMMY_BUTTON, menu.actionOnClick, this, 2, 1, 0);
 
