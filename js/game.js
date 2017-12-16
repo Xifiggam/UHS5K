@@ -544,6 +544,7 @@ var gameState = {
     activateRoom: function(index){
         var roomToActivate = this.world.roomList[index];
         if(!roomToActivate.activated) {
+            roomToActivate.activated = true;
             var copyTile = this.map.getTile(3, 0, this.wallLayer);
             for(var x = roomToActivate.posX; x < roomToActivate.length + roomToActivate.posX + 1; x++){
                 gameState.map.putTile(copyTile, x, roomToActivate.posY-1, this.wallLayer);
@@ -705,6 +706,7 @@ var gameState = {
                 } else {
                     console.error('type not found for placement');
                 }
+                this.backroundObjectGroup.add(sprite_group);
                 //write tile as blocker for building
                 var currentTile = this.map.getTile(tileX, tileY, this.floorLayer);
                 for (var it_bl_tile_x = 0; it_bl_tile_x < this.buildMarker.u_width; it_bl_tile_x++) {
