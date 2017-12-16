@@ -37,6 +37,7 @@ var gameState = {
         room.length = 6;
         room.height = 6;
         room.name = "Room 102";
+        room.singleBed = true;
         this.world.roomList.push(room);
 
 
@@ -132,9 +133,13 @@ var gameState = {
         var featureCount = 0;
         var self = this;
 
-        function addFeatureOption(name, value) {
+        function addFeatureOption(name, value, bought, notPlaceable) {
 
             var style = {font: "20px Arial", fill: "#000000", align: "left"};
+
+            if(bought){
+                style.fill = "gray"
+            }
 
             function click() {
                 //TODO
@@ -142,12 +147,13 @@ var gameState = {
 
             var button = game.add.button(offsetLeft + padding, 120 + featureCount * 100, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
             button.scale.x = 6;
+            button.inputEnabled = !bought;
             button.fixedToCamera = true;
 
             var featureName = game.add.text(offsetLeft + padding + 10, 130 + featureCount * 100, name, style);
             featureName.fixedToCamera = true;
 
-            var price = game.add.text(offsetLeft + padding + 100, 130 + featureCount * 100, value + "€", style);
+            var price = game.add.text(offsetLeft + padding + 130, 130 + featureCount * 100, value + "€", style);
             price.fixedToCamera = true;
 
             self.roomMenuHud.add(button);
@@ -175,11 +181,21 @@ var gameState = {
 
             this.roomMenuHud.add(sprite)
             this.roomMenuHud.add(title);
+            var features = room.getFeatures();
 
-            addFeatureOption("Test", 1000);
-            addFeatureOption("Test", 1000);
-            addFeatureOption("Test", 1000);
-            addFeatureOption("Test", 1000);
+            // [singleBed,doubleBed,childBed,luxuryBed,plant,view,entertainment,bath,minibar,acUnit]
+            alert(features);
+            addFeatureOption("Single bed", 1000,features[0]);
+            addFeatureOption("Double bed", 1000,features[1]);
+            addFeatureOption("Child bed", 1000,features[2]);
+            addFeatureOption("Luxury bed", 1000,features[3]);
+            addFeatureOption("Plant", 1000,features[4]);
+            addFeatureOption("View", 1000,features[5],true);
+            addFeatureOption("Entertainment", 1000,features[6]);
+            addFeatureOption("Bath", 1000,features[7]);
+            addFeatureOption("Minibar", 1000,features[8],true);
+            addFeatureOption("AC Unit", 1000,features[9],true);
+
         }
     },
     openRoomMenuIfAny: function (point) {

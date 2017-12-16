@@ -232,7 +232,9 @@ function Room () {
         var acUnit = false;
 
     this.getFeatures = function(){
-        return [singleBed,doubleBed,childBed,luxuryBed,plant,view,entertainment,bath,minibar,acUnit];
+        console.log(this);
+
+        return [this.singleBed,this.doubleBed,this.childBed,this.luxuryBed,this.plant,this.view,this.entertainment,this.bath,this.minibar,this.acUnit];
     };
     
     this.update = function (deltaTime) {
