@@ -12,6 +12,7 @@ var gameState = {
     miscButtons: null,
     newsHudMenu: null,
     roomMenuHud: null,
+    buttonsHud: null,
     world: null,
     stars: [],
     layers: [],
@@ -56,6 +57,48 @@ var gameState = {
         game.input.onDown.add(this.addObject, this);
         game.input.onDown.add(this.openRoomMenuIfAny, this);
 
+        var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
+        this.buttonsHud = game.add.group();
+        var button_start_x = 20;
+        var button_start_y = game.height-120;
+        var buyRoomButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
+            var button_texts = [];
+            var button_type = [];
+            for (var room_it = 0; room_it < self.world.roomList.length; room_it++) {
+                var room = self.world.roomList[room_it];
+                if(!room.activated){
+                    button_texts.push(room.name);
+                    button_type.push(room);
+                }
+            }
+            self.openBuyMenu(function(room_cl){console.log('clicked', room_cl)}, button_texts, button_type);
+
+        }, this, 2, 1, 0);
+        buyRoomButton.scale.x = 3;
+        buyRoomButton.scale.y = 1.5;
+        buyRoomButton.fixedToCamera = true;
+        var buyRoomsText = game.add.text(button_start_x+35, button_start_y+12, "BUY ROOMS", text_style);
+        buyRoomsText.fixedToCamera = true;
+
+        button_start_x += 200;
+        var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){self.openBuyMenu();}, this, 2, 1, 0);
+        buyStaffButton.scale.x = 3;
+        buyStaffButton.scale.y = 1.5;
+        buyStaffButton.fixedToCamera = true;
+        var buyStaff = game.add.text(button_start_x+35, button_start_y+12, "HIRE STAFF", text_style);
+        buyStaff.fixedToCamera = true;
+
+        button_start_x += 200;
+        var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){self.openBuyMenu();}, this, 2, 1, 0);
+        buyUpgradeButton.scale.x = 3.6;
+        buyUpgradeButton.scale.y = 1.5;
+        buyUpgradeButton.fixedToCamera = true;
+        var buyUpgradeText = game.add.text(button_start_x+35, button_start_y+12, "BUY UPGRADES", text_style);
+        buyUpgradeText.fixedToCamera = true;
+
+        this.buttonsHud.add(buyUpgradeButton);
+
+
         //day/night
         // var nightSprite = game.add.sprite(0,0,ASSETS.NIGHT);
         // nightSprite.scale.x = game.width;
@@ -66,6 +109,7 @@ var gameState = {
         // tween.start();
 
     },
+
 
 
     update: function () {
@@ -217,7 +261,7 @@ var gameState = {
         var featureCount = 0;
         var self = this;
 
-        if (self.roomMenuHud || self.buildMarker != null) {
+        if (self.roomMenuHud || self.buildMarker != null || self.buyMenuHud != null) {
             return;
         }
 
@@ -586,6 +630,46 @@ var gameState = {
         var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
         group.add(bed_head_sprite);
         group.add(bed_end_sprite);
+    },
+
+    openBuyMenu: function(click_callback, button_texts, button_types){
+        this.buyMenuHud = game.add.group();
+        var offsetLeft = game.width / 2;
+        var offsetTop = 10;
+        var sprite_top = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
+        sprite_top.fixedToCamera = true;
+        this.buyMenuHud.add(sprite_top);
+        offsetTop += TILE.SIZE;
+        var button_offset = offsetTop;
+        var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
+        sprite_center.scale.y = 10;
+        offsetTop += TILE.SIZE * 20;
+        sprite_center.fixedToCamera = true;
+        this.buyMenuHud.add(sprite_center);
+        var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
+        sprite_bottom.fixedToCamera = true;
+        sprite_bottom.anchor.setTo(1, 1);
+        sprite_bottom.angle = 180;
+        this.buyMenuHud.add(sprite_bottom);
+        if(button_texts.length != button_types.length){
+            console.log('error cannot render buttons types and texts not matching')
+        } else {
+            for (var button_render_it = 0; button_render_it < button_texts.length; button_render_it++) {
+                var button_text = button_texts[button_render_it];
+                var button_type = button_texts[button_render_it];
+                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, click_callback, this, 2, 1, 0);
+                buyUpgradeButton.fixedToCamera = true;
+                buyMenuHud.add(buyUpgradeButton);
+            }
+
+
+        }
+
+    },
+
+    closeBuyMenu: function(){
+        this.buyMenuHud.destroy();
+        this.buyMenuHud = null;
     }
 };
 
