@@ -15,6 +15,7 @@ ASSETS = {
     FLOOR: 'floor',
     WALL: 'wall',
     BED: 'bed',
+    NIGHT : 'asdf',
 
     BED_HEAD: 'bed_head',
     BED_MIDDLE: 'bed_middle',
@@ -24,6 +25,7 @@ ASSETS = {
     TOILET: 'toilet',
     SINK: 'sink',
     TV: 'tv',
+    CHAR_OLD: 'old',
 };
 
 SINGLE_FEATURE_TYPE = {
@@ -45,5 +47,5 @@ TILE = {
 };
 
 GAMELOGIC = {
-    MSPERDAY: 30000,
+    MSPERDAY: 3000,
 };
