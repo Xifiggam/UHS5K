@@ -128,43 +128,43 @@ var gameWorld = {
         switch(feature) {
             case "singleBed":
                 Room.singleBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.SINGLEBED_PRICE;
                 break;
             case "doubleBed":
                 Room.doubleBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.DOUBLEBED_PRICE;
                 break;
             case "childBed":
                 Room.childBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.CHILDBED_PRICE;
                 break;
             case "luxuryBed":
                 Room.luxuryBed = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.LUXURYBED_PRICE;
                 break;
             case "plant":
                 Room.plant = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.PLANT_PRICE;
                 break;
             case "view":
                 Room.view = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.VIEW_PRICE;
                 break;
             case "entertainment":
                 Room.entertainment = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.ENTERTAINMENT_PRICE;
                 break;
             case "bath":
                 Room.bath = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.BATH_PRICE;
                 break;
             case "minibar":
                 Room.minibar = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.MINIBAR_PRICE;
                 break;
             case "acUnit":
                 Room.acUnits = true;
-                this.money = this.money - 1000;
+                this.money = this.money - this.ACUNIT_PRICE;
                 break;
         }
     }
