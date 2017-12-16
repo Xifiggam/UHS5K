@@ -1,7 +1,7 @@
 
 //Random Requirements between 1-10 with random intensity.
 function Guest (type) {
-    this.type = type;
+    this.name = type;
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = this.globalUpgradesArray.concat(this.localUpgradesArray);
     this.requirementArray = [];
@@ -9,7 +9,10 @@ function Guest (type) {
         this.requirementArray.concat(this.requirementArrayChoose[Math.floor(Math.random() * myArray.length)]);
     }
     this.maximumPrice = Math.floor((Math.random() * 1000) + 100);
-
+    this.xCoordinate = 0;
+    this.yCoordinate = 0;
+    this.statusArray = ["coming", "going", "staying"];
+    this.statusCurrent;
 }
 
 
@@ -40,7 +43,7 @@ GobalUpgrades = {
     outdoorPool: false,
     OUTDOORPOOL_PRICE: 2000,
 
-    fitnesStudio: false,
+    fitnessStudio: false,
     FITNESSSTUDIO_PRICE: 1000,
 
     hotelBar: false,
@@ -73,7 +76,7 @@ var localUpgrades = {
     BATH_PRICE: 1000,
      minibar: false,
     MINIBAR_PRICE: false,
-     acUnit: false
+     acUnit: false,
     ACUNIT_PRICE: 1000
 
 };
@@ -83,21 +86,44 @@ var Rooms ={
 
 }
 
-var Personal = {
-   var job = ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Operating Officer"];
-   var skill = [1,2,3,4,5];
-   var price;
+
+// gets ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Operating Officer"] and randomly generates price and quality
+function Personal (type) {
+    this.job = type;
+    switch (type) {
+        case "receptionist":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
+            break;
+        case "cleaning":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 100) + 50)*this.quality);
+            break;
+        case "kitchen":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
+            break;
+        case "bar":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
+            break;
+        case "masseur":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
+            break;
+        case "Chief Operating Officer":
+            this.quality = Math.floor((Math.random() * 5) + 1);
+            this.price = Math.floor(((Math.random() * 300) + 50)*this.quality);
+            break;
+        default:
+
+    }
+    this.xCoordinate = 0;
+    this.yCoordinate = 0;
 
 }
 
 
-// Popularity goes from 1 to 100, if 100 is reached upgrade to one star higher.
-var Resources = {
-
-    var money;
-    var stars;
-    var popularity;
-}
 
 var Events = {
     var hygienecontrol;
@@ -128,4 +154,60 @@ var Marketing = {
 
 var Platform = {
 
+}
+
+var RandomNames = {
+    firstNames: [
+        'Vinicius',
+        'Talita',
+        'Maria',
+        'João',
+        'José',
+        'Marcos'
+    ],
+    middleNames: [
+        'Costa',
+        'Araújo',
+        'Rodrigues',
+        'Pereira',
+        'Soares'
+    ],
+    lastNames: [
+        'Pires',
+        'Alves',
+        'Álvares',
+        'Moreira',
+        'Ferreira'
+    ],
+    generate:function(quantity){
+        var maxNames = this.firstNames.length * this.middleNames.length * this.lastNames.length;
+        if (quantity > maxNames) {
+            throw "Quantity greater than possible matches. Possible matches: "+maxNames;
+        }
+        var names = [];
+        while ( names.length < quantity ) {
+            var name = "";
+            var first = Math.floor( Math.random() * this.firstNames.length );
+            name+= this.firstNames[first];
+            var middle = Math.floor( Math.random() * this.middleNames.length );
+            name+= " "+this.middleNames[middle];
+            var last = Math.floor( Math.random() * this.lastNames.length );
+            name+= " "+this.lastNames[last];
+
+            if (names.indexOf(name)==-1) {
+                names.push(name);
+            }
+        }
+        return names;
+    }
+};
+
+try {
+    var names = RandomNames.generate(150);
+    for (var i=0; i<names.length; i++) {
+        document.write(names[i]+'<br/>');
+    }
+    document.write('<br /><strong>Total names:</strong> '+names.length);
+} catch (e) {
+    document.write(e);
 }
