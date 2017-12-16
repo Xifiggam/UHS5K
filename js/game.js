@@ -271,7 +271,13 @@ var gameState = {
             }
             function click_button() {
                 self.close_build_menu();
-                self.activateBuildCursor(feature_type, room);
+                //TODO: check if there is money
+                if(!notPlaceable) {
+                   self.activateBuildCursor(feature_type, room);
+                } else {
+                    self.world.upgradeRoom(room, feature_type);
+                }
+
             }
 
             var baseOffsetTop = featureCount * 50;
@@ -325,10 +331,10 @@ var gameState = {
         addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
         addFeatureOption("Child bed", this.world.CHILDBED_PRICE, features[2], false, SINGLE_FEATURE_TYPE.CHILD_BED);
         addFeatureOption("Luxury bed", this.world.LUXURYBED_PRICE, features[3], false, SINGLE_FEATURE_TYPE.LUXURY_BED);
-        addFeatureOption("Plant", this.world.PLANT_PRICE, features[4], SINGLE_FEATURE_TYPE.PLANT);
+        addFeatureOption("Plant", this.world.PLANT_PRICE, features[4], false, SINGLE_FEATURE_TYPE.PLANT);
         addFeatureOption("View", this.world.VIEW_PRICE, features[5], true, SINGLE_FEATURE_TYPE.VIEW);
         addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE, features[6], false, SINGLE_FEATURE_TYPE.ENTERTAINMENT);
-        addFeatureOption("Bath", this.world.BATH_PRICE, features[7], SINGLE_FEATURE_TYPE.BATH);
+        addFeatureOption("Bath", this.world.BATH_PRICE, features[7], false, SINGLE_FEATURE_TYPE.BATH);
         addFeatureOption("Minibar", this.world.MINIBAR_PRICE, features[8], true, SINGLE_FEATURE_TYPE.MINIBAR);
         addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], true, SINGLE_FEATURE_TYPE.ACUNIT);
 
@@ -405,11 +411,48 @@ var gameState = {
         var width = 1;
         var height = 1;
         this.buildSpriteGroup = game.add.group();
-        if (type == SINGLE_FEATURE_TYPE.SINGLE_BED || type == SINGLE_FEATURE_TYPE.DOUBLE_BED) {
+        this.buildSpriteGroup.u_diff_size = false;
+        this.buildSpriteGroup.u_drawcallback = function(){console.log('drawcallback called but not implemented ')};
+        if (type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             width = 3;
+        } else if(type == SINGLE_FEATURE_TYPE.DOUBLE_BED) {
+            this.addBedSpriteToGroup(this.buildSpriteGroup);
+            this.addBedSpriteToGroup(this.buildSpriteGroup);
+            width = 3;
+            height = 2;
+        } else if(type == SINGLE_FEATURE_TYPE.LUXURY_BED) {
+            this.addBedSpriteToGroup(this.buildSpriteGroup);
+            this.addBedSpriteToGroup(this.buildSpriteGroup);
+            this.addBedSpriteToGroup(this.buildSpriteGroup);
+            width = 3;
+            height = 3;
+        } else if(type == SINGLE_FEATURE_TYPE.CHILD_BED) {
+            this.addChildBedSpriteToGroup(this.buildSpriteGroup);
+            width = 2;
+        } else if(type == SINGLE_FEATURE_TYPE.PLANT) {
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.PLANT));
+        } else if(type == SINGLE_FEATURE_TYPE.VIEW) {
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.VIEW));
+        } else if(type == SINGLE_FEATURE_TYPE.ENTERTAINMENT) {
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.TV));
+        } else if(type == SINGLE_FEATURE_TYPE.BATH) {
+            this.buildSpriteGroup.u_diff_size = true;
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.SHOWER));
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.TOILET));
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.SINK));
+            width = 2;
+            height = 4;
+            this.buildSpriteGroup.u_drawcallback = function(group, x, y){
+                group.children[0].x = x;
+                group.children[0].y = y;
+                group.children[1].x = x;
+                group.children[1].y = y + TILE.SIZE * 2;
+                group.children[2].x = x;
+                group.children[2].y = y + TILE.SIZE * 3;
+            }
         } else {
-            console.warn('will open build cursor without asset');
+            console.warn('will open build cursor without asset type was ' + type);
         }
         this.activeBuildCursor(width, height, false, type, room);
 
@@ -470,32 +513,69 @@ var gameState = {
                     this.activeBuildCursor(this.buildMarker.u_width, this.buildMarker.u_height, false, this.buildMarker.u_type, this.buildMarker.u_room);
                 }
             }
-            console.log(x, y);
             this.buildMarker.x = x;
             this.buildMarker.y = y;
-            for (var it_group_child = 0; it_group_child < this.buildSpriteGroup.children.length; it_group_child++) {
-                var group_child = this.buildSpriteGroup.children[it_group_child];
-                group_child.x = x + TILE.SIZE * it_group_child;
-                group_child.y = y;
+            if(!this.buildSpriteGroup.u_diff_size) {
+                //move build sprite
+                for (var it_group_child_x = 0; it_group_child_x < this.buildMarker.u_width; it_group_child_x++) {
+                    for (var it_group_child_y = 0; it_group_child_y < this.buildMarker.u_height; it_group_child_y++) {
+                        var group_child = this.buildSpriteGroup.children[it_group_child_x+it_group_child_y*this.buildMarker.u_width];
+                        group_child.x = x + TILE.SIZE * it_group_child_x ;
+                        group_child.y = y + TILE.SIZE * it_group_child_y;
+                    }
+                }
+            } else {
+                this.buildSpriteGroup.u_drawcallback(this.buildSpriteGroup, x, y);
             }
             if (game.input.mousePointer.isDown && !collide) {
                 var room = this.buildMarker.u_room;
                 this.world.upgradeRoom(this.buildMarker.u_room, this.buildMarker.u_type);
-                if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
-                    var currentTile = this.map.getTile(tileX, tileY, this.floorLayer);
-                    this.map.putTile(currentTile, tileX, tileY, this.objectLayer);
-                    this.map.putTile(currentTile, tileX + 1, tileY, this.objectLayer);
-                    this.map.putTile(currentTile, tileX + 2, tileY, this.objectLayer);
-                    var bedGroup = game.add.group();
-                    this.addBedSpriteToGroup(bedGroup);
-                    for (var bed_part_it = 0; bed_part_it < bedGroup.children.length; bed_part_it++) {
-                        var bed_part = bedGroup.children[bed_part_it];
-                        bed_part.x = x + TILE.SIZE * bed_part_it;
-                        bed_part.y = y;
-                    }
 
+                var sprite_group = game.add.group();
+                if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
+                    this.addBedSpriteToGroup(sprite_group);
+                }
+                else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.DOUBLE_BED) {
+                    this.addBedSpriteToGroup(sprite_group);
+                    this.addBedSpriteToGroup(sprite_group);
+                }
+                else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.LUXURY_BED) {
+                    this.addBedSpriteToGroup(sprite_group);
+                    this.addBedSpriteToGroup(sprite_group);
+                    this.addBedSpriteToGroup(sprite_group);
+                } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.CHILD_BED) {
+                    this.addChildBedSpriteToGroup(sprite_group);
+                } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.PLANT) {
+                    sprite_group.add(game.add.sprite(0, 0, ASSETS.PLANT));
+                } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.ENTERTAINMENT) {
+                    sprite_group.add(game.add.sprite(0, 0, ASSETS.TV));
+                } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.BATH) {
+                    sprite_group.add(game.add.sprite(0, 0, ASSETS.SHOWER));
+                    sprite_group.add(game.add.sprite(0, 0, ASSETS.TOILET));
+                    sprite_group.add(game.add.sprite(0, 0, ASSETS.SINK));
+                } else {
+                    console.error('type not found for placement');
+                }
+                //write tile as blocker for building
+                var currentTile = this.map.getTile(tileX, tileY, this.floorLayer);
+                for (var it_bl_tile_x = 0; it_bl_tile_x < this.buildMarker.u_width; it_bl_tile_x++) {
+                    for (var it_bl_tile_y = 0; it_bl_tile_y < this.buildMarker.u_height; it_bl_tile_y++) {
+                        this.map.putTile(currentTile, tileX + it_bl_tile_x, tileY + it_bl_tile_y, this.objectLayer);
+                        if(!this.buildSpriteGroup.u_diff_size) {
+                            var group_child_block = sprite_group.children[it_bl_tile_x + it_bl_tile_y * this.buildMarker.u_width];
+                            group_child_block.x = x + TILE.SIZE * it_bl_tile_x ;
+                            group_child_block.y = y + TILE.SIZE * it_bl_tile_y;
+                        }
+                    }
+                }
+                if(this.buildSpriteGroup.u_diff_size) {
+                    this.buildSpriteGroup.u_drawcallback(sprite_group, x, y);
                 }
 
+
+
+                this.deactivateBuildCursor();
+            } else if (game.input.mousePointer.isDown){
                 this.deactivateBuildCursor();
             }
         }
@@ -508,6 +588,12 @@ var gameState = {
         var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
         group.add(bed_head_sprite);
         group.add(bed_middle_sprite);
+        group.add(bed_end_sprite);
+    },
+    addChildBedSpriteToGroup: function(group){
+        var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
+        var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
+        group.add(bed_head_sprite);
         group.add(bed_end_sprite);
     }
 };
