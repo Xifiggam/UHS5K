@@ -82,7 +82,7 @@ var gameWorld = {
             this.guestList[i].update(deltaTime);
         }
         if(alength<this.roomList.length){
-            if(Math.random()<0.002){
+            if(Math.random()<0.004){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
                 //LUKAS KOMM DICH
@@ -216,7 +216,7 @@ function Guest (name) {
     this.statisfaction = 0;
     this.comingTime = Math.random()*3000;
     this.goingTime = Math.random()*3000;
-    this.daysToStay =  Math.floor((Math.random() * 10) + 1);
+    this.daysToStay =  Math.floor((Math.random() * 3) + 1);
     this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
@@ -235,8 +235,10 @@ function Guest (name) {
         this.statetime+=deltaTime;
         switch(this.statusCurrent){
             case "coming":
+                customer(this);
                 if(this.statetime>=this.comingTime){
-                    customer(this);
+                    this.statusCurrent = "going";
+                    this.statisfaction = 0;
                     this.statetime = 0;
                 }
                 break;
@@ -258,7 +260,12 @@ function Guest (name) {
                     console.log(this.daysToStay + " " + this.maximumPrice);
                     if(this.daysToStay <= 0 || this.maximumPrice<=0){
                         this.statusCurrent = "going";
-                        this.chosenRoom.free = true;
+                        if(Math.random()>0.5){
+                            this.chosenRoom.statusCurrent = "dirty";
+                        }
+                        else{
+                            this.chosenRoom.statusCurrent = "free";
+                        }
                         console.log("LUKAS VERTSCHÜSS DICH");
                         if(gameWorld.customerLeaveCallback){
                             gameWorld.customerLeaveCallback(this);
@@ -273,41 +280,74 @@ function Guest (name) {
     };
 }
 
-// gets ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Operating Officer"] and randomly generates price and quality
-function Worker (job) {
-    this.job = type;
-    switch (type) {
+// gets ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Onanating Officer"] and randomly generates price and quality
+function Worker (type) {
+    this.statusArray = ["working", "idle", "tohire"];
+    this.statusCurrent = "tohire";
+    this.paymentIntervallCounter =0;
+    this.xCoordinate = 0;
+    this.yCoordinate = 0;
+    this.name = name; //TODO!!
+    this.statetime = 0;
+    this.workTaskRoom = null;
+
+    this.type = type;
+    switch (this.type) {
         case "receptionist":
-            this.quality = Math.floor((Math.random() * 5) + 1);
             this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
             break;
         case "cleaning":
-            this.quality = Math.floor((Math.random() * 5) + 1);
             this.price = Math.floor(((Math.random() * 100) + 50)*this.quality);
             break;
-        case "kitchen":
-            this.quality = Math.floor((Math.random() * 5) + 1);
-            this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
-            break;
-        case "bar":
-            this.quality = Math.floor((Math.random() * 5) + 1);
-            this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
-            break;
-        case "masseur":
-            this.quality = Math.floor((Math.random() * 5) + 1);
-            this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
-            break;
-        case "Chief Operating Officer":
-            this.quality = Math.floor((Math.random() * 5) + 1);
-            this.price = Math.floor(((Math.random() * 300) + 50)*this.quality);
-            break;
-        default:
-
+        // case "kitchen":
+        //     this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);
+        //     break;
+        // case "bar":
+        //     this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
+        //     break;
+        // case "masseur":
+        //     this.price = Math.floor(((Math.random() * 200) + 50)*this.quality);
+        //     break;
+        // case "Chief Operating Officer":
+        //     this.price = Math.floor(((Math.random() * 300) + 50)*this.quality);
+        //     break;
     }
-    this.xCoordinate = 0;
-    this.yCoordinate = 0;
-    this.update = function (deltaTime) {
-        //Update Function
+    this.quality = Math.floor((Math.random() * 5) + 1);
+    this.cleanTaskTime = (10 - this.quality)*1000;
+
+    this.update = function(deltaTime) {
+        this.statetime+=deltaTime;
+        if(this.statusCurrent != "tohire"){
+            this.paymentIntervallCounter+=deltaTime;
+            if(this.paymentIntervallCounter>=GAMELOGIC.MSPERDAY)
+            {
+                gameWorld.money -= this.price;
+                this.paymentIntervallCounter = 0;
+            }
+        }
+        if(this.statusCurrent === "idle" && this.type === "cleaning"){
+            for (var i = 0; i < gameWorld.roomList.length; i++) {
+                var obj = gameWorld.roomList[i];
+                if(obj.statusCurrent === "dirty"){
+                    this.statusCurrent = "working";
+                    obj.statusCurrent = "cleaning";
+                    this.workTaskRoom = obj;
+                    this.statetime = 0;
+                    //TODO Lukas Entry for cleaning
+                    break;
+                }
+
+            }
+        }
+        if(this.statusCurrent === "working" && this.type === "cleaning"){
+            if(this.statetime >= this.cleanTaskTime){
+                this.statusCurrent = "idle";
+                this.workTaskRoom.statusCurrent = "free";
+                this.statetime = 0;
+                //TODO LUKAS zurück
+            }
+        }
+
     };
 }
 
@@ -480,7 +520,6 @@ function Room () {
         this.length = 0;
         this.height = 0;
         this.name = "No Room Name";
-        this.free = true;
         this.price = 50;
         this.singleBed = false;
         this.doubleBed = false;
@@ -494,6 +533,8 @@ function Room () {
         this.acUnit = false;
         this.activated = false;
         this.price_to_buy = 10;
+        this.statusArray = ["free", "taken", "dirty", "cleaning"];
+        this.statusCurrent = "free";
 
     this.getFeatures = function(){
 
@@ -514,22 +555,6 @@ function Room () {
         if(this.acUnit){returnArray.push(SINGLE_FEATURE_TYPE.ACUNIT);}
         return returnArray;
     };
-
-    this.getRoomStatus = function(){
-      return this.free;
-    };
-
-    this.getRoomPrice = function(){
-        return this.price;
-    };
-
-    this.changeRoomBool = function(){
-        if (this.free===true){
-            this.free=false;
-        } else if (this.free===false){
-            this.free=true;
-        }
-    };
     
     this.update = function (deltaTime) {
         //Update Function
@@ -548,7 +573,7 @@ function customer (guestObj) {
     var satisfiedRequirements = 0;
     var satisfactionArray = [];
     for (k=0; k<gameWorld.roomList.length;k++) {
-        if ((gameWorld.roomList[k].getRoomStatus() === true) && (gameWorld.roomList[k].getRoomPrice()<=guestObj.maximumPrice)) {
+        if ((gameWorld.roomList[k].statusCurrent === "free") && (gameWorld.roomList[k].price<=guestObj.maximumPrice)) {
             for (i = 0; i < guestObj.requirementArray.length; i++) {
                 for (j = 0; j < gameWorld.roomList[k].returnRoomFeaturesAsArray().length; j++) {
                      if (guestObj.requirementArray[i] === gameWorld.roomList[k].returnRoomFeaturesAsArray()[j]) {
@@ -564,12 +589,10 @@ function customer (guestObj) {
     //console.log(satisfactionArray)
     var roomChosen = indexOfMax(satisfactionArray);
     if(satisfactionArray[roomChosen] <= 0.3){
-        guestObj.statusCurrent = "going";
-        console.log(guestObj);
-        guestObj.statisfaction = 0;
+
     }
     else {
-        gameWorld.roomList[roomChosen].changeRoomBool();
+        gameWorld.roomList[roomChosen].statusCurrent = "taken";
         guestObj.statusCurrent = "staying";
         console.log("LUKAS KOMM DICH");
         guestObj.chosenRoom = gameWorld.roomList[roomChosen];
