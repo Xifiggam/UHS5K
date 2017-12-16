@@ -310,6 +310,18 @@ var gameState = {
         var closex = game.add.text(game.width - 40, 20, "X", style);
         closex.fixedToCamera = true;
 
+        function set_price() {
+            room.price = prompt("Please enter a price for the room", room.price);
+            setPrice.text = room.price+"€";
+        }
+
+        var btnSetPrice = game.add.button(game.width - 250, 20, ASSETS.DUMMY_BUTTON, set_price, this, 2, 1, 0);
+        btnSetPrice.fixedToCamera = true;
+        btnSetPrice.scale.x = 2.5;
+        console.log(room);
+        var setPrice = game.add.text(game.width - 240, 20, room.price+"€", style);
+        closex.fixedToCamera = true;
+
 
         var title = game.add.text(offsetLeft + padding, 20, room.name, style);
         title.fixedToCamera = true;
@@ -320,6 +332,10 @@ var gameState = {
 
         this.roomMenuHud.add(btnClose);
         this.roomMenuHud.add(closex);
+
+        this.roomMenuHud.add(btnSetPrice);
+        this.roomMenuHud.add(setPrice);
+
 
         addFeatureOption("Single bed", this.world.SINGLEBED_PRICE, features[0], false, SINGLE_FEATURE_TYPE.SINGLE_BED);
         addFeatureOption("Double bed", this.world.DOUBLEBED_PRICE, features[1], false, SINGLE_FEATURE_TYPE.DOUBLE_BED);
