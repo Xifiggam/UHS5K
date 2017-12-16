@@ -37,22 +37,22 @@
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.0.3",
- "tileheight":128,
+ "tileheight":32,
  "tilesets":[
         {
          "columns":2,
          "firstgid":1,
          "image":"tileset.png",
-         "imageheight":256,
-         "imagewidth":256,
+         "imageheight":64,
+         "imagewidth":64,
          "margin":0,
          "name":"ProtoTileset",
          "spacing":0,
          "tilecount":4,
-         "tileheight":128,
-         "tilewidth":128
+         "tileheight":32,
+         "tilewidth":32
         }],
- "tilewidth":128,
+ "tilewidth":32,
  "type":"map",
  "version":1,
  "width":50

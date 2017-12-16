@@ -13,18 +13,10 @@ var loadState = {
         //Load your images, spritesheets, bitmaps...
         game.load.image('boiler-logo', 'assets/img/boilerplate-logo.png');
         game.load.image(ASSETS.DUMMY_BUTTON, 'assets/img/button_dummy.png');
-        game.load.tilemap(ASSETS.TILES_DESERT_JSON, 'assets/desert.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image(ASSETS.TMW_DESERT_SPACING, 'assets/tmw_desert_spacing.png');
 
         game.load.tilemap(ASSETS.TILES_PROTO_KARTE, 'assets/ProtoKarte.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image(ASSETS.TILESET_PROTO_KARTE, 'assets/tileset.png');
         game.load.image(ASSETS.PERSON, 'assets/img/person.png');
-
-        //Load your sounds, efx, music...
-        //Example: game.load.audio('rockas', 'assets/snd/rockas.wav');
-
-        //Load your data, JSON, Querys...
-        //Example: game.load.json('version', 'http://phaser.io/version.json');
 
     },
 

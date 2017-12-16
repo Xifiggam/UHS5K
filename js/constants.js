@@ -17,5 +17,5 @@ ASSETS = {
 
 
 TILE = {
-    SIZE: 128,
+    SIZE: 32,
 };
