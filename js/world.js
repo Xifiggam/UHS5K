@@ -94,12 +94,13 @@ var gameWorld = {
             }
         }
         if(this.toDelete){
-            for (var i = 0; i < this.guestList.length; i++) {
-                var obj = this.guestList[i];
-                if(JSON.stringify(obj) === JSON.stringify(this.guestToDelete) ){
-                    this.guestList.splice(i,1);
-                }
-            }
+            this.guestList.splice(this.guestList.indexOf(this.guestToDelete),1);
+            // for (var i = 0; i < this.guestList.length; i++) {
+            //     var obj = this.guestList[i];
+            //     if(JSON.stringify(obj) === JSON.stringify(this.guestToDelete) ){
+            //         this.guestList.splice(i,1);
+            //     }
+            // }
             this.toDelete=false;
         }
     },
