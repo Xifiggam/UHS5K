@@ -12,7 +12,10 @@ var gameState = {
     miscButtons: null,
     newsHudMenu: null,
     roomMenuHud: null,
-    buttonsHud: null,
+    menuHud: null,
+    infoHud: null,
+    entityGroup: null,
+    backroundObjectGroup: null,
     world: null,
     stars: [],
     layers: [],
@@ -25,6 +28,8 @@ var gameState = {
     create: function () {
         this.world = gameWorld;
         var self = this;
+
+
         this.world.customerArrivalCallback =  function(customer) {
             self.moveToRoom(customer);
         };
@@ -52,16 +57,12 @@ var gameState = {
         this.onLayers(function (layer) {
             layer.resizeWorld();
         });
-        this.createNewsHud();
+
+
 
         var worker = new Worker("cleaning");
-        worker.statusCurrent = "idle";
+        worker.statusCurrent = WORKER_STATE.TO_HIRE;
         gameWorld.workerList.push(worker);
-        console.log(worker);
-        this.addWorker(worker);
-
-        this.initStarsHud();
-        this.updateMoneyHudFromWorld();
 
 
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -71,8 +72,14 @@ var gameState = {
         game.input.onDown.add(this.addObject, this);
         game.input.onDown.add(this.openRoomMenuIfAny, this);
 
+        this.backroundObjectGroup = game.add.group();
+        this.entityGroup = game.add.group();
+        this.infoHud = game.add.group();
+        this.initStarsHud();
+        this.createNewsHud();
+        this.menuHud = game.add.group();
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
-        this.buttonsHud = game.add.group();
+
         var button_start_x = 20;
         var button_start_y = game.height-120;
         var buyRoomButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
@@ -91,9 +98,10 @@ var gameState = {
         buyRoomButton.scale.x = 3;
         buyRoomButton.scale.y = 1.5;
         buyRoomButton.fixedToCamera = true;
+        this.menuHud.add(buyRoomButton);
         var buyRoomsText = game.add.text(button_start_x+35, button_start_y+12, "BUY ROOMS", text_style);
         buyRoomsText.fixedToCamera = true;
-        this.buttonsHud.add(buyRoomsText);
+        this.menuHud.add(buyRoomsText);
 
         button_start_x += 200;
         var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
@@ -114,10 +122,10 @@ var gameState = {
         buyStaffButton.scale.x = 3;
         buyStaffButton.scale.y = 1.5;
         buyStaffButton.fixedToCamera = true;
-        this.buttonsHud.add(buyStaffButton);
+        this.menuHud.add(buyStaffButton);
         var buyStaff = game.add.text(button_start_x+35, button_start_y+12, "HIRE STAFF", text_style);
         buyStaff.fixedToCamera = true;
-        this.buttonsHud.add(buyStaff);
+        this.menuHud.add(buyStaff);
 
         button_start_x += 200;
         var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
@@ -137,8 +145,8 @@ var gameState = {
         buyUpgradeButton.fixedToCamera = true;
         var buyUpgradeText = game.add.text(button_start_x+35, button_start_y+12, "BUY UPGRADES", text_style);
         buyUpgradeText.fixedToCamera = true;
-        this.buttonsHud.add(buyUpgradeButton);
-        this.buttonsHud.add(buyUpgradeText);
+        this.menuHud.add(buyUpgradeButton);
+        this.menuHud.add(buyUpgradeText);
 
 
         //day/night
@@ -258,6 +266,7 @@ var gameState = {
             var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
             var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
             room.sprite = game.add.sprite(roomCenterX,roomCenterY,ASSETS.DIRT);
+            this.backroundObjectGroup.add(room.sprite);
         }
 
     },
@@ -269,6 +278,7 @@ var gameState = {
             asset = ASSETS.CHAR_WORKER_M;
         }
         var person =  game.add.sprite(760,800,asset); //somewhere in lobby
+        this.entityGroup.add(person);
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
         var nameTag = game.add.text(760,800,worker.name, style);
         nameTag.anchor.x = 0.5;
@@ -292,6 +302,7 @@ var gameState = {
             asset = ASSETS.CHAR_GEN;
         }
         var person =  game.add.sprite(760,800,asset); //somewhere in lobby
+
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
         var nameTag = game.add.text(760,800,character.name, style);
         nameTag.anchor.x = 0.5;
@@ -300,6 +311,8 @@ var gameState = {
         person.scale.y = 1.2;
         character.sprite = person;
         character.nameTag = nameTag;
+        this.entityGroup.add(nameTag);
+        this.entityGroup.add(person);
         game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
         game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
 
@@ -403,6 +416,7 @@ var gameState = {
 
 
         this.roomMenuHud = game.add.group();
+        this.menuHud.add(this.roomMenuHud);
         var offsetLeft = game.width / 2;
         var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_BG);
         sprite.scale.x = offsetLeft - 10;
@@ -480,6 +494,7 @@ var gameState = {
         var text = game.add.text(15, 15, "News", style);
         text.anchor.set(0);
         text.fixedToCamera = true;
+        this.infoHud.add(this.newsHudMenu);
     },
 
 
@@ -489,6 +504,7 @@ var gameState = {
         text.anchor.set(0);
         text.alpha = 0;
         text.fixedToCamera = true;
+        this.newsHudMenu.add(text);
         var fadeInTween = game.add.tween(text).to({alpha: 1}, 2000);
         var fadeoutTween = game.add.tween(text).to({alpha: 0}, 2000);
         fadeoutTween.delay(delay);
@@ -503,18 +519,22 @@ var gameState = {
             var star = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
             this.stars.push(star);
             star.fixedToCamera = true;
+            this.infoHud.add(star);
         }
     }
     ,
     updateMoneyHudFromWorld: function () {
+        var text_info = this.world.money + "€";
         if (this.moneyText) {
-            this.moneyText.destroy();
+            this.moneyText.text = text_info;
+            return;
         }
         var style = {font: "25px Arial", fill: "#000000", align: "left"};
-        this.moneyText = game.add.text(game.width - 28, 45, this.world.money + " €", style);
+        this.moneyText = game.add.text(game.width - 28, 45, text_info, style);
         this.moneyText.anchor.x = 1;
         this.moneyText.anchor.y = 0;
         this.moneyText.fixedToCamera = true;
+        this.infoHud.add(this.moneyText);
     },
 
     updateStarsHudFromWorld: function () {
