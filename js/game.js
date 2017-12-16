@@ -136,7 +136,9 @@ var gameState = {
                 self.close_build_menu();
                 //TODO: check if there is money
                 if(!notPlaceable) {
-                   self.activateBuildCursor(feature_type, room);
+                   if(!bought){
+                       self.activateBuildCursor(feature_type, room);
+                   }
                 } else {
                     self.world.upgradeRoom(room, feature_type);
                 }
