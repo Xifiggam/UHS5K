@@ -129,12 +129,16 @@ var gameState = {
                 toLobby.start();
                 toLobbyTag.start();
             }else{
-                game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
-                game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(character.sprite).to( { x: lobbyX,y: 1000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to( { x: lobbyX,y: 1000  },2000 , Phaser.Easing.Quadratic.InOut, true);
             }
 
         }
     },
+    moveStaff: function(worker){
+        worker.
+    },
+
     spawnCharacterAndMoveToLobbyNow :  function(character){
         var lobbyX = 19*32 + (Math.random()*7*32);
         var lobbyY = 19*32 + (Math.random()*5*32);
