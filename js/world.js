@@ -192,6 +192,11 @@ function Guest (name) {
                     this.statusCurrent = "going";
                     this.statisfaction = 0;
                     this.statetime = 0;
+                    if(Math.random()<0.15){
+                        this.writeReview();
+                        console.log("Guest not served review!");
+                    }
+
                 }
                 break;
             case "going":
@@ -237,7 +242,20 @@ function Guest (name) {
     };
 
     this.writeReview = function() {
-
+        this.starsForReview = Math.round(this.statisfaction * 5);
+        someTempVariable =  Math.random();
+        if(someTempVariable>0.8){
+            if(this.starsForReview<5){
+                this.starsForReview++;
+            }
+        }
+        else if(someTempVariable<0.2){
+            if(this.starsForReview>1){
+                this.starsForReview--;
+            }
+        }
+        gameWorld.reviewList.push(this.starsForReview);
+        console.log("New Review: " + this.starsForReview);
     };
 
 }
