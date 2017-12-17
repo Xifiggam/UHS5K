@@ -34,7 +34,9 @@ ASSETS = {
 
     BUTTON_1: 'button_1_u',
     MENU_TOP: 'menu_top_u',
+    MENU_BOTTOM: 'menu_bottom_u',
     MENU_CENTER: 'menu_center_u',
+    MENU_BUBBLE: 'menu_bubble',
 };
 
 SINGLE_FEATURE_TYPE = {
@@ -72,4 +74,8 @@ AUDIO = {
     COUNTRY_MANDOLIN: 'country-mandolin',
     SWING_BASS: 'swing-bass',
     SWING_DRUMS: 'swing-drums'
+};
+
+SOUND = {
+  KACHING: 'kaching'
 };
