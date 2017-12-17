@@ -697,7 +697,8 @@ function generateName(quantity){
         'Kenobi',
         'Skywalker',
         'Archer',
-        'Schuerzenbacher'
+        'Schuerzenbacher',
+            'Hiller'
 
     ];
 
