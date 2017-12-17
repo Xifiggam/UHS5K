@@ -268,7 +268,67 @@ function Guest(name) {
                 if (this.statetime >= GAMELOGIC.MSPERDAY) {
                     if (!this.alreadySaidSomething) {
                         this.alreadySaidSomething = true;
-                        gameWorld.bubbleCallback(this, "dummy text");
+                        var roomHas = this.chosenRoom.returnRoomFeaturesAsArray();
+                        var customerWants = this.requirementArray;
+
+                        var positive = {
+                            "wifi_room": "Sweet, free wifi in the room.",
+                        "wifi_lobby": "Nice, the wifi even works in the lobby.",
+                        "seminarRoom": "Perfect work environment in the seminar room.",
+                        "massageParlor": "Mmmhh, the massages are so relaxing.",
+                        "sauna": "The sauna is hot, but it feels really good.",
+                        "saunaPlus": "Haaaaah, that sauna+ just hits the spot!",
+                            "pool": "Cool, a pool.",
+                        "outdoorPool": "Cool, an outdoor pool.",
+                        "fitnessStudio": "Yes, I can burn some calories in the gym.",
+                        "hotelBar": "I like the bar’s whiskey selection.",
+                        "restaurant": "The food in the restaurant is tasty.",
+                        "singleBed": "Yes, my own appropriately sized bed.",
+                        "doubleBed": "Perfect sized bed for me.",
+                            "childBed": "Even a bed for a kid. The night is saved.",
+                        "luxuryBed": "Perfect, so much space to sleep.",
+                        "plant": "A little green brightens the room.",
+                        "view": "What a beautiful view.",
+                        "entertainment": "Nice  rustic TV set.",
+                        "bath": "Such a clean bathroom.",
+                        "minibar": "A cheap minibar, that’s a first.",
+                        "acUnit": "Nice, I can adjust the temperature myself."};
+
+                        var negative = {
+                            "wifi_room": "No free wifi? Cheap bastards.",
+                            "wifi_lobby": "No wifi in the lobby? Great start!",
+                            "seminarRoom": "No seminar room? Where should I work?",
+                            "massageParlor": "No massage parlor? That stresses me.",
+                        "sauna": "No sauna? Where do they expect me to sweat?",
+                            "saunaPlus": "No sauna+? Where do they expect me to cum?",
+                            "pool": "Not even a pool? Poor!",
+                            "outdoorPool": "No outdoor pool? Poor!",
+                            "fitnessStudio": "No gym? Then I’ll have to rely on steroids.",
+                        "hotelBar": "No bar? Now I have to stay sober in this lousy dump!",
+                            "restaurant": "No restaurant? Do they want me to starve?",
+                            "singleBed": "No single bed? I’ll not be able to sleep.",
+                        "doubleBed": "No double bed? What a junky joint.",
+                        "childBed": "No kids bed? My evening plans ruined.",
+                        "luxuryBed": "No luxury bed? I expected better!",
+                            "plant": "No plants? What a shoddy establishment?",
+                            "view": "No view, only the hookers in the alley. What a trashy shack.",
+                        "entertainment": "No TV? What should I fap to?",
+                            "bath": "No bath? I guess I’ll pee on the floor.",
+                        "minibar": "No minibar? I’m gagging for a drink.",
+                        "acUnit": "No AC? I’ll freeze my ass off."
+                        };
+                        if(this.statisfaction< 0.5){
+                            //TODO unhappy
+                            var bad =arr_diff(roomHas,customerWants)[0];
+                            console.log("bad" + bad);
+                            gameWorld.bubbleCallback(this, negative[bad]);
+
+                        }else{
+                            var good = intersect_safe(roomHas,customerWants)[0];
+                            console.log("good:" + good);
+                            gameWorld.bubbleCallback(this, positive[good]);
+
+                        }
                     }
                     //console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
@@ -301,6 +361,49 @@ function Guest(name) {
 
         }
     };
+
+    function arr_diff (a1, a2) {
+
+        var a = [], diff = [];
+
+        for (var i = 0; i < a1.length; i++) {
+            a[a1[i]] = true;
+        }
+
+        for (var i = 0; i < a2.length; i++) {
+            if (a[a2[i]]) {
+                delete a[a2[i]];
+            } else {
+                a[a2[i]] = true;
+            }
+        }
+
+        for (var k in a) {
+            diff.push(k);
+        }
+
+        return diff;
+    }
+
+    function intersect_safe(a, b)
+    {
+        var ai=0, bi=0;
+        var result = [];
+
+        while( ai < a.length && bi < b.length )
+        {
+            if      (a[ai] < b[bi] ){ ai++; }
+            else if (a[ai] > b[bi] ){ bi++; }
+            else /* they're equal */
+            {
+                result.push(a[ai]);
+                ai++;
+                bi++;
+            }
+        }
+
+        return result;
+    }
 
     this.writeReview = function () {
         console.log("Statisfaction: " + this.statisfaction);
