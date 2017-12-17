@@ -270,7 +270,7 @@ function Guest (name) {
                 if(this.statetime>=GAMELOGIC.MSPERDAY){
                     if(!this.alreadySaidSomething){
                         this.alreadySaidSomething = true;
-                        //TODO ZELLE CALLBACK
+                        gameWorld.bubbleCallback(this, "dummy text");
                     }
                     console.log(this.name + " " +"Room: "+this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;

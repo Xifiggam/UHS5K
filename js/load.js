@@ -29,6 +29,8 @@ var loadState = {
         game.load.image(ASSETS.BUTTON_1, 'assets/img/button_1_u.png');
         game.load.image(ASSETS.MENU_CENTER, 'assets/img/u_menu_center.png');
         game.load.image(ASSETS.MENU_TOP, 'assets/img/u_menu_top.png');
+        game.load.image(ASSETS.MENU_BOTTOM, 'assets/img/u_menu_bottom.png');
+        game.load.image(ASSETS.MENU_BUBBLE, 'assets/img/u_bubble.png');
 
         game.load.image(ASSETS.BED_HEAD, 'assets/img/bed_head_32x32.png');
         game.load.image(ASSETS.BED_END, 'assets/img/bed_end_32x32.png');

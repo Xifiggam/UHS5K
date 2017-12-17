@@ -61,6 +61,11 @@ var gameState = {
             self.updateRoomDirtyState(room);
         };
 
+        this.world.bubbleCallback = function (customer) {
+            console.log(customer);
+            self.openBubble(150, 150, 'tesasdf');
+        };
+
         this.cursors = game.input.keyboard.createCursorKeys();
 
         this.map = game.add.tilemap(ASSETS.TILES_PROTO_KARTE);
@@ -403,15 +408,17 @@ var gameState = {
     },
 
     close_build_menu: function () {
-        this.roomMenuHud.destroy();
-        this.roomMenuHud = null;
+        if(this.roomMenuHud != null) {
+            this.roomMenuHud.destroy();
+            this.roomMenuHud = null;
+        }
     },
 
     createBuildMenu: function (room) {
         var featureCount = 0;
         var self = this;
 
-        if (self.roomMenuHud || self.buildMarker != null || self.buyMenuHud != null || !room.activated) {
+        if (self.roomMenuHud || self.buildMarker != null || self.buyMenuHud != null || !room.activated || self.messageBox != null) {
             return;
         }
 
@@ -939,6 +946,7 @@ var gameState = {
 
     openMessageBox: function (text, xScale, yScale, position) {
         var self = this;
+        self.close_build_menu();
         if (this.messageBox != null) {
             self.closeMessageBox();
         }
@@ -969,13 +977,10 @@ var gameState = {
             this.messageBox.add(sprite_center);
         }
 
-        offsetTop += TILE.SIZE*4;
-        var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
+        offsetTop += TILE.SIZE*2;
+        var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_BOTTOM);
         sprite_bottom.fixedToCamera = true;
-        sprite_bottom.anchor.setTo(0, 0);
-        sprite_bottom.angle = 180;
         sprite_bottom.scale.x = scaleX;
-        sprite_bottom.alignTo(sprite_center, Phaser.BOTTOM_RIGHT, -1 * sprite_bottom.width, sprite_bottom.height);
         sprite_bottom.fixedToCamera = true;
         this.messageBox.add(sprite_bottom);
 
@@ -1034,8 +1039,19 @@ var gameState = {
             position.y = game.height / 4;
             self.openMessageBox(texts, 2, 1, position)
         }
-    }
+    },
 
+
+    openBubble: function(posX, posY, text) {
+        var bubbleGroup = game.add.group();
+        var text_style = {font: "13px Arial", fill: "#000000", align: "left"};
+        // message_text.alignIn(bubble_sprite, Phaser.CENTER, 0, 0);
+        var bubble_sprite = game.add.sprite(posX, posY, ASSETS.MENU_BUBBLE);
+        var message_text = game.add.text(posX+60, posY+50, text, text_style);
+        bubbleGroup.add(bubble_sprite);
+        bubbleGroup.add(message_text);
+        this.entityGroup.add(bubbleGroup);
+    }
 };
 
 
