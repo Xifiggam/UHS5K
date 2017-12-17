@@ -694,7 +694,7 @@ function generateName(quantity){
         'Hidalgo',
         'Ruth',
         'Roald',
-        'Linus',
+        'Linus', 'Hosé',
         'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf'
 
     ];
