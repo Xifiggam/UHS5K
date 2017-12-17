@@ -1,3 +1,14 @@
+var country_bass;
+var country_fiddle;
+var country_guitar;
+var country_mandolin;
+var swing_bass;
+var swing_drums;
+
+var current;
+var loopCount = 0;
+var sounds;
+
 var loadState = {
 
     preload: function () {
@@ -38,9 +49,28 @@ var loadState = {
         game.load.image(ASSETS.TILESET_PROTO_KARTE, 'assets/tileset.png');
         game.load.image(ASSETS.PERSON, 'assets/img/person.png');
 
+        // load audio
+        game.load.audio(AUDIO.COUNTRY_BASS, 'assets/audio/hotel-country-bass.mp3');
+        game.load.audio(AUDIO.COUNTRY_FIDDLE, 'assets/audio/hotel-country-fiddle.mp3');
+        game.load.audio(AUDIO.COUNTRY_GUITAR, 'assets/audio/hotel-country-guitar.mp3');
+        game.load.audio(AUDIO.COUNTRY_MANDOLIN, 'assets/audio/hotel-country-mandolin.mp3');
+        game.load.audio(AUDIO.SWING_BASS, 'assets/audio/hotel-swing-bass.mp3');
+        game.load.audio(AUDIO.SWING_DRUMS, 'assets/audio/hotel-swing-drums.mp3');
+
     },
 
     create: function () {
+
+        country_bass = game.add.audio(AUDIO.COUNTRY_BASS);
+        country_fiddle = game.add.audio(AUDIO.COUNTRY_FIDDLE);
+        country_guitar = game.add.audio(AUDIO.COUNTRY_GUITAR);
+        country_mandolin = game.add.audio(AUDIO.COUNTRY_MANDOLIN);
+        swing_bass = game.add.audio(AUDIO.SWING_BASS);
+        swing_drums = game.add.audio(AUDIO.SWING_DRUMS);
+
+        sounds = [country_bass, country_fiddle, country_guitar, country_mandolin, swing_drums, swing_bass];
+
+        game.sound.setDecodedCallback(sounds, start, this);
 
         game.stage.setBackgroundColor('#0000');
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -49,5 +79,35 @@ var loadState = {
         // game.add.plugin(PhaserSuperStorage.StoragePlugin);
         game.add.plugin(PhaserInput.Plugin);
         game.state.start('game');
+
     }
 };
+
+
+function start() {
+
+    sounds.shift();
+
+    country_bass.loopFull(0.6);
+    country_bass.onLoop.add(hasLooped, this);
+
+}
+
+function hasLooped(sound) {
+
+    loopCount++;
+
+    if (loopCount === 1) {
+        sounds.shift();
+        country_fiddle.loopFull(0.6);
+    }
+    else if (loopCount === 2) {
+        current = game.rnd.pick(sounds);
+        current.loopFull();
+    }
+    else if (loopCount > 2) {
+        current.stop();
+        current = game.rnd.pick(sounds);
+        current.loopFull();
+    }
+}

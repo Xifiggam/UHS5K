@@ -15,8 +15,8 @@ ASSETS = {
     FLOOR: 'floor',
     WALL: 'wall',
     BED: 'bed',
-    NIGHT : 'asdf',
-    DIRT : 'dirt',
+    NIGHT: 'asdf',
+    DIRT: 'dirt',
 
     BED_HEAD: 'bed_head',
     BED_MIDDLE: 'bed_middle',
@@ -65,3 +65,11 @@ GAMELOGIC = {
     MSPERDAY: 20000,
 };
 
+AUDIO = {
+    COUNTRY_BASS: 'country-bass',
+    COUNTRY_FIDDLE: 'country-fiddle',
+    COUNTRY_GUITAR: 'country-guitar',
+    COUNTRY_MANDOLIN: 'country-mandolin',
+    SWING_BASS: 'swing-bass',
+    SWING_DRUMS: 'swing-drums'
+};
