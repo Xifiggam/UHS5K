@@ -270,6 +270,7 @@ function Guest(name) {
                     console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
                     gameWorld.money += this.chosenRoom.price;
+                    kaching.play();
                     this.maximumPrice -= this.chosenRoom.price;
                     console.log(this.daysToStay + " " + this.maximumPrice);
                     if (this.daysToStay <= 0 || this.maximumPrice <= 0) {
