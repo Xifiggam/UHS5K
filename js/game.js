@@ -275,8 +275,15 @@ var gameState = {
                 var person = worker.sprite;
                 var nameTag = worker.nameTag;
 
-                game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
-                game.add.tween(nameTag).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+                var moveTween = game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to({x: roomCenterX+5, y: roomCenterY+5}, 2000, Phaser.Easing.Quadratic.InOut, true);
+                moveTween.onComplete.add(broomShow(roomCenterX, roomCenterY))
+
+                function broomShow(xnew, ynew) {
+                    return function(){
+                        worker.broomSprite = game.add.sprite(xnew, ynew, ASSETS.BROOM)
+                    }
+                }
             }
         } else {//move to lobby
             var lobbyX = 19 * 32 + (Math.random() * 7 * 32);
@@ -285,7 +292,10 @@ var gameState = {
 
             var person = worker.sprite;
             var nameTag = worker.nameTag;
-
+            if(worker.broomSprite != null){
+                worker.broomSprite.destroy();
+                worker.broomSprite = null;
+            }
             game.add.tween(person).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
             game.add.tween(nameTag).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
         }
