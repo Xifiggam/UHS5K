@@ -277,7 +277,7 @@ function Guest (name) {
         gameWorld.reviewList.push(this.starsForReview);
         console.log("New Review: " + this.starsForReview);
         if(gameWorld.newReviewCallback){
-            gameWorld.newReviewCallback("a new review was send.... put text here.");
+            gameWorld.newReviewCallback("a new review was send - "+this.starsForReview+" Stars");
         }
     };
 

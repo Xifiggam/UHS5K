@@ -586,7 +586,7 @@ var gameState = {
     initStarsHud: function () {
         var starCount = 5;
         var starOffset = 60;
-        for (var i = 0; i < starCount; i++) {
+        for (var i = 0; i <= starCount; i++) {
             var star = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
             var star_gray = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
             this.stars.push(star);
@@ -601,7 +601,7 @@ var gameState = {
     initTimeHud: function () {
         var style = {font: "25px Arial", fill: "#000000", align: "left"};
         this.delta = 0;
-        this.timeTextField = game.add.text(game.width - 400, 15,"",style);
+        this.timeTextField = game.add.text(game.width - 460, 15,"",style);
         this.timeTextField.fixedToCamera = true;
     },
     updateTimeHud: function () {
