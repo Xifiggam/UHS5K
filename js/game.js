@@ -149,10 +149,11 @@ var gameState = {
             var global_feature_type = [];
             for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
                 var global_feature = global_features[global_feature_it];
+                global_feature_type.push(global_feature.name);
                 global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.readableName + ' - ' + global_feature.price + '€');
             }
             self.openBuyMenu(function (global_upgrade) {
-                var global_upgrade_obj = self.world.getGlobalFeatureForValue(global_upgrade)
+                var global_upgrade_obj = self.world.getGlobalFeatureForValue(global_upgrade);
                 if (!global_upgrade_obj.active && global_upgrade_obj.price <= self.world.money) {
                     self.world.buyGlobalUpgrade(global_upgrade);
                 } else {
