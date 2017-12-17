@@ -1,5 +1,3 @@
-
-
 /*
 For Fullscreen put this code:
 
