@@ -50,6 +50,7 @@ var gameState = {
             self.spawnCharacterAndMoveToLobbyNow(customer);
         };
         this.world.customerLeaveCallback = function (customer) {
+            // kaching.play();
             self.moveCustomerVisualFromRoom(customer);
         };
 

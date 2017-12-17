@@ -5,6 +5,8 @@ var country_mandolin;
 var swing_bass;
 var swing_drums;
 
+var kaching;
+
 var current;
 var loopCount = 0;
 var sounds;
@@ -59,6 +61,9 @@ var loadState = {
         game.load.audio(AUDIO.SWING_BASS, 'assets/audio/hotel-swing-bass.mp3');
         game.load.audio(AUDIO.SWING_DRUMS, 'assets/audio/hotel-swing-drums.mp3');
 
+        // load sounds
+        game.load.audio(SOUND.KACHING, 'assets/audio/cash_register.wav')
+
     },
 
     create: function () {
@@ -71,6 +76,8 @@ var loadState = {
         swing_drums = game.add.audio(AUDIO.SWING_DRUMS);
 
         sounds = [country_bass, country_fiddle, country_guitar, country_mandolin, swing_drums, swing_bass];
+
+        kaching = game.add.audio(SOUND.KACHING);
 
         game.sound.setDecodedCallback(sounds, start, this);
 
