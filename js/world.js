@@ -694,8 +694,9 @@ function generateName(quantity){
         'Hidalgo',
         'Ruth',
         'Roald',
-        'Linus',
-        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf'
+        'Linus', 'Hosé',
+        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"'
+
 
     ];
         var lastNames = [
