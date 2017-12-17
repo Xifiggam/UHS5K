@@ -14,6 +14,7 @@ var gameWorld = {
     stars: 1,
     guestToDelete: null,
     toDelete: false,
+    daysPassed: 0,
 
 
     GLOBAL_FEATURE_TYPE: {
@@ -101,7 +102,7 @@ var gameWorld = {
     },
 
     getGlobalFeatureForValue: function (feature) {
-        console.log('search feature', feature);
+        //console.log('search feature', feature);
         var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
         for (var i = 0; i < obj_values.length; i++) {
             if (this.GLOBAL_FEATURE_TYPE[obj_values[i]].name === feature) {
@@ -193,12 +194,14 @@ function Guest(name) {
     this.statetime = 0;
     this.chosenRoom = null;
     this.alreadySaidSomething = false;
-    this.reviewChance = 0.7;
+    this.reviewChance = 0.95;
     this.statisfaction = 0;
-    this.comingTime = Math.random() * 3000;
+    this.comingTime = Math.random() * 5500;
     this.goingTime = Math.random() * 3000;
+    this.maxRequirements = Math.min(gameWorld.daysPassed,10)
     this.daysToStay = Math.floor((Math.random() * 3) + 1);
-    this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
+    this.noOfRequirements = Math.floor((Math.random() * this.maxRequirements) + 1);
+    //console.log("New Customer: " + this.name + " #req: " + this.noOfRequirements);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
@@ -218,10 +221,10 @@ function Guest(name) {
     }
     if (!bedchosen) {
         x = Math.random();
-        if (x > 0.75) {
+        if (x > 0.96) {
             this.requirementArray.push(SINGLE_FEATURE_TYPE.LUXURY_BED);
         }
-        else if (x > 0.45) {
+        else if (x > 0.60) {
             this.requirementArray.push(SINGLE_FEATURE_TYPE.DOUBLE_BED);
         }
         else if (x > 0.1) {
@@ -247,7 +250,7 @@ function Guest(name) {
                     this.statetime = 0;
                     if (Math.random() < 0.10) {
                         this.writeReview();
-                        console.log("Guest not served review!");
+                        //console.log("Guest not served review!");
                     }
                     var want_req = [];
                     for (var want_req_it = 0; want_req_it < this.requirementArray.length; want_req_it+=2) {
@@ -273,14 +276,74 @@ function Guest(name) {
                 if (this.statetime >= GAMELOGIC.MSPERDAY) {
                     if (!this.alreadySaidSomething) {
                         this.alreadySaidSomething = true;
-                        gameWorld.bubbleCallback(this, "dummy text");
+                        var roomHas = this.chosenRoom.returnRoomFeaturesAsArray();
+                        var customerWants = this.requirementArray;
+
+                        var positive = {
+                            "wifi_room": "Sweet, free wifi in the room.",
+                        "wifi_lobby": "Nice, the wifi even works in the lobby.",
+                        "seminarRoom": "Perfect work environment in the seminar room.",
+                        "massageParlor": "Mmmhh, the massages are so relaxing.",
+                        "sauna": "The sauna is hot, but it feels really good.",
+                        "saunaPlus": "Haaaaah, that sauna+ just hits the spot!",
+                            "pool": "Cool, a pool.",
+                        "outdoorPool": "Cool, an outdoor pool.",
+                        "fitnessStudio": "Yes, I can burn some calories in the gym.",
+                        "hotelBar": "I like the bar’s whiskey selection.",
+                        "restaurant": "The food in the restaurant is tasty.",
+                        "singleBed": "Yes, my own appropriately sized bed.",
+                        "doubleBed": "Perfect sized bed for me.",
+                            "childBed": "Even a bed for a kid. The night is saved.",
+                        "luxuryBed": "Perfect, so much space to sleep.",
+                        "plant": "A little green brightens the room.",
+                        "view": "What a beautiful view.",
+                        "entertainment": "Nice  rustic TV set.",
+                        "bath": "Such a clean bathroom.",
+                        "minibar": "A cheap minibar, that’s a first.",
+                        "acUnit": "Nice, I can adjust the temperature myself."};
+
+                        var negative = {
+                            "wifi_room": "No free wifi? Cheap bastards.",
+                            "wifi_lobby": "No wifi in the lobby? Great start!",
+                            "seminarRoom": "No seminar room? Where should I work?",
+                            "massageParlor": "No massage parlor? That stresses me.",
+                        "sauna": "No sauna? Where do they expect me to sweat?",
+                            "saunaPlus": "No sauna+? Where do they expect me to cum?",
+                            "pool": "Not even a pool? Poor!",
+                            "outdoorPool": "No outdoor pool? Poor!",
+                            "fitnessStudio": "No gym? Then I’ll have to rely on steroids.",
+                        "hotelBar": "No bar? Now I have to stay sober in this lousy dump!",
+                            "restaurant": "No restaurant? Do they want me to starve?",
+                            "singleBed": "No single bed? I’ll not be able to sleep.",
+                        "doubleBed": "No double bed? What a junky joint.",
+                        "childBed": "No kids bed? My evening plans ruined.",
+                        "luxuryBed": "No luxury bed? I expected better!",
+                            "plant": "No plants? What a shoddy establishment?",
+                            "view": "No view, only the hookers in the alley. What a trashy shack.",
+                        "entertainment": "No TV? What should I fap to?",
+                            "bath": "No bath? I guess I’ll pee on the floor.",
+                        "minibar": "No minibar? I’m gagging for a drink.",
+                        "acUnit": "No AC? I’ll freeze my ass off."
+                        };
+                        if(this.statisfaction< 0.5){
+                            //TODO unhappy
+                            var bad =arr_diff(roomHas,customerWants)[0];
+                            console.log("bad" + bad);
+                            gameWorld.bubbleCallback(this, negative[bad]);
+
+                        }else{
+                            var good = intersect_safe(roomHas,customerWants)[0];
+                            console.log("good:" + good);
+                            gameWorld.bubbleCallback(this, positive[good]);
+
+                        }
                     }
-                    console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
+                    //console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
                     gameWorld.money += this.chosenRoom.price;
                     kaching.play();
                     this.maximumPrice -= this.chosenRoom.price;
-                    console.log(this.daysToStay + " " + this.maximumPrice);
+                    //console.log(this.daysToStay + " " + this.maximumPrice);
                     if (this.daysToStay <= 0 || this.maximumPrice <= 0) {
                         this.statusCurrent = "going";
                         if (Math.random() > 0.2) {
@@ -306,6 +369,49 @@ function Guest(name) {
 
         }
     };
+
+    function arr_diff (a1, a2) {
+
+        var a = [], diff = [];
+
+        for (var i = 0; i < a1.length; i++) {
+            a[a1[i]] = true;
+        }
+
+        for (var i = 0; i < a2.length; i++) {
+            if (a[a2[i]]) {
+                delete a[a2[i]];
+            } else {
+                a[a2[i]] = true;
+            }
+        }
+
+        for (var k in a) {
+            diff.push(k);
+        }
+
+        return diff;
+    }
+
+    function intersect_safe(a, b)
+    {
+        var ai=0, bi=0;
+        var result = [];
+
+        while( ai < a.length && bi < b.length )
+        {
+            if      (a[ai] < b[bi] ){ ai++; }
+            else if (a[ai] > b[bi] ){ bi++; }
+            else /* they're equal */
+            {
+                result.push(a[ai]);
+                ai++;
+                bi++;
+            }
+        }
+
+        return result;
+    }
 
     this.writeReview = function () {
         console.log("Statisfaction: " + this.statisfaction);
@@ -586,7 +692,7 @@ function Room() {
     this.length = 0;
     this.height = 0;
     this.name = "No Room Name";
-    this.price = 50;
+    this.price = 120;
     this.singleBed = false;
     this.doubleBed = false;
     this.childBed = false;
@@ -598,7 +704,7 @@ function Room() {
     this.minibar = false;
     this.acUnit = false;
     this.activated = false;
-    this.price_to_buy = 10;
+    this.price_to_buy = 1200;
     this.statusArray = ["free", "taken", "dirty", "cleaning"];
     this.statusCurrent = "free";
 
