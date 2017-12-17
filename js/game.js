@@ -267,6 +267,7 @@ var gameState = {
         }
     },
     updateWorker: function (worker) {
+        var self = this;
         console.log(worker.workTaskRoom);
         if (worker.workTaskRoom) {
             var room = worker.workTaskRoom;
@@ -280,11 +281,11 @@ var gameState = {
 
                 var moveTween = game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
                 game.add.tween(nameTag).to({x: roomCenterX+5, y: roomCenterY+5}, 2000, Phaser.Easing.Quadratic.InOut, true);
-                moveTween.onComplete.add(broomShow(roomCenterX, roomCenterY))
-
-                function broomShow(xnew, ynew) {
+                moveTween.onComplete.add(broomShow(roomCenterX, roomCenterY, worker))
+                function broomShow(xnew, ynew, worker_sc) {
                     return function(){
-                        worker.broomSprite = game.add.sprite(xnew, ynew, ASSETS.BROOM)
+                        self.openBubble(xnew,ynew, 'What a mess!', false);
+                        worker_sc.broomSprite = game.add.sprite(xnew, ynew, ASSETS.BROOM)
                     }
                 }
             }
