@@ -408,7 +408,7 @@ var gameState = {
     },
 
     close_build_menu: function () {
-        if(this.roomMenuHud != null) {
+        if (this.roomMenuHud != null) {
             this.roomMenuHud.destroy();
             this.roomMenuHud = null;
         }
@@ -546,10 +546,10 @@ var gameState = {
         this.newsHudMenu = game.add.group();
 
         function click() {
-            var start = Math.max(0,this.newsHistory.length-10);
-            var text2 = this.newsHistory.slice(start,start - this.newsHistory.length).join('\n');
+            var start = Math.max(0, this.newsHistory.length - 10);
+            var text2 = this.newsHistory.slice(start, start - this.newsHistory.length).join('\n');
             console.log(text2);
-            this.openMessageBox(text2,1,1,{x:game.width/2, y:game.height/2});
+            this.openMessageBox(text2, 1, 1, {x: game.width / 2, y: game.height / 2});
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -607,19 +607,19 @@ var gameState = {
     initTimeHud: function () {
         var style = {font: "25px Arial", fill: "#000000", align: "left"};
         this.delta = 0;
-        this.timeTextField = game.add.text(game.width - 460, 15,"",style);
+        this.timeTextField = game.add.text(game.width - 460, 15, "", style);
         this.timeTextField.fixedToCamera = true;
     },
     updateTimeHud: function () {
         this.delta += game.time.elapsed;
         var timeDelta = this.delta % GAMELOGIC.MSPERDAY;
-        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY)*24);
-        if(timeInHours<10){
-            timeInHours = '0'+timeInHours;
+        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY) * 24);
+        if (timeInHours < 10) {
+            timeInHours = '0' + timeInHours;
         }
         this.world.daysPassed = parseInt(this.delta / GAMELOGIC.MSPERDAY);
-        var text = 'Day '+this.world.daysPassed+', '+timeInHours+':00';
-        this.dayandtime =text;
+        var text = 'Day ' + this.world.daysPassed + ', ' + timeInHours + ':00';
+        this.dayandtime = text;
         this.timeTextField.text = text;
 
     }
@@ -950,7 +950,7 @@ var gameState = {
         if (this.messageBox != null) {
             self.closeMessageBox();
         }
-        if(text.hasOwnProperty('isArray') && !text.isArray()){
+        if (text.hasOwnProperty('isArray') && !text.isArray()) {
             text = [text];
         }
 
@@ -967,17 +967,17 @@ var gameState = {
 
         var button_offset = offsetTop;
         for (var i = 0; i < text.length / 2; i++) {
-            offsetTop += TILE.SIZE*2;
+            offsetTop += TILE.SIZE * 2;
             console.log(button_offset);
             var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
             // sprite_center.scale.y = scaleY;
             sprite_center.scale.x = scaleX;
-            sprite_center.scale.y = yScale ;
+            sprite_center.scale.y = yScale;
             sprite_center.fixedToCamera = true;
             this.messageBox.add(sprite_center);
         }
 
-        offsetTop += TILE.SIZE*2;
+        offsetTop += TILE.SIZE * 2;
         var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_BOTTOM);
         sprite_bottom.fixedToCamera = true;
         sprite_bottom.scale.x = scaleX;
@@ -1003,12 +1003,10 @@ var gameState = {
         for (var text_it = 0; text_it < text.length; text_it++) {
             var text_str = text[text_it];
             var message_text = game.add.text(offsetLeft + 10, button_offset + 45 * text_it, text_str, text_style);
-            message_text.alignIn(sprite_top, Phaser.CENTER, 0, 30*text_it);
+            message_text.alignIn(sprite_top, Phaser.CENTER, 0, 30 * text_it);
             message_text.fixedToCamera = true;
             this.messageBox.add(message_text);
         }
-
-
 
 
     },
@@ -1018,7 +1016,7 @@ var gameState = {
         this.messageBox = null;
     },
 
-    moveGroup: function(group, toX, toY, duration){
+    moveGroup: function (group, toX, toY, duration) {
         for (var stats_window_it = 0; stats_window_it < group.children.length; stats_window_it++) {
             var stats_window_obj = group.children[stats_window_it];
             console.log(stats_window_obj);
@@ -1026,7 +1024,7 @@ var gameState = {
         }
     },
 
-    openStatsWindow: function(char){
+    openStatsWindow: function (char) {
         var self = this;
         return function () {
             console.log(char);
@@ -1042,14 +1040,21 @@ var gameState = {
     },
 
 
-    openBubble: function(posX, posY, text) {
+    openBubble: function (posX, posY, text) {
         var bubbleGroup = game.add.group();
         var text_style = {font: "13px Arial", fill: "#000000", align: "left"};
         // message_text.alignIn(bubble_sprite, Phaser.CENTER, 0, 0);
-        var bubble_sprite = game.add.sprite(posX, posY, ASSETS.MENU_BUBBLE);
-        var message_text = game.add.text(posX+60, posY+50, text, text_style);
+        var bubble_sprite = game.add.sprite(posX, posY - TILE.SIZE * 2, ASSETS.MENU_BUBBLE);
+        bubble_sprite.scale.x = 0.7;
+        bubble_sprite.scale.y = 0.7;
+        var message_text = game.add.text(posX + 30, posY-30, text, text_style);
         bubbleGroup.add(bubble_sprite);
         bubbleGroup.add(message_text);
+        var fadeOutTween = game.add.tween(bubbleGroup).to( { alpha: 0 }, 2500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        fadeOutTween.onComplete.add(function () {
+            bubbleGroup.destroy();
+            bubbleGroup = null;
+        }, this);
         this.entityGroup.add(bubbleGroup);
     }
 };
