@@ -10,7 +10,7 @@ var gameWorld = {
     reviewList: [],
     globalUpgradesArray: ["wifi_room", "wifi_lobby", "seminarRoom", "massageParlor", "sauna", "saunaPlus", "pool", "outdoorPool", "fitnessStudio", "hotelBar", "restaurant"],
     localUpgradesArray: [SINGLE_FEATURE_TYPE.SINGLE_BED, SINGLE_FEATURE_TYPE.DOUBLE_BED, SINGLE_FEATURE_TYPE.CHILD_BED, SINGLE_FEATURE_TYPE.LUXURY_BED, SINGLE_FEATURE_TYPE.PLANT, SINGLE_FEATURE_TYPE.VIEW, SINGLE_FEATURE_TYPE.ENTERTAINMENT, SINGLE_FEATURE_TYPE.BATH, SINGLE_FEATURE_TYPE.MINIBAR, SINGLE_FEATURE_TYPE.ACUNIT],
-    money: 1000,
+    money: 100000,
     stars: 1,
     guestToDelete: null,
     toDelete: false,
@@ -50,6 +50,16 @@ var gameWorld = {
             init();
             this.init = true;
         }
+
+        if(this.reviewList.length>20){
+            countingReviewsNo = (this.reviewList.length/2 +10);
+            reviewCount = 0;
+            for (var i = countingReviewsNo-1; i >= 0; i--) {
+                reviewCount += this.reviewList[i];
+            }
+            this.stars = Math.floor(reviewCount/countingReviewsNo);
+        }
+
         alength = this.roomList.length;
         for (i = 0; i < alength; i++) {
             this.roomList[i].update(deltaTime);
@@ -63,13 +73,12 @@ var gameWorld = {
             this.guestList[i].update(deltaTime);
         }
         if(alength<this.roomList.length){
-            if(Math.random()<0.004){
+            if(Math.random()<(0.004+(0.001*this.stars))){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
                 if(gameWorld.customerToLobbyCallback){
                     gameWorld.customerToLobbyCallback(guest);
                 }
-                //customer(guest);
                 for(i=0; i<gameWorld.roomList.length; i++){
                     //console.log(gameWorld.roomList[i]);
                 }
@@ -99,7 +108,7 @@ var gameWorld = {
     },
 
     getActiveGlobalFeatureNames: function(){
-        var global_features = this.world.getGlobalFeatureValues();
+        var global_features = this.getGlobalFeatureValues();
         var global_feature_texts = [];
         for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
             var global_feature = global_features[global_feature_it];
@@ -197,7 +206,7 @@ function Guest (name) {
         this.requirementArray.push(this.requirementArrayChoose[x]);
         this.requirementArrayChoose.splice(x, 1);
     }
-    this.maximumPrice = Math.floor((Math.random() * 1000) + 100);
+    this.maximumPrice = Math.floor((Math.random() * 1000) + 100)+(Math.random()*gameWorld.stars*50);
     this.xCoordinate = 0;
     this.yCoordinate = 0;
     this.statusArray = ["coming", "going", "staying"];
@@ -593,14 +602,19 @@ function customer (guestObj) {
     var satisfiedRequirements = 0;
     var satisfactionArray = [];
     for (k=0; k<gameWorld.roomList.length;k++) {
-        if ((gameWorld.roomList[k].statusCurrent === "free") && (gameWorld.roomList[k].price<=guestObj.maximumPrice)) {
+        if ((gameWorld.roomList[k].statusCurrent === "free"  && gameWorld.roomList[k].activated === true) && (gameWorld.roomList[k].price<=guestObj.maximumPrice)) {
+            console.log("In there")
             for (i = 0; i < guestObj.requirementArray.length; i++) {
                 for (j = 0; j < gameWorld.roomList[k].returnRoomFeaturesAsArray().length; j++) {
                      if (guestObj.requirementArray[i] === gameWorld.roomList[k].returnRoomFeaturesAsArray()[j]) {
                          satisfiedRequirements++;
                     }
                 }
-
+                for (j = 0; j < gameWorld.getActiveGlobalFeatureNames().length; j++) {
+                    if (guestObj.requirementArray[i] === gameWorld.getActiveGlobalFeatureNames()[j]) {
+                        satisfiedRequirements++;
+                    }
+                }
             }
         }
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
