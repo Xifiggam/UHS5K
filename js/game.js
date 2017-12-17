@@ -1,3 +1,10 @@
+function formatDateTime() {
+    var date = new Date();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    return hours+":"+minutes;
+}
+
 /**
  * Created by zelle on 15.12.17.
  */
@@ -19,6 +26,7 @@ var gameState = {
     world: null,
     stars: [],
     layers: [],
+    newsHistory: [],
 
     buildMarker: null,
     buildTile: null,
@@ -196,7 +204,7 @@ var gameState = {
         }
         if (this.miscButtons.shake.isDown) {
             game.camera.shake();
-            //this.postNews("the cake is a lie", 4000);
+            this.postNews("You are broke.");
         }
     },
 
@@ -495,33 +503,42 @@ var gameState = {
         this.newsHudMenu = game.add.group();
 
         function click() {
-            console.log("blub");
+            //todo open bigger news screen with backlog
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
         button.scale.setTo(10, 1.1);
         button.fixedToCamera = true;
 
-        var style = {font: "25px Arial", fill: "#FFFFFF", align: "left"};
+        var style = {font: "20px Arial", fill: "#FFFFFF", align: "left"};
         var text = game.add.text(15, 15, "News", style);
         text.anchor.set(0);
         text.fixedToCamera = true;
+        var style_txt = {font: "14px Arial", fill: "#FFFFFF", align: "left"};
+        this.news_text = game.add.text(15, 45, text, style_txt);
+        this.news_text.alpha = 0;
+        this.news_text.fixedToCamera = true;
+        this.newsHudMenu.add(button);
+        this.newsHudMenu.add(text);
+        this.newsHudMenu.add(this.news_text);
         this.infoHud.add(this.newsHudMenu);
     },
 
 
-    postNews: function (text, delay) {
-        var style = {font: "14px Arial", fill: "#FFFFFF", align: "left"};
-        var text = game.add.text(15, 45, text, style);
-        text.anchor.set(0);
-        text.alpha = 0;
-        text.fixedToCamera = true;
-        this.newsHudMenu.add(text);
-        var fadeInTween = game.add.tween(text).to({alpha: 1}, 2000);
-        var fadeoutTween = game.add.tween(text).to({alpha: 0}, 2000);
-        fadeoutTween.delay(delay);
-        fadeInTween.chain(fadeoutTween);
-        fadeInTween.start();
+    postNews: function (text) {
+        var text2 = formatDateTime() +" "+ text;
+
+        this.newsHistory.push(text2);
+        var tween1 = game.add.tween(this.news_text).to({alpha: 0}, 2000);
+        function setText() {
+            this.news_text.text = text2;
+        }
+        tween1.onComplete.add(setText,this);
+        var tween3 = game.add.tween(this.news_text).to({alpha: 1}, 2000);
+
+        tween1.chain(tween3);
+        tween1.start();
+
     },
 
     initStarsHud: function () {
