@@ -588,8 +588,12 @@ var gameState = {
         var starOffset = 60;
         for (var i = 0; i < starCount; i++) {
             var star = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
+            var star_gray = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
             this.stars.push(star);
             star.fixedToCamera = true;
+            star_gray.fixedToCamera = true;
+            star_gray.alpha = 0.3;
+            this.infoHud.add(star_gray);
             this.infoHud.add(star);
         }
     },
