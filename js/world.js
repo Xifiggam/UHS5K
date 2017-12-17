@@ -14,6 +14,7 @@ var gameWorld = {
     stars: 1,
     guestToDelete: null,
     toDelete: false,
+    daysPassed: 0,
 
 
     GLOBAL_FEATURE_TYPE: {
@@ -101,7 +102,7 @@ var gameWorld = {
     },
 
     getGlobalFeatureForValue: function (feature) {
-        console.log('search feature', feature);
+        //console.log('search feature', feature);
         var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
         for (var i = 0; i < obj_values.length; i++) {
             if (this.GLOBAL_FEATURE_TYPE[obj_values[i]].name === feature) {
@@ -197,8 +198,10 @@ function Guest(name) {
     this.statisfaction = 0;
     this.comingTime = Math.random() * 5500;
     this.goingTime = Math.random() * 3000;
+    this.maxRequirements = Math.min(gameWorld.daysPassed,10)
     this.daysToStay = Math.floor((Math.random() * 3) + 1);
-    this.noOfRequirements = Math.floor((Math.random() * 8) + 1);
+    this.noOfRequirements = Math.floor((Math.random() * this.maxRequirements) + 1);
+    //console.log("New Customer: " + this.name + " #req: " + this.noOfRequirements);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
@@ -247,7 +250,7 @@ function Guest(name) {
                     this.statetime = 0;
                     if (Math.random() < 0.10) {
                         this.writeReview();
-                        console.log("Guest not served review!");
+                        //console.log("Guest not served review!");
                     }
 
                 }
@@ -267,12 +270,12 @@ function Guest(name) {
                         this.alreadySaidSomething = true;
                         gameWorld.bubbleCallback(this, "dummy text");
                     }
-                    console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
+                    //console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
                     gameWorld.money += this.chosenRoom.price;
                     kaching.play();
                     this.maximumPrice -= this.chosenRoom.price;
-                    console.log(this.daysToStay + " " + this.maximumPrice);
+                    //console.log(this.daysToStay + " " + this.maximumPrice);
                     if (this.daysToStay <= 0 || this.maximumPrice <= 0) {
                         this.statusCurrent = "going";
                         if (Math.random() > 0.2) {
