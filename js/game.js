@@ -1069,8 +1069,8 @@ var gameState = {
         var bubble_sprite = game.add.sprite(posX, posY - TILE.SIZE * 2, ASSETS.MENU_BUBBLE);
         bubble_sprite.scale.x = big ? 1.5 : 0.7;
         bubble_sprite.scale.y = big ? 1.5 : 0.7;
-        var textPosX  = big ?  posX + 70: posX -  30;
-        var textPosY  = big ? posY - 25 : posY + 30 ;
+        var textPosX  = big ?  posX + 70: posX + 20;
+        var textPosY  = big ? posY - 25 : posY - 30 ;
         var message_text = game.add.text(textPosX, textPosY, text, text_style);
         bubbleGroup.add(bubble_sprite);
         bubbleGroup.add(message_text);
