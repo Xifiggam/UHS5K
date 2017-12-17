@@ -198,11 +198,24 @@ function Guest(name) {
     this.statisfaction = 0;
     this.comingTime = Math.random() * 5500;
     this.goingTime = Math.random() * 3000;
-    this.maxRequirements = Math.min(gameWorld.daysPassed/4,10)+1;
+    this.maxRequirements = Math.min(gameWorld.daysPassed/8,10)+1;
     this.daysToStay = Math.floor((Math.random() * 3) + 1);
     this.noOfRequirements = Math.floor((Math.random() * this.maxRequirements) + 1);
     //console.log("New Customer: " + this.name + " #req: " + this.noOfRequirements);
-    this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
+    this.requirementArrayChoose = gameWorld.localUpgradesArray;
+    var tempRand = Math.floor((Math.random() * gameWorld.globalUpgradesArray.length));
+    this.requirementArrayChoose.push(gameWorld.globalUpgradesArray[tempRand]);
+    var tempRand2 = Math.floor((Math.random() * gameWorld.globalUpgradesArray.length));
+    while(tempRand2===tempRand){
+        tempRand2 = Math.floor((Math.random() * gameWorld.globalUpgradesArray.length));
+    }
+    this.requirementArrayChoose.push(gameWorld.globalUpgradesArray[tempRand2]);
+    var tempRand3 = Math.floor((Math.random() * gameWorld.globalUpgradesArray.length));
+    while(tempRand3===tempRand2 && tempRand3 === tempRand){
+        tempRand3 = Math.floor((Math.random() * gameWorld.globalUpgradesArray.length));
+    }
+    this.requirementArrayChoose.push(gameWorld.globalUpgradesArray[tempRand3]);
+
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
         x = Math.floor(Math.random() * this.requirementArrayChoose.length);
