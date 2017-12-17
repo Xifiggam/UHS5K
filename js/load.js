@@ -48,6 +48,13 @@ var loadState = {
         // game.add.plugin(Phaser.Plugin.Inspector);
         // game.add.plugin(PhaserSuperStorage.StoragePlugin);
         game.add.plugin(PhaserInput.Plugin);
+
+        var canvas = game.canvas;
+        canvas.width = w * window.devicePixelRatio;
+        canvas.height = h * window.devicePixelRatio;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+
         game.state.start('game');
     }
 };
