@@ -14,6 +14,7 @@ var game = new Phaser.Game(w, h, Phaser.AUTO, 'gameContainer');
 game.state.add('boot', bootState);
 game.state.add('load', loadState);
 game.state.add('menu', menuState);
+game.state.add('tutorial', tutorialState);
 game.state.add('credits', creditsState);
 game.state.add('game', gameState);
 

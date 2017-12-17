@@ -87,7 +87,7 @@ var loadState = {
         // game.add.plugin(Phaser.Plugin.Inspector);
         // game.add.plugin(PhaserSuperStorage.StoragePlugin);
         game.add.plugin(PhaserInput.Plugin);
-        game.state.start('game');
+        game.state.start('menu');
 
     }
 };
