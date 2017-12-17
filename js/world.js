@@ -226,7 +226,7 @@ function Guest (name) {
                         }
                         if(Math.random()<this.reviewChance){
                             this.writeReview();
-                            //TODO LUKAS CALLBACK HERE
+
                         }
                     }
                     this.statetime = 0;
@@ -237,7 +237,9 @@ function Guest (name) {
     };
 
     this.writeReview = function() {
-
+        if(gameWorld.newReviewCallback){
+            gameWorld.newReviewCallback("a new review was send.... put text here.");
+        }
     };
 
 }

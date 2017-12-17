@@ -42,6 +42,10 @@ var gameState = {
             self.moveToRoom(customer);
         };
 
+        this.world.newReviewCallback =  function(text) {
+            self.postNews(text);
+        };
+
         this.world.customerToLobbyCallback =  function(customer) {
             self.spawnCharacterAndMoveToLobbyNow(customer);
         };
