@@ -60,9 +60,13 @@ var gameWorld = {
             this.stars = Math.floor(reviewCount/countingReviewsNo);
         }
 
+        numberOfActivatedRooms = 0;
         alength = this.roomList.length;
         for (i = 0; i < alength; i++) {
             this.roomList[i].update(deltaTime);
+            if(this.roomList[i].activated){
+                numberOfActivatedRooms++;
+            }
         }
         alength = this.workerList.length;
         for (i = 0; i < alength; i++) {
@@ -72,7 +76,7 @@ var gameWorld = {
         for (i = 0; i < alength; i++) {
             this.guestList[i].update(deltaTime);
         }
-        if(alength<this.roomList.length){
+        if(alength<numberOfActivatedRooms){
             if(Math.random()<(0.004+(0.001*this.stars))){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
