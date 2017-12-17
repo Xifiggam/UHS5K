@@ -563,13 +563,13 @@ var gameState = {
         if(!roomToActivate.activated) {
             roomToActivate.activated = true;
             var copyTile = this.map.getTile(3, 0, this.wallLayer);
-            for(var x = roomToActivate.posX; x < roomToActivate.length + roomToActivate.posX + 1; x++){
+            for(var x = roomToActivate.posX-1; x < roomToActivate.length + roomToActivate.posX + 1; x++){
                 gameState.map.putTile(copyTile, x, roomToActivate.posY-1, this.wallLayer);
-                gameState.map.putTile(copyTile, x, roomToActivate.posY+roomToActivate.height+1, this.wallLayer);
+                gameState.map.putTile(copyTile, x, roomToActivate.posY+roomToActivate.height, this.wallLayer);
             }
-            for(var y = roomToActivate.posY ; y < roomToActivate.height + roomToActivate.posY + 1; y++) {
+            for(var y = roomToActivate.posY-1 ; y < roomToActivate.height + roomToActivate.posY; y++) {
                 gameState.map.putTile(copyTile, roomToActivate.posX-1, y, this.wallLayer);
-                gameState.map.putTile(copyTile, roomToActivate.posX + roomToActivate.length + 1, y, this.wallLayer);
+                gameState.map.putTile(copyTile, roomToActivate.posX + roomToActivate.length, y, this.wallLayer);
             }
         } else {
             console.error('could not activate room already activated');
@@ -637,6 +637,10 @@ var gameState = {
         this.buildMarker.u_height = height;
         this.buildMarker.u_type = type;
         this.buildMarker.u_room = room;
+        var roomRect = game.add.graphics();
+        roomRect.lineStyle(2, color, 1);
+        roomRect.drawRect(room.posX*TILE.SIZE, room.posY*TILE.SIZE, TILE.SIZE * room.length, TILE.SIZE * room.height);
+        this.buildSpriteGroup.add(roomRect);
 
     },
 
