@@ -17,17 +17,17 @@ var gameWorld = {
 
 
     GLOBAL_FEATURE_TYPE: {
-        WIFI_ROOM: new GlobalFeatureType('wifi_room', 1000),
-        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 100),
-        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 100),
-        MASSAGE_PARLOR: new GlobalFeatureType('massageParlor', 1000),
-        SAUNA: new GlobalFeatureType('sauna', 1000),
-        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 2000),
-        POOL: new GlobalFeatureType('pool', 2000),
-        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 2000),
-        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 1000),
-        HOTEL_BAR: new GlobalFeatureType('hotelBar', 1000),
-        RESTAURANT: new GlobalFeatureType('restaurant', 1000)
+        WIFI_ROOM: new GlobalFeatureType('wifi_room', 'Wifi in all rooms', 1000),
+        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 'Wifi in the lobby', 100),
+        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 'Seminar room for meetings', 100),
+        MASSAGE_PARLOR: new GlobalFeatureType('massageParlor', 'Massage room', 1000),
+        SAUNA: new GlobalFeatureType('sauna', 'Sauna for all guests', 1000),
+        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 'Massage with Happy-End', 2000),
+        POOL: new GlobalFeatureType('pool', 'Pool 4 all!', 2000),
+        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 'Outdoor Pool 4 all', 2000),
+        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 'Pump it up!', 1000),
+        HOTEL_BAR: new GlobalFeatureType('hotelBar', 'Hotel Bar', 1000),
+        RESTAURANT: new GlobalFeatureType('restaurant', 'Restaurant', 1000)
     },
 
     // Room Upgrade Prices
@@ -774,14 +774,15 @@ function generateName(quantity) {
         var last = Math.floor(Math.random() * lastNames.length);
         name += " " + lastNames[last];
 
-        if (names.indexOf(name) == -1) {
+        if (names.indexOf(name) === -1) {
             names.push(name);
         }
     }
     return names;
 }
 
-function GlobalFeatureType(name, price) {
+function GlobalFeatureType(name, readableName, price) {
+    this.readableName = readableName;
     this.name = name;
     this.active = false;
     this.price = price;

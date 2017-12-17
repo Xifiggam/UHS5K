@@ -149,8 +149,7 @@ var gameState = {
             var global_feature_type = [];
             for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
                 var global_feature = global_features[global_feature_it];
-                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.name + ' - ' +global_feature.price+"€" );
-                global_feature_type.push(global_feature.name);
+                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.readableName + ' - ' + global_feature.price + '€');
             }
             self.openBuyMenu(function (global_upgrade) {
                 var global_upgrade_obj = self.world.getGlobalFeatureForValue(global_upgrade)
@@ -428,6 +427,7 @@ var gameState = {
             if (bought) {
                 style.fill = "gray"
             }
+
             function click_button() {
                 self.close_build_menu();
                 //TODO: check if there is money
@@ -544,11 +544,11 @@ var gameState = {
 
     createNewsHud: function () {
         this.newsHudMenu = game.add.group();
-        var self =this
+        var self = this
 
         function click() {
-            var start = Math.max(0,this.newsHistory.length-10);
-            self.openMessageBox(this.newsHistory.splice(start,this.newsHistory.length - start),2,1);
+            var start = Math.max(0, this.newsHistory.length - 10);
+            self.openMessageBox(this.newsHistory.splice(start, this.newsHistory.length - start), 2, 1);
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -755,7 +755,7 @@ var gameState = {
                 console.log("not in room");
                 collide = true; // not in room
             }
-            for (var width = x; width < (this.buildMarker.u_width * TILE.SIZE + x ); width += TILE.SIZE) {
+            for (var width = x; width < (this.buildMarker.u_width * TILE.SIZE + x); width += TILE.SIZE) {
                 for (var height = y; height < (this.buildMarker.u_height * TILE.SIZE + y); height += TILE.SIZE) {
                     collide = collide || this.map.getTile(this.objectLayer.getTileX(width), this.objectLayer.getTileY(height), this.objectLayer) != null;
                     collide = collide || this.map.getTile(this.wallLayer.getTileX(width), this.wallLayer.getTileY(height), this.wallLayer) != null;
@@ -965,8 +965,8 @@ var gameState = {
         this.messageBox.add(sprite_top);
 
         var button_offset = offsetTop;
-        for (var i = 0; i < Math.max(text.length / 2,1); i++) {
-            offsetTop += TILE.SIZE*2;
+        for (var i = 0; i < Math.max(text.length / 2, 1); i++) {
+            offsetTop += TILE.SIZE * 2;
             console.log(button_offset);
             var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
             // sprite_center.scale.y = scaleY;
@@ -1046,10 +1046,10 @@ var gameState = {
         var bubble_sprite = game.add.sprite(posX, posY - TILE.SIZE * 2, ASSETS.MENU_BUBBLE);
         bubble_sprite.scale.x = 0.7;
         bubble_sprite.scale.y = 0.7;
-        var message_text = game.add.text(posX + 30, posY-30, text, text_style);
+        var message_text = game.add.text(posX + 30, posY - 30, text, text_style);
         bubbleGroup.add(bubble_sprite);
         bubbleGroup.add(message_text);
-        var fadeOutTween = game.add.tween(bubbleGroup).to( { alpha: 0 }, 2500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeOutTween = game.add.tween(bubbleGroup).to({alpha: 0}, 2500, Phaser.Easing.Linear.None, true, 0, 0, false);
         fadeOutTween.onComplete.add(function () {
             bubbleGroup.destroy();
             bubbleGroup = null;
