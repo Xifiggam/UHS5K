@@ -528,7 +528,7 @@ var gameState = {
         this.newsHudMenu = game.add.group();
 
         function click() {
-            //todo open bigger news screen with backlog
+            this.openMessageBox(this.newsHistory.slice(Math.max(0,this.newsHistory.length-10),this.newsHistory.length).join('\,'),1,1,game.width/2, game.height/2);
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);

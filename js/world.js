@@ -636,7 +636,9 @@ function generateName(quantity){
         'Vix',
         'Sterling',
         'Obi',
-        'Lukas'
+        'Lukas',
+        'Lorenz',
+        'Hassan'
 
     ];
         var middleNames = [
@@ -650,7 +652,7 @@ function generateName(quantity){
         'Ruth',
         'Roald',
         'Linus',
-        'Mallory', 'Wan', 'Zelle'
+        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf'
 
     ];
         var lastNames = [
