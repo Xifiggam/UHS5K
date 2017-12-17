@@ -727,7 +727,8 @@ function generateName(quantity) {
         'Obi',
         'Lukas',
         'Lorenz',
-        'Hassan'
+        'Hassan',
+        'Super'
 
     ];
     var middleNames = [
@@ -741,9 +742,7 @@ function generateName(quantity) {
         'Ruth',
         'Roald',
         'Linus', 'Hosé',
-        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"'
-
-
+        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"', '"Pump it Up!"'
     ];
     var lastNames = [
         'Pires',
@@ -759,6 +758,7 @@ function generateName(quantity) {
         'Skywalker',
         'Archer',
         'Schuerzenbacher',
+        'Mario'
 
     ];
 
