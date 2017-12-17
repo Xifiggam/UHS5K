@@ -16,6 +16,7 @@ var menuState = {
         button.onInputOut.add(menu.out, this);
 
         this.addMenuEntry("Start", function () {game.state.start('game'); });
+        this.addMenuEntry("Tutorial", function () {game.state.start('tutorial'); });
         this.addMenuEntry("Credits", function () {game.state.start('credits'); });
 
     },

@@ -144,7 +144,7 @@ var gameState = {
             var global_feature_type = [];
             for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
                 var global_feature = global_features[global_feature_it];
-                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.name);
+                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.name + ' - ' +global_feature.price+"€" );
                 global_feature_type.push(global_feature.name);
             }
             self.openBuyMenu(function (global_upgrade) {
@@ -537,12 +537,11 @@ var gameState = {
 
     createNewsHud: function () {
         this.newsHudMenu = game.add.group();
+        var self =this
 
         function click() {
             var start = Math.max(0,this.newsHistory.length-10);
-            var text2 = this.newsHistory.slice(start,start - this.newsHistory.length).join('\n');
-            console.log(text2);
-            this.openMessageBox(text2,1,1,{x:game.width/2, y:game.height/2});
+            self.openMessageBox(this.newsHistory.splice(start,this.newsHistory.length - start),2,1);
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -939,6 +938,7 @@ var gameState = {
 
     openMessageBox: function (text, xScale, yScale, position) {
         var self = this;
+        console.log("text is: "+text);
         if (this.messageBox != null) {
             self.closeMessageBox();
         }
@@ -958,7 +958,7 @@ var gameState = {
         this.messageBox.add(sprite_top);
 
         var button_offset = offsetTop;
-        for (var i = 0; i < text.length / 2; i++) {
+        for (var i = 0; i < Math.max(text.length / 2,1); i++) {
             offsetTop += TILE.SIZE*2;
             console.log(button_offset);
             var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);

@@ -1,14 +1,20 @@
-var creditsState = {
 
+var creditsState = {
+    backToMenu : function () {
+    game.state.start('menu');
+},
     create: function () {
         this.creditCount = 0;
-        this.addCredit('Developer', 'Christian Zellot');
+        this.addCredit('Developer/Art', 'Christian Zellot');
         this.addCredit('Developer', 'Lorenz Schmoliner');
         this.addCredit('Developer', 'Lukas Knoch-Girstmair');
         this.addCredit('Game Concept', 'Diana Schaffer');
-        this.addCredit('Game Desig', 'Matthias Kostwein');
+        this.addCredit('Game Design', 'Matthias Kostwein');
+        this.addCredit('Audio', 'Matthias Lux');
         this.addCredit('Producer', 'Veit Frick');
         this.addCredit('Art', 'Gabriel Napetschnig');
+        this.addCredit('Text', 'Armin Lippitz');
+        game.input.onDown.add(this.backToMenu, this);
     },
     addCredit: function(task, author) {
         var authorStyle = { font: '40pt TheMinion', fill: 'white', align: 'center', stroke: 'rgba(0,0,0,0)', strokeThickness: 4};
