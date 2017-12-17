@@ -100,10 +100,20 @@ var gameWorld = {
         return null;
     },
 
+    getGlobalFeatureValues: function(){
+        var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
+        var ret_values = []
+        for(var i=0; i<obj_values.length; i++) {
+            ret_values.push(this.GLOBAL_FEATURE_TYPE[obj_values[i]]);
+        }
+        return ret_values;
+    },
+
     buyGlobalUpgrade: function (feature) {
         var feature_obj = this.getGlobalFeatureForValue(feature);
         if(feature_obj != null){
            this.money = this.money - feature_obj.price;
+           feature_obj.active = true;
            console.log('feature found' + feature, feature_obj);
         }
     },
@@ -231,7 +241,7 @@ function Guest (name) {
                         }
                         if(Math.random()<this.reviewChance){
                             this.writeReview();
-                            //TODO LUKAS CALLBACK HERE
+
                         }
                     }
                     this.statetime = 0;
@@ -256,6 +266,9 @@ function Guest (name) {
         }
         gameWorld.reviewList.push(this.starsForReview);
         console.log("New Review: " + this.starsForReview);
+        if(gameWorld.newReviewCallback){
+            gameWorld.newReviewCallback("a new review was send.... put text here.");
+        }
     };
 
 }

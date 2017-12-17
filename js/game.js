@@ -2,7 +2,7 @@ function formatDateTime() {
     var date = new Date();
     var hours = date.getHours();
     var minutes = date.getMinutes();
-    return hours+":"+minutes;
+    return hours + ":" + minutes;
 }
 
 /**
@@ -38,22 +38,26 @@ var gameState = {
         var self = this;
 
 
-        this.world.customerArrivalCallback =  function(customer) {
+        this.world.customerArrivalCallback = function (customer) {
             self.moveToRoom(customer);
         };
 
-        this.world.customerToLobbyCallback =  function(customer) {
+        this.world.newReviewCallback = function (text) {
+            self.postNews(text);
+        };
+
+        this.world.customerToLobbyCallback = function (customer) {
             self.spawnCharacterAndMoveToLobbyNow(customer);
         };
-        this.world.customerLeaveCallback =  function(customer) {
+        this.world.customerLeaveCallback = function (customer) {
             self.moveCustomerVisualFromRoom(customer);
         };
 
-        this.world.doCleaningCallback =  function(worker) {
+        this.world.doCleaningCallback = function (worker) {
             self.updateWorker(worker);
         };
 
-        this.world.updateRoomStatusCallback =  function(room) {
+        this.world.updateRoomStatusCallback = function (room) {
             self.updateRoomDirtyState(room);
         };
 
@@ -83,18 +87,20 @@ var gameState = {
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
 
         var button_start_x = 20;
-        var button_start_y = game.height-120;
-        var buyRoomButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
+        var button_start_y = game.height - 120;
+        var buyRoomButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function () {
             var button_texts = [];
             var button_type = [];
             for (var room_it = 0; room_it < self.world.roomList.length; room_it++) {
                 var room = self.world.roomList[room_it];
-                if(!room.activated){
-                    button_texts.push(room.name  + ' - ' + room.price_to_buy  + '€');
+                if (!room.activated) {
+                    button_texts.push(room.name + ' - ' + room.price_to_buy + '€');
                     button_type.push(room_it);
                 }
             }
-            self.openBuyMenu(function(room_cl){self.activateRoom(room_cl)}, button_texts, button_type);
+            self.openBuyMenu(function (room_cl) {
+                self.activateRoom(room_cl)
+            }, button_texts, button_type);
 
         }, this, 2, 1, 0);
         buyRoomButton.scale.x = 3;
@@ -102,22 +108,22 @@ var gameState = {
         buyRoomButton.scale.y = scalY;
         buyRoomButton.fixedToCamera = true;
         this.menuHud.add(buyRoomButton);
-        var buyRoomsText = game.add.text(button_start_x+35, button_start_y+12, "BUY ROOMS", text_style);
+        var buyRoomsText = game.add.text(button_start_x + 35, button_start_y + 12, "BUY ROOMS", text_style);
         buyRoomsText.fixedToCamera = true;
         this.menuHud.add(buyRoomsText);
 
         button_start_x += 200;
-        var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
+        var buyStaffButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function () {
             var worker_texts = [];
             var worker_objects = [];
             for (var worker_it = 0; worker_it < self.world.workerList.length; worker_it++) {
                 var worker_obj = self.world.workerList[worker_it];
-                if(worker_obj.statusCurrent === WORKER_STATE.TO_HIRE){
-                    worker_texts.push(worker_obj.name+" - eff:"+worker_obj.quality+" - "+worker_obj.price+"€/d");
+                if (worker_obj.statusCurrent === WORKER_STATE.TO_HIRE) {
+                    worker_texts.push(worker_obj.name + " - eff:" + worker_obj.quality + " - " + worker_obj.price + "€/d");
                     worker_objects.push(worker_obj);
                 }
             }
-            self.openBuyMenu(function(worker_cl_obj){
+            self.openBuyMenu(function (worker_cl_obj) {
                 worker_cl_obj.statusCurrent = WORKER_STATE.IDLE;
                 self.addWorker(worker_cl_obj);
             }, worker_texts, worker_objects);
@@ -126,26 +132,34 @@ var gameState = {
         buyStaffButton.scale.y = scalY;
         buyStaffButton.fixedToCamera = true;
         this.menuHud.add(buyStaffButton);
-        var buyStaff = game.add.text(button_start_x+35, button_start_y+12, "HIRE STAFF", text_style);
+        var buyStaff = game.add.text(button_start_x + 35, button_start_y + 12, "HIRE STAFF", text_style);
         buyStaff.fixedToCamera = true;
         this.menuHud.add(buyStaff);
 
         button_start_x += 200;
-        var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
-            self.openBuyMenu(function(global_upgrade){
-                console.log(self.world.getGlobalFeatureForValue(global_upgrade));
-                if(self.world.getGlobalFeatureForValue(global_upgrade).price <= self.world.money){
+        var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function () {
+            var global_features = this.world.getGlobalFeatureValues();
+            var global_feature_texts = [];
+            var global_feature_type = [];
+            for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
+                var global_feature = global_features[global_feature_it];
+                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.name);
+                global_feature_type.push(global_feature.name);
+            }
+            self.openBuyMenu(function (global_upgrade) {
+                var global_upgrade_obj = self.world.getGlobalFeatureForValue(global_upgrade)
+                if (!global_upgrade_obj.active && global_upgrade_obj.price <= self.world.money) {
                     self.world.buyGlobalUpgrade(global_upgrade);
                 } else {
                     self.openMessageBox('cannot buy not enough money');
                 }
 
-            }, this.world.globalUpgradesArray, this.world.globalUpgradesArray);
+            }, global_feature_texts, global_feature_type);
         }, this, 2, 1, 0);
         buyUpgradeButton.scale.x = 3.6;
         buyUpgradeButton.scale.y = scalY;
         buyUpgradeButton.fixedToCamera = true;
-        var buyUpgradeText = game.add.text(button_start_x+35, button_start_y+12, "BUY UPGRADES", text_style);
+        var buyUpgradeText = game.add.text(button_start_x + 35, button_start_y + 12, "BUY UPGRADES", text_style);
         buyUpgradeText.fixedToCamera = true;
         this.menuHud.add(buyUpgradeButton);
         this.menuHud.add(buyUpgradeText);
@@ -161,7 +175,6 @@ var gameState = {
         // tween.start();
         //
     },
-
 
 
     update: function () {
@@ -208,81 +221,93 @@ var gameState = {
         }
     },
 
-    moveCustomerVisualFromRoom: function(character) {
-        if(character.sprite){
+    moveCustomerVisualFromRoom: function (character) {
+        if (character.sprite) {
             var lobbyX = 760;
             var lobbyY = 750;
 
             var nameTag = character.nameTag;
 
-            if(character.chosenRoom){
-                var toLobby = game.add.tween(character.sprite).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-                var toLobbyTag = game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, false);
-                var awaaaaay = game.add.tween(character.sprite).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
-                var awaaaaayTag = game.add.tween(nameTag).to( { x: lobbyX,y: 2000  },2000 , Phaser.Easing.Quadratic.InOut, false);
+            if (character.chosenRoom) {
+                var toLobby = game.add.tween(character.sprite).to({
+                    x: lobbyX,
+                    y: lobbyY
+                }, 2000, Phaser.Easing.Quadratic.InOut, false);
+                var toLobbyTag = game.add.tween(nameTag).to({
+                    x: lobbyX,
+                    y: lobbyY
+                }, 2000, Phaser.Easing.Quadratic.InOut, false);
+                var awaaaaay = game.add.tween(character.sprite).to({
+                    x: lobbyX,
+                    y: 2000
+                }, 2000, Phaser.Easing.Quadratic.InOut, false);
+                var awaaaaayTag = game.add.tween(nameTag).to({
+                    x: lobbyX,
+                    y: 2000
+                }, 2000, Phaser.Easing.Quadratic.InOut, false);
                 toLobby.chain(awaaaaay);
                 toLobbyTag.chain(awaaaaayTag);
                 toLobby.start();
                 toLobbyTag.start();
-            }else{
-                game.add.tween(character.sprite).to( { x: lobbyX,y: 1000  },2000 , Phaser.Easing.Quadratic.InOut, true);
-                game.add.tween(nameTag).to( { x: lobbyX,y: 1000  },2000 , Phaser.Easing.Quadratic.InOut, true);
+            } else {
+                game.add.tween(character.sprite).to({x: lobbyX, y: 1000}, 2000, Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to({x: lobbyX, y: 1000}, 2000, Phaser.Easing.Quadratic.InOut, true);
             }
 
         }
     },
-    updateWorker: function(worker){
+    updateWorker: function (worker) {
         console.log(worker.workTaskRoom);
-        if(worker.workTaskRoom){
+        if (worker.workTaskRoom) {
             var room = worker.workTaskRoom;
             {
-                var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
-                var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
+                var roomCenterX = (room.posX + room.length / 2) * TILE.SIZE - TILE.SIZE / 2;
+                var roomCenterY = (room.posY + room.height / 2) * TILE.SIZE - TILE.SIZE / 2;
 
 
                 var person = worker.sprite;
                 var nameTag = worker.nameTag;
 
-                game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
-                game.add.tween(nameTag).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+                game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
             }
-        }else{//move to lobby
-            var lobbyX = 19*32 + (Math.random()*7*32);
-            var lobbyY = 19*32 + (Math.random()*5*32);
+        } else {//move to lobby
+            var lobbyX = 19 * 32 + (Math.random() * 7 * 32);
+            var lobbyY = 19 * 32 + (Math.random() * 5 * 32);
 
 
             var person = worker.sprite;
             var nameTag = worker.nameTag;
 
-            game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut,true);
-            game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+            game.add.tween(person).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+            game.add.tween(nameTag).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
         }
     },
-    updateRoomDirtyState: function(room){
+    updateRoomDirtyState: function (room) {
 
-        var asset= null;
-        if(room.statusCurrent ==  "free" && room.sprite){
+        var asset = null;
+        if (room.statusCurrent == "free" && room.sprite) {
             room.sprite.destroy();
         }
-        if(room.statusCurrent == 'dirty'){
-            var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
-            var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
-            room.sprite = game.add.sprite(roomCenterX,roomCenterY,ASSETS.DIRT);
+        if (room.statusCurrent == 'dirty') {
+            var roomCenterX = (room.posX + room.length / 2) * TILE.SIZE - TILE.SIZE / 2;
+            var roomCenterY = (room.posY + room.height / 2) * TILE.SIZE - TILE.SIZE / 2;
+            room.sprite = game.add.sprite(roomCenterX, roomCenterY, ASSETS.DIRT);
             this.backroundObjectGroup.add(room.sprite);
         }
 
     },
 
-    addWorker: function(worker){
+    addWorker: function (worker) {
         var number = Math.random();
         var asset = ASSETS.CHAR_WORKER_F;
-        if(number< 0.5){
+        if (number < 0.5) {
             asset = ASSETS.CHAR_WORKER_M;
         }
-        var person =  game.add.sprite(760,800,asset); //somewhere in lobby
+        var person = game.add.sprite(760, 800, asset); //somewhere in lobby
         this.entityGroup.add(person);
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
-        var nameTag = game.add.text(760,800,worker.name, style);
+        var nameTag = game.add.text(760, 800, worker.name, style);
         nameTag.anchor.x = 0.5;
         nameTag.anchor.y = 0.5;
         this.entityGroup.add(nameTag);
@@ -294,20 +319,20 @@ var gameState = {
         this.updateWorker(worker);
     },
 
-    spawnCharacterAndMoveToLobbyNow :  function(character){
-        var lobbyX = 19*32 + (Math.random()*7*32);
-        var lobbyY = 19*32 + (Math.random()*5*32);
+    spawnCharacterAndMoveToLobbyNow: function (character) {
+        var lobbyX = 19 * 32 + (Math.random() * 7 * 32);
+        var lobbyY = 19 * 32 + (Math.random() * 5 * 32);
         var number = Math.random();
         var asset = null;
-        if(number< 0.5){
+        if (number < 0.5) {
             asset = ASSETS.CHAR_OLD;
-        }else{
+        } else {
             asset = ASSETS.CHAR_GEN;
         }
-        var person =  game.add.sprite(760,800,asset); //somewhere in lobby
+        var person = game.add.sprite(760, 800, asset); //somewhere in lobby
 
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
-        var nameTag = game.add.text(760,800,character.name, style);
+        var nameTag = game.add.text(760, 800, character.name, style);
         nameTag.anchor.x = 0.5;
         nameTag.anchor.y = 0.5;
         person.scale.x = 1.2;
@@ -316,30 +341,30 @@ var gameState = {
         character.nameTag = nameTag;
         this.entityGroup.add(nameTag);
         this.entityGroup.add(person);
-        game.add.tween(person).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
-        game.add.tween(nameTag).to( { x: lobbyX,y: lobbyY  },2000 , Phaser.Easing.Quadratic.InOut, true);
+        game.add.tween(person).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+        game.add.tween(nameTag).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
 
     },
-    moveToRoom: function(character){
+    moveToRoom: function (character) {
         var room = null;
         var roomName = character.chosenRoom.name;
 
-        for(var i = 0; i<this.world.roomList.length;i++ ){
+        for (var i = 0; i < this.world.roomList.length; i++) {
             var candidateRoom = this.world.roomList[i];
-            if(candidateRoom.name === roomName){
+            if (candidateRoom.name === roomName) {
                 room = candidateRoom;
             }
         }
-        if(room){
-            var roomCenterX = (room.posX + room.length/2) * TILE.SIZE- TILE.SIZE/2;
-            var roomCenterY = (room.posY + room.height/2) * TILE.SIZE- TILE.SIZE/2;
+        if (room) {
+            var roomCenterX = (room.posX + room.length / 2) * TILE.SIZE - TILE.SIZE / 2;
+            var roomCenterY = (room.posY + room.height / 2) * TILE.SIZE - TILE.SIZE / 2;
 
 
             var person = character.sprite;
             var nameTag = character.nameTag;
 
-            game.add.tween(person).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
-            game.add.tween(nameTag).to( { x: roomCenterX,y: roomCenterY  },2000 , Phaser.Easing.Quadratic.InOut,true);
+            game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+            game.add.tween(nameTag).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
         }
     },
     addObject: function (point) {
@@ -388,10 +413,10 @@ var gameState = {
             function click_button() {
                 self.close_build_menu();
                 //TODO: check if there is money
-                if(!notPlaceable) {
-                   if(!bought){
-                       self.activateBuildCursor(feature_type, room);
-                   }
+                if (!notPlaceable) {
+                    if (!bought) {
+                        self.activateBuildCursor(feature_type, room);
+                    }
                 } else {
                     self.world.upgradeRoom(room, feature_type);
                 }
@@ -425,7 +450,7 @@ var gameState = {
         var sprite = game.add.sprite(offsetLeft, 10, ASSETS.MENU_TOP);
         sprite.scale.x = 2;
         sprite.fixedToCamera = true;
-        var sprite_bg = game.add.sprite(offsetLeft, 10  + TILE.SIZE * 2, ASSETS.MENU_CENTER);
+        var sprite_bg = game.add.sprite(offsetLeft, 10 + TILE.SIZE * 2, ASSETS.MENU_CENTER);
         sprite_bg.scale.x = 2;
         sprite_bg.scale.y = 10;
         sprite_bg.fixedToCamera = true;
@@ -443,7 +468,7 @@ var gameState = {
 
         function set_price() {
             room.price = parseInt(prompt("Please enter a price for the room", room.price));
-            setPrice.text = room.price+"€";
+            setPrice.text = room.price + "€";
         }
 
         var btnSetPrice = game.add.button(game.width - 250, 20, ASSETS.DUMMY_BUTTON, set_price, this, 2, 1, 0);
@@ -452,7 +477,7 @@ var gameState = {
         btnSetPrice.alignIn(sprite, Phaser.TOP_RIGHT, -100, 0);
         btnSetPrice.fixedToCamera = true;
         console.log(room);
-        var setPrice = game.add.text(game.width - 240, 20, room.price+"€", style);
+        var setPrice = game.add.text(game.width - 240, 20, room.price + "€", style);
         setPrice.alignIn(btnSetPrice, Phaser.CENTER, 0, 0);
         setPrice.fixedToCamera = true;
 
@@ -463,7 +488,7 @@ var gameState = {
         sprite_end.scale.x = 2;
         sprite_end.anchor.setTo(1, 1);
         sprite_end.angle = 180;
-        sprite_end.alignTo(sprite_bg, Phaser.BOTTOM_LEFT, sprite.width, -1*sprite_end.height);
+        sprite_end.alignTo(sprite_bg, Phaser.BOTTOM_LEFT, sprite.width, -1 * sprite_end.height);
         sprite_end.fixedToCamera = true;
         this.roomMenuHud.add(sprite_end);
 
@@ -526,14 +551,16 @@ var gameState = {
 
 
     postNews: function (text) {
-        var text2 = formatDateTime() +" "+ text;
+        var text2 = formatDateTime() + " " + text;
 
         this.newsHistory.push(text2);
         var tween1 = game.add.tween(this.news_text).to({alpha: 0}, 2000);
+
         function setText() {
             this.news_text.text = text2;
         }
-        tween1.onComplete.add(setText,this);
+
+        tween1.onComplete.add(setText, this);
         var tween3 = game.add.tween(this.news_text).to({alpha: 1}, 2000);
 
         tween1.chain(tween3);
@@ -574,17 +601,17 @@ var gameState = {
         }
     },
 
-    activateRoom: function(index){
+    activateRoom: function (index) {
         var roomToActivate = this.world.roomList[index];
-        if(!roomToActivate.activated) {
+        if (!roomToActivate.activated) {
             roomToActivate.activated = true;
             var copyTile = this.map.getTile(3, 0, this.wallLayer);
-            for(var x = roomToActivate.posX-1; x < roomToActivate.length + roomToActivate.posX + 1; x++){
-                gameState.map.putTile(copyTile, x, roomToActivate.posY-1, this.wallLayer);
-                gameState.map.putTile(copyTile, x, roomToActivate.posY+roomToActivate.height, this.wallLayer);
+            for (var x = roomToActivate.posX - 1; x < roomToActivate.length + roomToActivate.posX + 1; x++) {
+                gameState.map.putTile(copyTile, x, roomToActivate.posY - 1, this.wallLayer);
+                gameState.map.putTile(copyTile, x, roomToActivate.posY + roomToActivate.height, this.wallLayer);
             }
-            for(var y = roomToActivate.posY-1 ; y < roomToActivate.height + roomToActivate.posY; y++) {
-                gameState.map.putTile(copyTile, roomToActivate.posX-1, y, this.wallLayer);
+            for (var y = roomToActivate.posY - 1; y < roomToActivate.height + roomToActivate.posY; y++) {
+                gameState.map.putTile(copyTile, roomToActivate.posX - 1, y, this.wallLayer);
                 gameState.map.putTile(copyTile, roomToActivate.posX + roomToActivate.length, y, this.wallLayer);
             }
         } else {
@@ -597,40 +624,42 @@ var gameState = {
         var height = 1;
         this.buildSpriteGroup = game.add.group();
         this.buildSpriteGroup.u_diff_size = false;
-        this.buildSpriteGroup.u_drawcallback = function(){console.log('drawcallback called but not implemented ')};
+        this.buildSpriteGroup.u_drawcallback = function () {
+            console.log('drawcallback called but not implemented ')
+        };
         if (type == SINGLE_FEATURE_TYPE.SINGLE_BED) {
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             width = 3;
-        } else if(type == SINGLE_FEATURE_TYPE.DOUBLE_BED) {
+        } else if (type == SINGLE_FEATURE_TYPE.DOUBLE_BED) {
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             width = 3;
             height = 2;
-        } else if(type == SINGLE_FEATURE_TYPE.LUXURY_BED) {
+        } else if (type == SINGLE_FEATURE_TYPE.LUXURY_BED) {
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             this.addBedSpriteToGroup(this.buildSpriteGroup);
             width = 3;
             height = 3;
-        } else if(type == SINGLE_FEATURE_TYPE.CHILD_BED) {
+        } else if (type == SINGLE_FEATURE_TYPE.CHILD_BED) {
             this.addChildBedSpriteToGroup(this.buildSpriteGroup);
             width = 2;
-        } else if(type == SINGLE_FEATURE_TYPE.PLANT) {
+        } else if (type == SINGLE_FEATURE_TYPE.PLANT) {
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.PLANT));
-        } else if(type == SINGLE_FEATURE_TYPE.VIEW) {
+        } else if (type == SINGLE_FEATURE_TYPE.VIEW) {
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.VIEW));
-        } else if(type == SINGLE_FEATURE_TYPE.ENTERTAINMENT) {
+        } else if (type == SINGLE_FEATURE_TYPE.ENTERTAINMENT) {
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.TV));
-        } else if(type == SINGLE_FEATURE_TYPE.ACUNIT) {
+        } else if (type == SINGLE_FEATURE_TYPE.ACUNIT) {
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.AC_UNIT));
-        } else if(type == SINGLE_FEATURE_TYPE.BATH) {
+        } else if (type == SINGLE_FEATURE_TYPE.BATH) {
             this.buildSpriteGroup.u_diff_size = true;
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.SHOWER));
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.TOILET));
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.SINK));
             width = 2;
             height = 4;
-            this.buildSpriteGroup.u_drawcallback = function(group, x, y){
+            this.buildSpriteGroup.u_drawcallback = function (group, x, y) {
                 group.children[0].x = x;
                 group.children[0].y = y;
                 group.children[1].x = x;
@@ -657,7 +686,7 @@ var gameState = {
         this.buildMarker.u_room = room;
         var roomRect = game.add.graphics();
         roomRect.lineStyle(2, color, 1);
-        roomRect.drawRect(room.posX*TILE.SIZE, room.posY*TILE.SIZE, TILE.SIZE * room.length, TILE.SIZE * room.height);
+        roomRect.drawRect(room.posX * TILE.SIZE, room.posY * TILE.SIZE, TILE.SIZE * room.length, TILE.SIZE * room.height);
         this.buildSpriteGroup.add(roomRect);
 
     },
@@ -704,12 +733,12 @@ var gameState = {
             }
             this.buildMarker.x = x;
             this.buildMarker.y = y;
-            if(!this.buildSpriteGroup.u_diff_size) {
+            if (!this.buildSpriteGroup.u_diff_size) {
                 //move build sprite
                 for (var it_group_child_x = 0; it_group_child_x < this.buildMarker.u_width; it_group_child_x++) {
                     for (var it_group_child_y = 0; it_group_child_y < this.buildMarker.u_height; it_group_child_y++) {
-                        var group_child = this.buildSpriteGroup.children[it_group_child_x+it_group_child_y*this.buildMarker.u_width];
-                        group_child.x = x + TILE.SIZE * it_group_child_x ;
+                        var group_child = this.buildSpriteGroup.children[it_group_child_x + it_group_child_y * this.buildMarker.u_width];
+                        group_child.x = x + TILE.SIZE * it_group_child_x;
                         group_child.y = y + TILE.SIZE * it_group_child_y;
                     }
                 }
@@ -753,28 +782,27 @@ var gameState = {
                 for (var it_bl_tile_x = 0; it_bl_tile_x < this.buildMarker.u_width; it_bl_tile_x++) {
                     for (var it_bl_tile_y = 0; it_bl_tile_y < this.buildMarker.u_height; it_bl_tile_y++) {
                         this.map.putTile(currentTile, tileX + it_bl_tile_x, tileY + it_bl_tile_y, this.objectLayer);
-                        if(!this.buildSpriteGroup.u_diff_size) {
+                        if (!this.buildSpriteGroup.u_diff_size) {
                             var group_child_block = sprite_group.children[it_bl_tile_x + it_bl_tile_y * this.buildMarker.u_width];
-                            group_child_block.x = x + TILE.SIZE * it_bl_tile_x ;
+                            group_child_block.x = x + TILE.SIZE * it_bl_tile_x;
                             group_child_block.y = y + TILE.SIZE * it_bl_tile_y;
                         }
                     }
                 }
-                if(this.buildSpriteGroup.u_diff_size) {
+                if (this.buildSpriteGroup.u_diff_size) {
                     this.buildSpriteGroup.u_drawcallback(sprite_group, x, y);
                 }
 
 
-
                 this.deactivateBuildCursor();
-            } else if (game.input.mousePointer.isDown){
+            } else if (game.input.mousePointer.isDown) {
                 this.deactivateBuildCursor();
             }
         }
     },
 
 
-    addBedSpriteToGroup: function(group){
+    addBedSpriteToGroup: function (group) {
         var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
         var bed_middle_sprite = game.add.sprite(0, 0, ASSETS.BED_MIDDLE).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
         var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_middle_sprite, Phaser.RIGHT_CENTER, 0);
@@ -782,19 +810,19 @@ var gameState = {
         group.add(bed_middle_sprite);
         group.add(bed_end_sprite);
     },
-    addChildBedSpriteToGroup: function(group){
+    addChildBedSpriteToGroup: function (group) {
         var bed_end_sprite = game.add.sprite(0, 0, ASSETS.BED_HEAD);
         var bed_head_sprite = game.add.sprite(0, 0, ASSETS.BED_END).alignTo(bed_end_sprite, Phaser.RIGHT_CENTER, 0);
         group.add(bed_head_sprite);
         group.add(bed_end_sprite);
     },
 
-    openBuyMenu: function(click_callback, button_texts, button_types){
+    openBuyMenu: function (click_callback, button_texts, button_types) {
         var self = this;
-        if(this.buyMenuHud != null){
+        if (this.buyMenuHud != null) {
             self.closeBuyMenu();
         }
-        
+
         this.buyMenuHud = game.add.group();
         var offsetLeft = game.width / 2;
         var offsetTop = 10;
@@ -819,43 +847,45 @@ var gameState = {
         this.buyMenuHud.add(sprite_bottom);
 
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
-        var closeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function(){self.closeBuyMenu();}, this, 2, 1, 0);
+        var closeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function () {
+            self.closeBuyMenu();
+        }, this, 2, 1, 0);
         closeButton.scale.y = 25;
         closeButton.scale.x = 25;
         closeButton.alpha = 0;
-        closeButton.alignIn(sprite_top, Phaser.TOP_RIGHT, -15,-15);
+        closeButton.alignIn(sprite_top, Phaser.TOP_RIGHT, -15, -15);
         closeButton.fixedToCamera = true;
         this.buyMenuHud.add(closeButton);
-        var closeButtonText = game.add.text(offsetLeft+35, button_offset, 'X', text_style);
+        var closeButtonText = game.add.text(offsetLeft + 35, button_offset, 'X', text_style);
         closeButtonText.alignIn(closeButton, Phaser.CENTER);
         closeButtonText.fixedToCamera = true;
         this.buyMenuHud.add(closeButtonText);
 
 
-        if(button_texts.length != button_types.length ){
+        if (button_texts.length != button_types.length) {
             console.log('error cannot render buttons types and texts not matching')
         } else {
             for (var button_render_it = 0; button_render_it < button_texts.length; button_render_it++) {
                 var button_text = button_texts[button_render_it];
                 var button_type = button_types[button_render_it];
-                var callback = function(button_type_t){
+                var callback = function (button_type_t) {
                     return function () {
                         self.closeBuyMenu();
                         click_callback(button_type_t);
                     };
                 };
-                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, callback(button_type) , this, 2, 1, 0);
-                buyUpgradeButton.scale.y = TILE.SIZE*1.1;
-                buyUpgradeButton.scale.x = TILE.SIZE*8;
+                var buyUpgradeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, callback(button_type), this, 2, 1, 0);
+                buyUpgradeButton.scale.y = TILE.SIZE * 1.1;
+                buyUpgradeButton.scale.x = TILE.SIZE * 8;
                 buyUpgradeButton.alpha = 0;
                 buyUpgradeButton.fixedToCamera = true;
                 this.buyMenuHud.add(buyUpgradeButton);
 
 
-                var buyUpgradeText = game.add.text(offsetLeft+35, button_offset, button_text, text_style);
+                var buyUpgradeText = game.add.text(offsetLeft + 35, button_offset, button_text, text_style);
                 buyUpgradeText.fixedToCamera = true;
                 this.buyMenuHud.add(buyUpgradeText);
-                button_offset += TILE.SIZE*1.2;
+                button_offset += TILE.SIZE * 1.2;
             }
 
 
@@ -863,15 +893,15 @@ var gameState = {
 
     },
 
-    closeBuyMenu: function(){
+    closeBuyMenu: function () {
         this.buyMenuHud.destroy();
         this.buyMenuHud = null;
-        
+
     },
 
-    openMessageBox: function(text, xScale, yScale, position){
+    openMessageBox: function (text, xScale, yScale, position) {
         var self = this;
-        if(this.messageBox != null){
+        if (this.messageBox != null) {
             self.closeMessageBox();
         }
 
@@ -889,7 +919,7 @@ var gameState = {
         var button_offset = offsetTop;
         var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
         sprite_center.scale.y = scaleY;
-        sprite_center.scale.x = scaleX*2;
+        sprite_center.scale.x = scaleX * 2;
         sprite_center.fixedToCamera = true;
         this.messageBox.add(sprite_center);
         var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
@@ -897,30 +927,32 @@ var gameState = {
         sprite_bottom.anchor.setTo(1, 1);
         sprite_bottom.angle = 180;
         sprite_bottom.scale.x = scaleX;
-        sprite_bottom.alignTo(sprite_center, Phaser.BOTTOM_LEFT, 0,-15);
+        sprite_bottom.alignTo(sprite_center, Phaser.BOTTOM_LEFT, 0, -15);
         sprite_bottom.fixedToCamera = true;
         this.messageBox.add(sprite_bottom);
 
         var text_style = {font: "15px Arial", fill: "#ffffff", align: "left"};
-        var closeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function(){self.closeMessageBox();}, this, 2, 1, 0);
+        var closeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function () {
+            self.closeMessageBox();
+        }, this, 2, 1, 0);
         closeButton.scale.y = 25;
         closeButton.scale.x = 25;
         closeButton.alpha = 0;
-        closeButton.alignIn(sprite_top, Phaser.TOP_RIGHT, -15,-15);
+        closeButton.alignIn(sprite_top, Phaser.TOP_RIGHT, -15, -15);
         closeButton.fixedToCamera = true;
         this.messageBox.add(closeButton);
-        var closeButtonText = game.add.text(offsetLeft+35, button_offset, 'X', text_style);
+        var closeButtonText = game.add.text(offsetLeft + 35, button_offset, 'X', text_style);
         closeButtonText.alignIn(closeButton, Phaser.CENTER);
         closeButtonText.fixedToCamera = true;
         this.messageBox.add(closeButtonText);
-        var message_text = game.add.text(offsetLeft+55, button_offset + 25, text, text_style);
+        var message_text = game.add.text(offsetLeft + 55, button_offset + 25, text, text_style);
         message_text.alignIn(this.messageBox, Phaser.CENTER, 0, 30);
         message_text.fixedToCamera = true;
         this.messageBox.add(message_text);
 
     },
 
-    closeMessageBox: function(){
+    closeMessageBox: function () {
         this.messageBox.destroy();
         this.messageBox = null;
     }
