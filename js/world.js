@@ -14,18 +14,19 @@ var gameWorld = {
     stars: 1,
     guestToDelete: null,
     toDelete: false,
+    daysPassed: 0,
 
 
     GLOBAL_FEATURE_TYPE: {
-        WIFI_ROOM: new GlobalFeatureType('wifi_room', 'Wifi in all rooms', 1000),
-        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 'Wifi in the lobby', 100),
-        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 'Seminar room for meetings', 100),
+        WIFI_ROOM: new GlobalFeatureType('wifi_room', 'Wifi in all Rooms', 1000),
+        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 'Wifi in the Lobby', 100),
+        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 'Seminar Room', 100),
         MASSAGE_PARLOR: new GlobalFeatureType('massageParlor', 'Massage room', 1000),
-        SAUNA: new GlobalFeatureType('sauna', 'Sauna for all guests', 1000),
-        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 'Massage with Happy-End', 2000),
-        POOL: new GlobalFeatureType('pool', 'Pool 4 all!', 2000),
-        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 'Outdoor Pool 4 all', 2000),
-        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 'Pump it up!', 1000),
+        SAUNA: new GlobalFeatureType('sauna', 'Sauna', 1000),
+        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 'Sauna +', 2000),
+        POOL: new GlobalFeatureType('pool', 'Pool', 2000),
+        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 'Outdoor Pool', 2000),
+        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 'Fitness Studio', 1000),
         HOTEL_BAR: new GlobalFeatureType('hotelBar', 'Hotel Bar', 1000),
         RESTAURANT: new GlobalFeatureType('restaurant', 'Restaurant', 1000)
     },
@@ -101,7 +102,7 @@ var gameWorld = {
     },
 
     getGlobalFeatureForValue: function (feature) {
-        console.log('search feature', feature);
+        //console.log('search feature', feature);
         var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
         for (var i = 0; i < obj_values.length; i++) {
             if (this.GLOBAL_FEATURE_TYPE[obj_values[i]].name === feature) {
@@ -193,12 +194,14 @@ function Guest(name) {
     this.statetime = 0;
     this.chosenRoom = null;
     this.alreadySaidSomething = false;
-    this.reviewChance = 0.7;
+    this.reviewChance = 0.95;
     this.statisfaction = 0;
-    this.comingTime = Math.random() * 3000;
+    this.comingTime = Math.random() * 5500;
     this.goingTime = Math.random() * 3000;
+    this.maxRequirements = Math.min(gameWorld.daysPassed,10)
     this.daysToStay = Math.floor((Math.random() * 3) + 1);
-    this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
+    this.noOfRequirements = Math.floor((Math.random() * this.maxRequirements) + 1);
+    //console.log("New Customer: " + this.name + " #req: " + this.noOfRequirements);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
@@ -218,10 +221,10 @@ function Guest(name) {
     }
     if (!bedchosen) {
         x = Math.random();
-        if (x > 0.75) {
+        if (x > 0.96) {
             this.requirementArray.push(SINGLE_FEATURE_TYPE.LUXURY_BED);
         }
-        else if (x > 0.45) {
+        else if (x > 0.60) {
             this.requirementArray.push(SINGLE_FEATURE_TYPE.DOUBLE_BED);
         }
         else if (x > 0.1) {
@@ -247,7 +250,7 @@ function Guest(name) {
                     this.statetime = 0;
                     if (Math.random() < 0.10) {
                         this.writeReview();
-                        console.log("Guest not served review!");
+                        //console.log("Guest not served review!");
                     }
 
                 }
@@ -327,12 +330,12 @@ function Guest(name) {
 
                         }
                     }
-                    console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
+                    //console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
                     gameWorld.money += this.chosenRoom.price;
                     kaching.play();
                     this.maximumPrice -= this.chosenRoom.price;
-                    console.log(this.daysToStay + " " + this.maximumPrice);
+                    //console.log(this.daysToStay + " " + this.maximumPrice);
                     if (this.daysToStay <= 0 || this.maximumPrice <= 0) {
                         this.statusCurrent = "going";
                         if (Math.random() > 0.2) {
@@ -612,7 +615,7 @@ function init() {
     room.posY = 1;
     room.length = 7;
     room.height = 5;
-    room.name = "Honeymoon Suite";
+    room.name = "Suite \"Lorenz\"";
     gameWorld.roomList.push(room);
 
     var room = new Room();
@@ -681,7 +684,7 @@ function Room() {
     this.length = 0;
     this.height = 0;
     this.name = "No Room Name";
-    this.price = 50;
+    this.price = 120;
     this.singleBed = false;
     this.doubleBed = false;
     this.childBed = false;
@@ -693,7 +696,7 @@ function Room() {
     this.minibar = false;
     this.acUnit = false;
     this.activated = false;
-    this.price_to_buy = 10;
+    this.price_to_buy = 1200;
     this.statusArray = ["free", "taken", "dirty", "cleaning"];
     this.statusCurrent = "free";
 
@@ -830,7 +833,8 @@ function generateName(quantity) {
         'Obi',
         'Lukas',
         'Lorenz',
-        'Hassan'
+        'Hassan',
+        'Super'
 
     ];
     var middleNames = [
@@ -844,9 +848,7 @@ function generateName(quantity) {
         'Ruth',
         'Roald',
         'Linus', 'Hosé',
-        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"'
-
-
+        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"', '"Pump it Up!"'
     ];
     var lastNames = [
         'Pires',
@@ -862,6 +864,7 @@ function generateName(quantity) {
         'Skywalker',
         'Archer',
         'Schuerzenbacher',
+        'Mario'
 
     ];
 

@@ -65,7 +65,7 @@ TILE = {
 };
 
 GAMELOGIC = {
-    MSPERDAY: 20000,
+    MSPERDAY: 17000,
 };
 
 AUDIO = {
