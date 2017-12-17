@@ -629,7 +629,7 @@ var gameState = {
             this.moneyText.text = text_info;
             return;
         }
-        var style = {font: "25px Arial", fill: "#000000", align: "left"};
+        var style = {font: "25px Arial", fill: "blue", align: "left"};
         this.moneyText = game.add.text(game.width - 28, 45, text_info, style);
         this.moneyText.anchor.x = 1;
         this.moneyText.anchor.y = 0;
