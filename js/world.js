@@ -454,10 +454,10 @@ function Worker(type) {
     this.type = type;
     switch (this.type) {
         case "receptionist":
-            this.price = Math.floor(((Math.random() * 150) + 50) * this.quality);
+            this.price = Math.floor(((Math.random() * 80) + 30) * this.quality);
             break;
         case "cleaning":
-            this.price = Math.floor(((Math.random() * 100) + 50) * this.quality);
+            this.price = Math.floor(((Math.random() * 80) + 30) * this.quality);
             break;
         // case "kitchen":
         //     this.price = Math.floor(((Math.random() * 150) + 50)*this.quality);

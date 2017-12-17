@@ -672,6 +672,7 @@ var gameState = {
                 gameState.map.putTile(copyTile, roomToActivate.posX - 1, y, this.wallLayer);
                 gameState.map.putTile(copyTile, roomToActivate.posX + roomToActivate.length, y, this.wallLayer);
             }
+            gameWorld.money-=roomToActivate.price_to_buy;
         } else {
             console.error('could not activate room already activated');
         }
