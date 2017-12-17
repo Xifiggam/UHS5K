@@ -17,15 +17,15 @@ var gameWorld = {
 
 
     GLOBAL_FEATURE_TYPE: {
-        WIFI_ROOM: new GlobalFeatureType('wifi_room', 'Wifi in all rooms', 1000),
-        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 'Wifi in the lobby', 100),
-        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 'Seminar room for meetings', 100),
+        WIFI_ROOM: new GlobalFeatureType('wifi_room', 'Wifi in all Rooms', 1000),
+        WIFI_LOBBY: new GlobalFeatureType('wifi_lobby', 'Wifi in the Lobby', 100),
+        SEMINAR_ROOM: new GlobalFeatureType('seminarRoom', 'Seminar Room', 100),
         MASSAGE_PARLOR: new GlobalFeatureType('massageParlor', 'Massage room', 1000),
-        SAUNA: new GlobalFeatureType('sauna', 'Sauna for all guests', 1000),
-        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 'Massage with Happy-End', 2000),
-        POOL: new GlobalFeatureType('pool', 'Pool 4 all!', 2000),
-        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 'Outdoor Pool 4 all', 2000),
-        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 'Pump it up!', 1000),
+        SAUNA: new GlobalFeatureType('sauna', 'Sauna', 1000),
+        SAUNA_PLUS: new GlobalFeatureType('saunaPlus', 'Sauna +', 2000),
+        POOL: new GlobalFeatureType('pool', 'Pool', 2000),
+        OUTDOOR_POOL: new GlobalFeatureType('outdoorPool', 'Outdoor Pool', 2000),
+        FINESS_STUDIO: new GlobalFeatureType('fitnessStudio', 'Fitness Studio', 1000),
         HOTEL_BAR: new GlobalFeatureType('hotelBar', 'Hotel Bar', 1000),
         RESTAURANT: new GlobalFeatureType('restaurant', 'Restaurant', 1000)
     },
@@ -517,7 +517,7 @@ function init() {
     room.posY = 1;
     room.length = 7;
     room.height = 5;
-    room.name = "Honeymoon Suite";
+    room.name = "Suite \"Lorenz\"";
     gameWorld.roomList.push(room);
 
     var room = new Room();
@@ -735,7 +735,8 @@ function generateName(quantity) {
         'Obi',
         'Lukas',
         'Lorenz',
-        'Hassan'
+        'Hassan',
+        'Super'
 
     ];
     var middleNames = [
@@ -749,9 +750,7 @@ function generateName(quantity) {
         'Ruth',
         'Roald',
         'Linus', 'Hosé',
-        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"'
-
-
+        'Mallory', 'Wan', 'Zelle', 'Adolf', 'Jussuf', '"The Killer"', '"Pump it Up!"'
     ];
     var lastNames = [
         'Pires',
@@ -767,6 +766,7 @@ function generateName(quantity) {
         'Skywalker',
         'Archer',
         'Schuerzenbacher',
+        'Mario'
 
     ];
 

@@ -1043,8 +1043,15 @@ var gameState = {
             console.log(char);
             var texts = [];
             texts.push(char.name);
-            var req_str = 'Wants: ' + char.requirementArray.join(', ');
+            var req_str = 'Wants: ';
             texts.push(req_str);
+            for (var i = 0; i < char.requirementArray.length; i++) {
+                var requirement = char.requirementArray[i];
+                texts.push(requirement.charAt(0).toUpperCase() + requirement.substr(1, requirement.length));
+            }
+
+            // var req_str = 'Wants: ' + char.requirementArray.join(', \n');
+            // texts.push(req_str);
             var position = {};
             position.x = game.width / 3;
             position.y = game.height / 4;
