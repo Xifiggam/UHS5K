@@ -66,8 +66,6 @@ var gameWorld = {
             if(Math.random()<0.004){
                 var guest = new Guest(generateName(1));
                 gameWorld.guestList.push(guest);
-                //LUKAS KOMM DICH
-                console.log("LUKAS GEHE IN DIE LOBBY DICH");
                 if(gameWorld.customerToLobbyCallback){
                     gameWorld.customerToLobbyCallback(guest);
                 }
