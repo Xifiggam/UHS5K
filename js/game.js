@@ -62,9 +62,8 @@ var gameState = {
             self.updateRoomDirtyState(room);
         };
 
-        this.world.bubbleCallback = function (customer) {
-            console.log(customer);
-            self.openBubble(150, 150, 'tesasdf');
+        this.world.bubbleCallback = function (customer, text) {
+            self.openBubble(customer.sprite.position.x, customer.sprite.position.y, text);
         };
 
         this.cursors = game.input.keyboard.createCursorKeys();
