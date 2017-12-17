@@ -26,6 +26,7 @@ ASSETS = {
     TOILET: 'toilet',
     SINK: 'sink',
     TV: 'tv',
+    AC_UNIT: 'ac_unit',
     CHAR_OLD: 'old',
     CHAR_GEN: 'CHAR_GEN',
     CHAR_WORKER_F: 'CHAR_WORKER_F',

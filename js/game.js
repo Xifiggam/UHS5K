@@ -481,7 +481,7 @@ var gameState = {
         addFeatureOption("Entertainment", this.world.ENTERTAINMENT_PRICE, features[6], false, SINGLE_FEATURE_TYPE.ENTERTAINMENT);
         addFeatureOption("Bath", this.world.BATH_PRICE, features[7], false, SINGLE_FEATURE_TYPE.BATH);
         addFeatureOption("Minibar", this.world.MINIBAR_PRICE, features[8], true, SINGLE_FEATURE_TYPE.MINIBAR);
-        addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], true, SINGLE_FEATURE_TYPE.ACUNIT);
+        addFeatureOption("AC Unit", this.world.ACUNIT_PRICE, features[9], false, SINGLE_FEATURE_TYPE.ACUNIT);
 
     },
     openRoomMenuIfAny: function (point) {
@@ -605,6 +605,8 @@ var gameState = {
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.VIEW));
         } else if(type == SINGLE_FEATURE_TYPE.ENTERTAINMENT) {
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.TV));
+        } else if(type == SINGLE_FEATURE_TYPE.ACUNIT) {
+            this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.AC_UNIT));
         } else if(type == SINGLE_FEATURE_TYPE.BATH) {
             this.buildSpriteGroup.u_diff_size = true;
             this.buildSpriteGroup.add(game.add.sprite(0, 0, ASSETS.SHOWER));
@@ -720,6 +722,8 @@ var gameState = {
                     sprite_group.add(game.add.sprite(0, 0, ASSETS.PLANT));
                 } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.ENTERTAINMENT) {
                     sprite_group.add(game.add.sprite(0, 0, ASSETS.TV));
+                } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.ACUNIT) {
+                    sprite_group.add(game.add.sprite(0, 0, ASSETS.AC_UNIT));
                 } else if (this.buildMarker.u_type == SINGLE_FEATURE_TYPE.BATH) {
                     sprite_group.add(game.add.sprite(0, 0, ASSETS.SHOWER));
                     sprite_group.add(game.add.sprite(0, 0, ASSETS.TOILET));
