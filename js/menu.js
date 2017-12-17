@@ -7,7 +7,8 @@ var menuState = {
         
 
         var button = game.add.button(game.world.centerX - 95, 100, ASSETS.DUMMY_BUTTON, menu.actionOnClick, this, 2, 1, 0);
-
+        button.scale.x = 2;
+        button.alpha = 0;
         var style = { font: "25px Arial", fill: "#FFFFFF", align: "left" };
         var text = game.add.text(game.world.centerX - 93, 110, "Start", style);
         text.anchor.set(0);
@@ -26,6 +27,8 @@ var menuState = {
         var style = { font: "25px Arial", fill: "#FFFFFF", align: "left" };
         var text = game.add.text(game.world.centerX - 93, this.MenuEntryCount*100 + 10, name, style);
         text.anchor.set(0);
+        button.scale.x = 2;
+        button.alpha = 0;
         this.MenuEntryCount += 1;
         button.onInputOver.add(menu.over, this);
         button.onInputOut.add(menu.out, this);
@@ -36,9 +39,9 @@ var menuState = {
 
 var menu = {
     over: function(btn) {
-        btn.alpha = 0.8;
+        btn.alpha = 0.2 ;
     },
     out: function(btn) {
-        btn.alpha = 1;
+        btn.alpha = 0;
     }
 }

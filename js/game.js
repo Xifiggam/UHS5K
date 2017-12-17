@@ -62,8 +62,11 @@ var gameState = {
             self.updateRoomDirtyState(room);
         };
 
-        this.world.bubbleCallback = function (customer, text) {
-            self.openBubble(customer.sprite.position.x, customer.sprite.position.y, text);
+        this.world.bubbleCallback = function (customer, text, big) {
+            if(big == undefined){
+                big = false;
+            }
+            self.openBubble(customer.sprite.position.x, customer.sprite.position.y, text, big);
         };
 
         this.cursors = game.input.keyboard.createCursorKeys();
@@ -278,9 +281,9 @@ var gameState = {
                 var moveTween = game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
                 game.add.tween(nameTag).to({x: roomCenterX+5, y: roomCenterY+5}, 2000, Phaser.Easing.Quadratic.InOut, true);
                 moveTween.onComplete.add(broomShow(roomCenterX, roomCenterY))
-
                 function broomShow(xnew, ynew) {
                     return function(){
+                        this.openBubble(xnew,ynew, 'What a mess!', false);
                         worker.broomSprite = game.add.sprite(xnew, ynew, ASSETS.BROOM)
                     }
                 }
@@ -669,6 +672,7 @@ var gameState = {
                 gameState.map.putTile(copyTile, roomToActivate.posX - 1, y, this.wallLayer);
                 gameState.map.putTile(copyTile, roomToActivate.posX + roomToActivate.length, y, this.wallLayer);
             }
+            gameWorld.money-=roomToActivate.price_to_buy;
         } else {
             console.error('could not activate room already activated');
         }
@@ -1057,17 +1061,21 @@ var gameState = {
     },
 
 
-    openBubble: function (posX, posY, text) {
+    openBubble: function (posX, posY, text, big) {
         var bubbleGroup = game.add.group();
         var text_style = {font: "13px Arial", fill: "#000000", align: "left"};
         // message_text.alignIn(bubble_sprite, Phaser.CENTER, 0, 0);
+        posX = big ? posX + 50 : posX;
+        posY = big ? posY - 100 : posY;
         var bubble_sprite = game.add.sprite(posX, posY - TILE.SIZE * 2, ASSETS.MENU_BUBBLE);
-        bubble_sprite.scale.x = 0.7;
-        bubble_sprite.scale.y = 0.7;
-        var message_text = game.add.text(posX + 30, posY - 30, text, text_style);
+        bubble_sprite.scale.x = big ? 1.5 : 1.1;
+        bubble_sprite.scale.y = big ? 1.5 : 0.7;
+        var textPosX  = big ?  posX + 70: posX + 20;
+        var textPosY  = big ? posY - 25 : posY - 30 ;
+        var message_text = game.add.text(textPosX, textPosY, text, text_style);
         bubbleGroup.add(bubble_sprite);
         bubbleGroup.add(message_text);
-        var fadeOutTween = game.add.tween(bubbleGroup).to({alpha: 0}, 2500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeOutTween = game.add.tween(bubbleGroup).to({alpha: 0}, 2500, Phaser.Easing.Linear.None, true, big ? 500 : 2000, 0, false);
         fadeOutTween.onComplete.add(function () {
             bubbleGroup.destroy();
             bubbleGroup = null;
