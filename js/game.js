@@ -539,7 +539,10 @@ var gameState = {
         this.newsHudMenu = game.add.group();
 
         function click() {
-            this.openMessageBox(this.newsHistory.slice(Math.max(0,this.newsHistory.length-10),this.newsHistory.length).join('\n'),1,1,game.width/2, game.height/2);
+            var start = Math.max(0,this.newsHistory.length-10);
+            var text2 = this.newsHistory.slice(start,start - this.newsHistory.length).join('\n');
+            console.log(text2);
+            this.openMessageBox(text2,1,1,{x:game.width/2, y:game.height/2});
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);

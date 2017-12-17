@@ -713,7 +713,6 @@ function generateName(quantity){
         'Skywalker',
         'Archer',
         'Schuerzenbacher',
-            'Hiller'
 
     ];
 
