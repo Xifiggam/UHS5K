@@ -73,3 +73,7 @@ AUDIO = {
     SWING_BASS: 'swing-bass',
     SWING_DRUMS: 'swing-drums'
 };
+
+SOUND = {
+  KACHING: 'kaching'
+};
