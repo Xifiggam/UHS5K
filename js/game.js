@@ -82,6 +82,7 @@ var gameState = {
         this.entityGroup = game.add.group();
         this.infoHud = game.add.group();
         this.initStarsHud();
+        this.initTimeHud();
         this.createNewsHud();
         this.menuHud = game.add.group();
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
@@ -181,6 +182,7 @@ var gameState = {
         this.inputHandling();
         this.updateBuildCursor();
         this.world.update(game.time.elapsed);
+        this.updateTimeHud();
         this.updateStarsHudFromWorld();
         this.updateMoneyHudFromWorld();
     },
@@ -564,7 +566,7 @@ var gameState = {
 
 
     postNews: function (text) {
-        var text2 = formatDateTime() + " " + text;
+        var text2 = this.dayandtime + ": " + text;
 
         this.newsHistory.push(text2);
         var tween1 = game.add.tween(this.news_text).to({alpha: 0}, 2000);
@@ -590,6 +592,26 @@ var gameState = {
             star.fixedToCamera = true;
             this.infoHud.add(star);
         }
+    },
+
+    initTimeHud: function () {
+        var style = {font: "25px Arial", fill: "#000000", align: "left"};
+        this.delta = 0;
+        this.timeTextField = game.add.text(game.width - 400, 15,"",style);
+        this.timeTextField.fixedToCamera = true;
+    },
+    updateTimeHud: function () {
+        this.delta += game.time.elapsed;
+        var timeDelta = this.delta % GAMELOGIC.MSPERDAY;
+        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY)*24);
+        if(timeInHours<10){
+            timeInHours = '0'+timeInHours;
+        }
+        this.world.daysPassed = parseInt(this.delta / GAMELOGIC.MSPERDAY);
+        var text = 'Day '+this.world.daysPassed+', '+timeInHours+':00';
+        this.dayandtime =text;
+        this.timeTextField.text = text;
+
     }
     ,
     updateMoneyHudFromWorld: function () {
