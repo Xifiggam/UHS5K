@@ -149,8 +149,7 @@ var gameState = {
             var global_feature_type = [];
             for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
                 var global_feature = global_features[global_feature_it];
-                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.name + ' - ' +global_feature.price+"€" );
-                global_feature_type.push(global_feature.name);
+                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') + '  ' + global_feature.readableName + ' - ' + global_feature.price + '€');
             }
             self.openBuyMenu(function (global_upgrade) {
                 var global_upgrade_obj = self.world.getGlobalFeatureForValue(global_upgrade)
@@ -408,7 +407,7 @@ var gameState = {
     },
 
     close_build_menu: function () {
-        if(this.roomMenuHud != null) {
+        if (this.roomMenuHud != null) {
             this.roomMenuHud.destroy();
             this.roomMenuHud = null;
         }
@@ -428,6 +427,7 @@ var gameState = {
             if (bought) {
                 style.fill = "gray"
             }
+
             function click_button() {
                 self.close_build_menu();
                 //TODO: check if there is money
@@ -544,11 +544,11 @@ var gameState = {
 
     createNewsHud: function () {
         this.newsHudMenu = game.add.group();
-        var self =this
+        var self = this
 
         function click() {
-            var start = Math.max(0,this.newsHistory.length-10);
-            self.openMessageBox(this.newsHistory.splice(start,this.newsHistory.length - start),2,1);
+            var start = Math.max(0, this.newsHistory.length - 10);
+            self.openMessageBox(this.newsHistory.splice(start, this.newsHistory.length - start), 2, 1);
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -606,19 +606,19 @@ var gameState = {
     initTimeHud: function () {
         var style = {font: "25px Arial", fill: "#000000", align: "left"};
         this.delta = 0;
-        this.timeTextField = game.add.text(game.width - 460, 15,"",style);
+        this.timeTextField = game.add.text(game.width - 460, 15, "", style);
         this.timeTextField.fixedToCamera = true;
     },
     updateTimeHud: function () {
         this.delta += game.time.elapsed;
         var timeDelta = this.delta % GAMELOGIC.MSPERDAY;
-        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY)*24);
-        if(timeInHours<10){
-            timeInHours = '0'+timeInHours;
+        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY) * 24);
+        if (timeInHours < 10) {
+            timeInHours = '0' + timeInHours;
         }
         this.world.daysPassed = parseInt(this.delta / GAMELOGIC.MSPERDAY);
-        var text = 'Day '+this.world.daysPassed+', '+timeInHours+':00';
-        this.dayandtime =text;
+        var text = 'Day ' + this.world.daysPassed + ', ' + timeInHours + ':00';
+        this.dayandtime = text;
         this.timeTextField.text = text;
 
     }
@@ -755,7 +755,7 @@ var gameState = {
                 console.log("not in room");
                 collide = true; // not in room
             }
-            for (var width = x; width < (this.buildMarker.u_width * TILE.SIZE + x ); width += TILE.SIZE) {
+            for (var width = x; width < (this.buildMarker.u_width * TILE.SIZE + x); width += TILE.SIZE) {
                 for (var height = y; height < (this.buildMarker.u_height * TILE.SIZE + y); height += TILE.SIZE) {
                     collide = collide || this.map.getTile(this.objectLayer.getTileX(width), this.objectLayer.getTileY(height), this.objectLayer) != null;
                     collide = collide || this.map.getTile(this.wallLayer.getTileX(width), this.wallLayer.getTileY(height), this.wallLayer) != null;
@@ -949,7 +949,7 @@ var gameState = {
         if (this.messageBox != null) {
             self.closeMessageBox();
         }
-        if(text.hasOwnProperty('isArray') && !text.isArray()){
+        if (text.hasOwnProperty('isArray') && !text.isArray()) {
             text = [text];
         }
 
@@ -965,18 +965,18 @@ var gameState = {
         this.messageBox.add(sprite_top);
 
         var button_offset = offsetTop;
-        for (var i = 0; i < Math.max(text.length / 2,1); i++) {
-            offsetTop += TILE.SIZE*2;
+        for (var i = 0; i < Math.max(text.length / 2, 1); i++) {
+            offsetTop += TILE.SIZE * 2;
             console.log(button_offset);
             var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
             // sprite_center.scale.y = scaleY;
             sprite_center.scale.x = scaleX;
-            sprite_center.scale.y = yScale ;
+            sprite_center.scale.y = yScale;
             sprite_center.fixedToCamera = true;
             this.messageBox.add(sprite_center);
         }
 
-        offsetTop += TILE.SIZE*2;
+        offsetTop += TILE.SIZE * 2;
         var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_BOTTOM);
         sprite_bottom.fixedToCamera = true;
         sprite_bottom.scale.x = scaleX;
@@ -1002,12 +1002,10 @@ var gameState = {
         for (var text_it = 0; text_it < text.length; text_it++) {
             var text_str = text[text_it];
             var message_text = game.add.text(offsetLeft + 10, button_offset + 45 * text_it, text_str, text_style);
-            message_text.alignIn(sprite_top, Phaser.CENTER, 0, 30*text_it);
+            message_text.alignIn(sprite_top, Phaser.CENTER, 0, 30 * text_it);
             message_text.fixedToCamera = true;
             this.messageBox.add(message_text);
         }
-
-
 
 
     },
@@ -1017,7 +1015,7 @@ var gameState = {
         this.messageBox = null;
     },
 
-    moveGroup: function(group, toX, toY, duration){
+    moveGroup: function (group, toX, toY, duration) {
         for (var stats_window_it = 0; stats_window_it < group.children.length; stats_window_it++) {
             var stats_window_obj = group.children[stats_window_it];
             console.log(stats_window_obj);
@@ -1025,7 +1023,7 @@ var gameState = {
         }
     },
 
-    openStatsWindow: function(char){
+    openStatsWindow: function (char) {
         var self = this;
         return function () {
             console.log(char);
@@ -1041,14 +1039,21 @@ var gameState = {
     },
 
 
-    openBubble: function(posX, posY, text) {
+    openBubble: function (posX, posY, text) {
         var bubbleGroup = game.add.group();
         var text_style = {font: "13px Arial", fill: "#000000", align: "left"};
         // message_text.alignIn(bubble_sprite, Phaser.CENTER, 0, 0);
-        var bubble_sprite = game.add.sprite(posX, posY, ASSETS.MENU_BUBBLE);
-        var message_text = game.add.text(posX+60, posY+50, text, text_style);
+        var bubble_sprite = game.add.sprite(posX, posY - TILE.SIZE * 2, ASSETS.MENU_BUBBLE);
+        bubble_sprite.scale.x = 0.7;
+        bubble_sprite.scale.y = 0.7;
+        var message_text = game.add.text(posX + 30, posY - 30, text, text_style);
         bubbleGroup.add(bubble_sprite);
         bubbleGroup.add(message_text);
+        var fadeOutTween = game.add.tween(bubbleGroup).to({alpha: 0}, 2500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        fadeOutTween.onComplete.add(function () {
+            bubbleGroup.destroy();
+            bubbleGroup = null;
+        }, this);
         this.entityGroup.add(bubbleGroup);
     }
 };
