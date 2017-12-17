@@ -82,6 +82,7 @@ var gameState = {
         this.entityGroup = game.add.group();
         this.infoHud = game.add.group();
         this.initStarsHud();
+        this.initTimeHud();
         this.createNewsHud();
         this.menuHud = game.add.group();
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
@@ -181,6 +182,7 @@ var gameState = {
         this.inputHandling();
         this.updateBuildCursor();
         this.world.update(game.time.elapsed);
+        this.updateTimeHud();
         this.updateStarsHudFromWorld();
         this.updateMoneyHudFromWorld();
     },
@@ -537,7 +539,7 @@ var gameState = {
         this.newsHudMenu = game.add.group();
 
         function click() {
-            //todo open bigger news screen with backlog
+            this.openMessageBox(this.newsHistory.slice(Math.max(0,this.newsHistory.length-10),this.newsHistory.length).join('\n'),1,1,game.width/2, game.height/2);
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -560,7 +562,7 @@ var gameState = {
 
 
     postNews: function (text) {
-        var text2 = formatDateTime() + " " + text;
+        var text2 = this.dayandtime + ": " + text;
 
         this.newsHistory.push(text2);
         var tween1 = game.add.tween(this.news_text).to({alpha: 0}, 2000);
@@ -580,12 +582,36 @@ var gameState = {
     initStarsHud: function () {
         var starCount = 5;
         var starOffset = 60;
-        for (var i = 0; i < starCount; i++) {
+        for (var i = 0; i <= starCount; i++) {
             var star = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
+            var star_gray = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
             this.stars.push(star);
             star.fixedToCamera = true;
+            star_gray.fixedToCamera = true;
+            star_gray.alpha = 0.3;
+            this.infoHud.add(star_gray);
             this.infoHud.add(star);
         }
+    },
+
+    initTimeHud: function () {
+        var style = {font: "25px Arial", fill: "#000000", align: "left"};
+        this.delta = 0;
+        this.timeTextField = game.add.text(game.width - 460, 15,"",style);
+        this.timeTextField.fixedToCamera = true;
+    },
+    updateTimeHud: function () {
+        this.delta += game.time.elapsed;
+        var timeDelta = this.delta % GAMELOGIC.MSPERDAY;
+        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY)*24);
+        if(timeInHours<10){
+            timeInHours = '0'+timeInHours;
+        }
+        this.world.daysPassed = parseInt(this.delta / GAMELOGIC.MSPERDAY);
+        var text = 'Day '+this.world.daysPassed+', '+timeInHours+':00';
+        this.dayandtime =text;
+        this.timeTextField.text = text;
+
     }
     ,
     updateMoneyHudFromWorld: function () {
