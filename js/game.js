@@ -333,17 +333,30 @@ var gameState = {
 
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
         var nameTag = game.add.text(760, 800, character.name, style);
+        var statsWindowGroup = game.add.group();
+        var statsWindow = game.add.sprite(760, 800, ASSETS.MENU_TOP);
+        statsWindowGroup.add(statsWindow);
         nameTag.anchor.x = 0.5;
         nameTag.anchor.y = 0.5;
         person.scale.x = 1.2;
         person.scale.y = 1.2;
+        statsWindow.scale.y = 0.5;
+        statsWindow.scale.x = 0.5;
         character.sprite = person;
         character.nameTag = nameTag;
+        character.statsWindowGroup = statsWindowGroup;
         this.entityGroup.add(nameTag);
         this.entityGroup.add(person);
+        this.entityGroup.add(statsWindowGroup);
         game.add.tween(person).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
         game.add.tween(nameTag).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
 
+        console.log(statsWindowGroup);
+        for (var stats_window_it = 0; stats_window_it < statsWindowGroup.children.length; stats_window_it++) {
+            var stats_window_obj = statsWindowGroup.children[stats_window_it];
+            console.log(stats_window_obj);
+            game.add.tween(stats_window_obj).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+        }
     },
     moveToRoom: function (character) {
         var room = null;

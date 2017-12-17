@@ -100,9 +100,21 @@ var gameWorld = {
         return null;
     },
 
+    getActiveGlobalFeatureNames: function(){
+        var global_features = this.world.getGlobalFeatureValues();
+        var global_feature_texts = [];
+        for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
+            var global_feature = global_features[global_feature_it];
+            if(global_feature.active){
+                global_feature_texts.push(global_feature.name);
+            }
+        }
+        return global_feature_texts;
+    },
+
     getGlobalFeatureValues: function(){
         var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
-        var ret_values = []
+        var ret_values = [];
         for(var i=0; i<obj_values.length; i++) {
             ret_values.push(this.GLOBAL_FEATURE_TYPE[obj_values[i]]);
         }
