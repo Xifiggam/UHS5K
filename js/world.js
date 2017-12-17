@@ -615,7 +615,8 @@ function generateName(quantity){
         'Gal',
         'Gloria',
         'Vix',
-        'Sterling', 'Obi', 'Lukas'
+        'Sterling', 'Obi', 'Lukas',
+        'John'
 
     ];
         var middleNames = [
@@ -629,7 +630,15 @@ function generateName(quantity){
         'Ruth',
         'Roald',
         'Linus',
-        'Mallory', 'Wan', 'Zelle'
+        'Mallory', 'Wan', 'Zelle',
+        'Lorenz',
+        'Veit',
+        'Adolf',
+        'Achmed',
+        'Bilbo',
+        'Barabossa'
+
+
 
     ];
         var lastNames = [
@@ -645,7 +654,10 @@ function generateName(quantity){
         'Kenobi',
         'Skywalker',
         'Archer',
-            'Schuerzenbacher'
+            'Anexia',
+            'Schuerzenbacher',
+            'Schwazenegger',
+
 
     ];
 
