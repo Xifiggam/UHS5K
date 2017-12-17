@@ -509,7 +509,7 @@ function init() {
     room.posY = 1;
     room.length = 7;
     room.height = 5;
-    room.name = "Honeymoon Suite";
+    room.name = "Suite \"Lorenz\"";
     gameWorld.roomList.push(room);
 
     var room = new Room();
