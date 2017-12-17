@@ -198,7 +198,7 @@ function Guest(name) {
     this.statisfaction = 0;
     this.comingTime = Math.random() * 5500;
     this.goingTime = Math.random() * 3000;
-    this.maxRequirements = Math.min(gameWorld.daysPassed,10)
+    this.maxRequirements = Math.min(gameWorld.daysPassed/4,10)+1;
     this.daysToStay = Math.floor((Math.random() * 3) + 1);
     this.noOfRequirements = Math.floor((Math.random() * this.maxRequirements) + 1);
     //console.log("New Customer: " + this.name + " #req: " + this.noOfRequirements);
