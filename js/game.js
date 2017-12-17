@@ -281,9 +281,9 @@ var gameState = {
                 var moveTween = game.add.tween(person).to({x: roomCenterX, y: roomCenterY}, 2000, Phaser.Easing.Quadratic.InOut, true);
                 game.add.tween(nameTag).to({x: roomCenterX+5, y: roomCenterY+5}, 2000, Phaser.Easing.Quadratic.InOut, true);
                 moveTween.onComplete.add(broomShow(roomCenterX, roomCenterY))
-
                 function broomShow(xnew, ynew) {
                     return function(){
+                        this.openBubble(xnew,ynew, 'What a mess!', false);
                         worker.broomSprite = game.add.sprite(xnew, ynew, ASSETS.BROOM)
                     }
                 }
