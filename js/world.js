@@ -319,15 +319,18 @@ function Guest(name) {
                         };
                         if(this.statisfaction< 0.5){
                             //TODO unhappy
-                            var bad =arr_diff(roomHas,customerWants)[0];
+                            var bad =arr_diff(roomHas.concat(this.getActiveGlobalFeatureNames),customerWants)[0];
                             console.log("bad" + bad);
-                            gameWorld.bubbleCallback(this, negative[bad]);
+                            if(bad){
+                                gameWorld.bubbleCallback(this, negative[bad]);
+                            }
 
                         }else{
                             var good = intersect_safe(roomHas,customerWants)[0];
                             console.log("good:" + good);
-                            gameWorld.bubbleCallback(this, positive[good]);
-
+                            if(good){
+                                gameWorld.bubbleCallback(this, positive[good]);
+                            }
                         }
                     }
                     //console.log(this.name + " " + "Room: " + this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
@@ -421,8 +424,77 @@ function Guest(name) {
         }
         gameWorld.reviewList.push(this.starsForReview);
         console.log("New Review: " + this.starsForReview);
-        if (gameWorld.newReviewCallback) {
-            gameWorld.newReviewCallback("a new review was send - " + this.starsForReview + " Stars");
+        if (gameWorld.newReviewCallback && this.chosenRoom) {
+            var roomHas = this.chosenRoom.returnRoomFeaturesAsArray();
+            var customerWants = this.requirementArray;
+
+            var positive = {
+                "wifi_room": "Sweet, free wifi in the room.",
+                "wifi_lobby": "Nice, the wifi even works in the lobby.",
+                "seminarRoom": "Perfect work environment in the seminar room.",
+                "massageParlor": "Mmmhh, the massages are so relaxing.",
+                "sauna": "The sauna is hot, but it feels really good.",
+                "saunaPlus": "Haaaaah, that sauna+ just hits the spot!",
+                "pool": "Cool, a pool.",
+                "outdoorPool": "Cool, an outdoor pool.",
+                "fitnessStudio": "Yes, I can burn some calories in the gym.",
+                "hotelBar": "I like the bar’s whiskey selection.",
+                "restaurant": "The food in the restaurant is tasty.",
+                "singleBed": "Yes, my own appropriately sized bed.",
+                "doubleBed": "Perfect sized bed for me.",
+                "childBed": "Even a bed for a kid. The night is saved.",
+                "luxuryBed": "Perfect, so much space to sleep.",
+                "plant": "A little green brightens the room.",
+                "view": "What a beautiful view.",
+                "entertainment": "Nice  rustic TV set.",
+                "bath": "Such a clean bathroom.",
+                "minibar": "A cheap minibar, that’s a first.",
+                "acUnit": "Nice, I can adjust the temperature myself."};
+
+            var negative = {
+                "wifi_room": "No free wifi? Cheap bastards.",
+                "wifi_lobby": "No wifi in the lobby? Great start!",
+                "seminarRoom": "No seminar room? Where should I work?",
+                "massageParlor": "No massage parlor? That stresses me.",
+                "sauna": "No sauna? Where do they expect me to sweat?",
+                "saunaPlus": "No sauna+? Where do they expect me to cum?",
+                "pool": "Not even a pool? Poor!",
+                "outdoorPool": "No outdoor pool? Poor!",
+                "fitnessStudio": "No gym? Then I’ll have to rely on steroids.",
+                "hotelBar": "No bar? Now I have to stay sober in this lousy dump!",
+                "restaurant": "No restaurant? Do they want me to starve?",
+                "singleBed": "No single bed? I’ll not be able to sleep.",
+                "doubleBed": "No double bed? What a junky joint.",
+                "childBed": "No kids bed? My evening plans ruined.",
+                "luxuryBed": "No luxury bed? I expected better!",
+                "plant": "No plants? What a shoddy establishment?",
+                "view": "No view, only the hookers in the alley. What a trashy shack.",
+                "entertainment": "No TV? What should I fap to?",
+                "bath": "No bath? I guess I’ll pee on the floor.",
+                "minibar": "No minibar? I’m gagging for a drink.",
+                "acUnit": "No AC? I’ll freeze my ass off."
+            };
+            var text;
+            if(this.starsForReview < 0.5){
+                //TODO unhappy
+                var bad =arr_diff(roomHas.concat(this.getActiveGlobalFeatureNames),customerWants)[0];
+                console.log("bad" + bad);
+                if(bad){
+                    text = negative[bad];
+                }
+
+            }else{
+                var good = intersect_safe(roomHas,customerWants)[0];
+                console.log("good:" + good);
+                if(good){
+                    text = positive[good];
+                }
+            }
+            if(text){
+                gameWorld.newReviewCallback("Review: "+text+"- " + this.starsForReview + " Stars");
+            }else{
+                gameWorld.newReviewCallback("Review: " + this.starsForReview + " Stars");
+            }
         }
         console.log("Review: " + this.starsForReview);
     };
