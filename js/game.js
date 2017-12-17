@@ -129,8 +129,7 @@ var gameState = {
                 if(self.world.getGlobalFeatureForValue(global_upgrade).price <= self.world.money){
                     self.world.buyGlobalUpgrade(global_upgrade);
                 } else {
-                    //TODO: add waringin dialogue
-                    console.log('cannot buy not enough money');
+                    self.openMessageBox('cannot buy not enough money');
                 }
 
             }, this.world.globalUpgradesArray, this.world.globalUpgradesArray);
@@ -850,6 +849,63 @@ var gameState = {
     closeBuyMenu: function(){
         this.buyMenuHud.destroy();
         this.buyMenuHud = null;
+        
+    },
+
+    openMessageBox: function(text, xScale, yScale, position){
+        var self = this;
+        if(this.messageBox != null){
+            self.closeMessageBox();
+        }
+
+        this.messageBox = game.add.group();
+        var offsetLeft = position == undefined ? (game.width / 2) : position.x;
+        var offsetTop = position == undefined ? (game.height / 2) : position.y;
+        var scaleX = xScale;
+        var scaleY = yScale;
+        var sprite_top = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
+
+        sprite_top.fixedToCamera = true;
+        sprite_top.scale.x = 1.0;
+        this.messageBox.add(sprite_top);
+        offsetTop += TILE.SIZE;
+        var button_offset = offsetTop;
+        var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
+        sprite_center.scale.y = scaleY;
+        sprite_center.scale.x = scaleX*2;
+        sprite_center.fixedToCamera = true;
+        this.messageBox.add(sprite_center);
+        var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
+        sprite_bottom.fixedToCamera = true;
+        sprite_bottom.anchor.setTo(1, 1);
+        sprite_bottom.angle = 180;
+        sprite_bottom.scale.x = scaleX;
+        sprite_bottom.alignTo(sprite_center, Phaser.BOTTOM_LEFT, 0,-15);
+        sprite_bottom.fixedToCamera = true;
+        this.messageBox.add(sprite_bottom);
+
+        var text_style = {font: "15px Arial", fill: "#ffffff", align: "left"};
+        var closeButton = game.add.button(offsetLeft, button_offset, ASSETS.MENU_BG, function(){self.closeMessageBox();}, this, 2, 1, 0);
+        closeButton.scale.y = 25;
+        closeButton.scale.x = 25;
+        closeButton.alpha = 0;
+        closeButton.alignIn(sprite_top, Phaser.TOP_RIGHT, -15,-15);
+        closeButton.fixedToCamera = true;
+        this.messageBox.add(closeButton);
+        var closeButtonText = game.add.text(offsetLeft+35, button_offset, 'X', text_style);
+        closeButtonText.alignIn(closeButton, Phaser.CENTER);
+        closeButtonText.fixedToCamera = true;
+        this.messageBox.add(closeButtonText);
+        var message_text = game.add.text(offsetLeft+55, button_offset + 25, text, text_style);
+        message_text.alignIn(this.messageBox, Phaser.CENTER, 0, 30);
+        message_text.fixedToCamera = true;
+        this.messageBox.add(message_text);
+
+    },
+
+    closeMessageBox: function(){
+        this.messageBox.destroy();
+        this.messageBox = null;
     }
 };
 
