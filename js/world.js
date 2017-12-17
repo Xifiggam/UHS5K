@@ -104,6 +104,7 @@ var gameWorld = {
         var feature_obj = this.getGlobalFeatureForValue(feature);
         if(feature_obj != null){
            this.money = this.money - feature_obj.price;
+           feature_obj.active = true;
            console.log('feature found' + feature, feature_obj);
         }
     },
