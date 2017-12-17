@@ -82,6 +82,7 @@ var gameState = {
         this.entityGroup = game.add.group();
         this.infoHud = game.add.group();
         this.initStarsHud();
+        this.initTimeHud();
         this.createNewsHud();
         this.menuHud = game.add.group();
         var text_style = {font: "20px Arial", fill: "#ffffff", align: "left"};
@@ -181,6 +182,7 @@ var gameState = {
         this.inputHandling();
         this.updateBuildCursor();
         this.world.update(game.time.elapsed);
+        this.updateTimeHud();
         this.updateStarsHudFromWorld();
         this.updateMoneyHudFromWorld();
     },
@@ -333,31 +335,27 @@ var gameState = {
 
         var style = {font: "14px Arial", fill: "#000000", align: "left"};
         var nameTag = game.add.text(760, 800, character.name, style);
-        var statsWindowGroup = game.add.group();
-        var statsWindow = game.add.sprite(760, 800, ASSETS.MENU_TOP);
-        statsWindowGroup.add(statsWindow);
+
+
         nameTag.anchor.x = 0.5;
         nameTag.anchor.y = 0.5;
         person.scale.x = 1.2;
         person.scale.y = 1.2;
-        statsWindow.scale.y = 0.5;
-        statsWindow.scale.x = 0.5;
+        // statsWindow.scale.y = 0.5;
+        // statsWindow.scale.x = 0.5;
         character.sprite = person;
+        character.sprite.inputEnabled = true;
+        character.sprite.events.onInputDown.add(this.openStatsWindow(character), this);
         character.nameTag = nameTag;
-        character.statsWindowGroup = statsWindowGroup;
+        character.statsWindowOpen = true;
         this.entityGroup.add(nameTag);
         this.entityGroup.add(person);
-        this.entityGroup.add(statsWindowGroup);
         game.add.tween(person).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
         game.add.tween(nameTag).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
 
-        console.log(statsWindowGroup);
-        for (var stats_window_it = 0; stats_window_it < statsWindowGroup.children.length; stats_window_it++) {
-            var stats_window_obj = statsWindowGroup.children[stats_window_it];
-            console.log(stats_window_obj);
-            game.add.tween(stats_window_obj).to({x: lobbyX, y: lobbyY}, 2000, Phaser.Easing.Quadratic.InOut, true);
-        }
     },
+
+
     moveToRoom: function (character) {
         var room = null;
         var roomName = character.chosenRoom.name;
@@ -541,7 +539,10 @@ var gameState = {
         this.newsHudMenu = game.add.group();
 
         function click() {
-            this.openMessageBox(this.newsHistory.slice(Math.max(0,this.newsHistory.length-10),this.newsHistory.length).join('\,'),1,1,game.width/2, game.height/2);
+            var start = Math.max(0,this.newsHistory.length-10);
+            var text2 = this.newsHistory.slice(start,start - this.newsHistory.length).join('\n');
+            console.log(text2);
+            this.openMessageBox(text2,1,1,{x:game.width/2, y:game.height/2});
         }
 
         var button = game.add.button(10, 10, ASSETS.DUMMY_BUTTON, click, this, 2, 1, 0);
@@ -564,7 +565,7 @@ var gameState = {
 
 
     postNews: function (text) {
-        var text2 = formatDateTime() + " " + text;
+        var text2 = this.dayandtime + ": " + text;
 
         this.newsHistory.push(text2);
         var tween1 = game.add.tween(this.news_text).to({alpha: 0}, 2000);
@@ -584,12 +585,36 @@ var gameState = {
     initStarsHud: function () {
         var starCount = 5;
         var starOffset = 60;
-        for (var i = 0; i < starCount; i++) {
+        for (var i = 0; i <= starCount; i++) {
             var star = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
+            var star_gray = game.add.sprite(game.width - i * starOffset, 10, ASSETS.STAR);
             this.stars.push(star);
             star.fixedToCamera = true;
+            star_gray.fixedToCamera = true;
+            star_gray.alpha = 0.3;
+            this.infoHud.add(star_gray);
             this.infoHud.add(star);
         }
+    },
+
+    initTimeHud: function () {
+        var style = {font: "25px Arial", fill: "#000000", align: "left"};
+        this.delta = 0;
+        this.timeTextField = game.add.text(game.width - 460, 15,"",style);
+        this.timeTextField.fixedToCamera = true;
+    },
+    updateTimeHud: function () {
+        this.delta += game.time.elapsed;
+        var timeDelta = this.delta % GAMELOGIC.MSPERDAY;
+        var timeInHours = parseInt((timeDelta / GAMELOGIC.MSPERDAY)*24);
+        if(timeInHours<10){
+            timeInHours = '0'+timeInHours;
+        }
+        this.world.daysPassed = parseInt(this.delta / GAMELOGIC.MSPERDAY);
+        var text = 'Day '+this.world.daysPassed+', '+timeInHours+':00';
+        this.dayandtime =text;
+        this.timeTextField.text = text;
+
     }
     ,
     updateMoneyHudFromWorld: function () {
@@ -917,30 +942,40 @@ var gameState = {
         if (this.messageBox != null) {
             self.closeMessageBox();
         }
+        if(text.hasOwnProperty('isArray') && !text.isArray()){
+            text = [text];
+        }
 
         this.messageBox = game.add.group();
         var offsetLeft = position == undefined ? (game.width / 2) : position.x;
-        var offsetTop = position == undefined ? (game.height / 2) : position.y;
-        var scaleX = xScale;
-        var scaleY = yScale;
+        var offsetTop = position == undefined ? (game.height / 4) : position.y;
+        var scaleX = xScale == undefined ? 1 : xScale;
+        var scaleY = yScale == undefined ? 1 : yScale;
         var sprite_top = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
 
         sprite_top.fixedToCamera = true;
-        sprite_top.scale.x = 1.0;
+        sprite_top.scale.x = scaleX;
         this.messageBox.add(sprite_top);
-        offsetTop += TILE.SIZE;
+
         var button_offset = offsetTop;
-        var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
-        sprite_center.scale.y = scaleY;
-        sprite_center.scale.x = scaleX * 2;
-        sprite_center.fixedToCamera = true;
-        this.messageBox.add(sprite_center);
+        for (var i = 0; i < text.length / 2; i++) {
+            offsetTop += TILE.SIZE*2;
+            console.log(button_offset);
+            var sprite_center = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_CENTER);
+            // sprite_center.scale.y = scaleY;
+            sprite_center.scale.x = scaleX;
+            sprite_center.scale.y = yScale ;
+            sprite_center.fixedToCamera = true;
+            this.messageBox.add(sprite_center);
+        }
+
+        offsetTop += TILE.SIZE*4;
         var sprite_bottom = game.add.sprite(offsetLeft, offsetTop, ASSETS.MENU_TOP);
         sprite_bottom.fixedToCamera = true;
-        sprite_bottom.anchor.setTo(1, 1);
+        sprite_bottom.anchor.setTo(0, 0);
         sprite_bottom.angle = 180;
         sprite_bottom.scale.x = scaleX;
-        sprite_bottom.alignTo(sprite_center, Phaser.BOTTOM_LEFT, 0, -15);
+        sprite_bottom.alignTo(sprite_center, Phaser.BOTTOM_RIGHT, -1 * sprite_bottom.width, sprite_bottom.height);
         sprite_bottom.fixedToCamera = true;
         this.messageBox.add(sprite_bottom);
 
@@ -958,17 +993,52 @@ var gameState = {
         closeButtonText.alignIn(closeButton, Phaser.CENTER);
         closeButtonText.fixedToCamera = true;
         this.messageBox.add(closeButtonText);
-        var message_text = game.add.text(offsetLeft + 55, button_offset + 25, text, text_style);
-        message_text.alignIn(this.messageBox, Phaser.CENTER, 0, 30);
-        message_text.fixedToCamera = true;
-        this.messageBox.add(message_text);
+
+        console.log(button_offset);
+        for (var text_it = 0; text_it < text.length; text_it++) {
+            var text_str = text[text_it];
+            var message_text = game.add.text(offsetLeft + 10, button_offset + 45 * text_it, text_str, text_style);
+            message_text.alignIn(sprite_top, Phaser.CENTER, 0, 30*text_it);
+            message_text.fixedToCamera = true;
+            this.messageBox.add(message_text);
+        }
+
+
+
 
     },
 
     closeMessageBox: function () {
         this.messageBox.destroy();
         this.messageBox = null;
+    },
+
+    moveGroup: function(group, toX, toY, duration){
+        for (var stats_window_it = 0; stats_window_it < group.children.length; stats_window_it++) {
+            var stats_window_obj = group.children[stats_window_it];
+            console.log(stats_window_obj);
+            game.add.tween(stats_window_obj).to({x: toX, y: toY}, 2000, Phaser.Easing.Quadratic.InOut, true);
+        }
+    },
+
+    openStatsWindow: function(char){
+        var self = this;
+        return function () {
+            console.log(char);
+            var texts = [];
+            texts.push(char.name);
+            var req_str = 'Wants: ' + char.requirementArray.join(', ');
+            texts.push(req_str);
+            var position = {};
+            position.x = game.width / 3;
+            position.y = game.height / 4;
+            self.openMessageBox(texts, 2, 1, position)
+        }
     }
+
 };
+
+
+
 
 
