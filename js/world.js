@@ -248,10 +248,20 @@ function Guest(name) {
                     this.statusCurrent = "going";
                     this.statisfaction = 0.1;
                     this.statetime = 0;
+                    var badReview = false;
                     if (Math.random() < 0.10) {
                         this.writeReview();
+                        badReview = true;
                         //console.log("Guest not served review!");
                     }
+                    var want_req = [];
+                    for (var want_req_it = 0; want_req_it < this.requirementArray.length; want_req_it+=2) {
+                        var req1 = this.requirementArray[want_req_it];
+                        var req2 = want_req_it+1 < this.requirementArray.length ? ', ' + this.requirementArray[want_req_it+1] : ', ';
+                        want_req.push(req1 + req2);
+                    }
+                    gameWorld.bubbleCallback(this, (badReview ? 'What a shitty place. \n' : '') + "Would be nice if you had at least one of \n" + want_req.join(", \n"), true);
+
 
                 }
                 break;
