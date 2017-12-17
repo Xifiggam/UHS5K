@@ -193,6 +193,7 @@ function Guest (name) {
     this.name = name;
     this.statetime = 0;
     this.chosenRoom = null;
+    this.alreadySaidSomething = false;
     this.reviewChance = 0.7;
     this.statisfaction = 0;
     this.comingTime = Math.random()*3000;
@@ -206,6 +207,30 @@ function Guest (name) {
         this.requirementArray.push(this.requirementArrayChoose[x]);
         this.requirementArrayChoose.splice(x, 1);
     }
+
+
+    bedchosen = false;
+    for (var i = 0; i < this.requirementArray.length; i++) {
+        var obj = this.requirementArray[i];
+        if(obj === SINGLE_FEATURE_TYPE.SINGLE_BED || obj === SINGLE_FEATURE_TYPE.DOUBLE_BED || obj === SINGLE_FEATURE_TYPE.LUXURY_BED){
+            bedchosen = true;
+            break;
+        }
+    }
+    if(!bedchosen){
+        x = Math.random();
+        if(x>0.75){
+            this.requirementArray.push(SINGLE_FEATURE_TYPE.LUXURY_BED);
+        }
+        else if(x > 0.45){
+            this.requirementArray.push(SINGLE_FEATURE_TYPE.DOUBLE_BED);
+        }
+        else if(x > 0.1){
+            this.requirementArray.push(SINGLE_FEATURE_TYPE.SINGLE_BED);
+        }
+    }
+
+
     this.maximumPrice = Math.floor((Math.random() * 1000) + 100)+(Math.random()*gameWorld.stars*50);
     this.xCoordinate = 0;
     this.yCoordinate = 0;
@@ -219,9 +244,9 @@ function Guest (name) {
                 customer(this);
                 if(this.statetime>=this.comingTime){
                     this.statusCurrent = "going";
-                    this.statisfaction = 0;
+                    this.statisfaction = 1;
                     this.statetime = 0;
-                    if(Math.random()<0.15){
+                    if(Math.random()<0.10){
                         this.writeReview();
                         console.log("Guest not served review!");
                     }
@@ -239,6 +264,10 @@ function Guest (name) {
                 break;
             case "staying":
                 if(this.statetime>=GAMELOGIC.MSPERDAY){
+                    if(!this.alreadySaidSomething){
+                        this.alreadySaidSomething = true;
+                        //TODO ZELLE CALLBACK
+                    }
                     console.log(this.name + " " +"Room: "+this.chosenRoom + " M0ney: " + this.maximumPrice + " statetime: " + this.statetime + " No of NIghts: " + this.daysToStay);
                     this.daysToStay--;
                     gameWorld.money += this.chosenRoom.price;
@@ -273,7 +302,7 @@ function Guest (name) {
     this.writeReview = function() {
         this.starsForReview = Math.round(this.statisfaction * 5);
         someTempVariable =  Math.random();
-        if(someTempVariable>0.8){
+        if(someTempVariable>0.7){
             if(this.starsForReview<5){
                 this.starsForReview++;
             }
@@ -603,7 +632,6 @@ function customer (guestObj) {
     var satisfactionArray = [];
     for (k=0; k<gameWorld.roomList.length;k++) {
         if ((gameWorld.roomList[k].statusCurrent === "free"  && gameWorld.roomList[k].activated === true) && (gameWorld.roomList[k].price<=guestObj.maximumPrice)) {
-            console.log("In there")
             for (i = 0; i < guestObj.requirementArray.length; i++) {
                 for (j = 0; j < gameWorld.roomList[k].returnRoomFeaturesAsArray().length; j++) {
                      if (guestObj.requirementArray[i] === gameWorld.roomList[k].returnRoomFeaturesAsArray()[j]) {
