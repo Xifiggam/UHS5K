@@ -100,6 +100,15 @@ var gameWorld = {
         return null;
     },
 
+    getGlobalFeatureValues: function(){
+        var obj_values = Object.getOwnPropertyNames(this.GLOBAL_FEATURE_TYPE);
+        var ret_values = []
+        for(var i=0; i<obj_values.length; i++) {
+            ret_values.push(this.GLOBAL_FEATURE_TYPE[obj_values[i]]);
+        }
+        return ret_values;
+    },
+
     buyGlobalUpgrade: function (feature) {
         var feature_obj = this.getGlobalFeatureForValue(feature);
         if(feature_obj != null){

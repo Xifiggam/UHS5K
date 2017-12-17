@@ -132,15 +132,23 @@ var gameState = {
 
         button_start_x += 200;
         var buyUpgradeButton = game.add.button(button_start_x, button_start_y, ASSETS.BUTTON_1, function(){
+            var global_features = this.world.getGlobalFeatureValues();
+            var global_feature_texts = [];
+            var global_feature_type = [];
+            for (var global_feature_it = 0; global_feature_it < global_features.length; global_feature_it++) {
+                var global_feature = global_features[global_feature_it];
+                global_feature_texts.push((global_feature.active ? '[x]' : '[  ]') +  '  ' + global_feature.name);
+                global_feature_type.push(global_feature.name);
+            }
             self.openBuyMenu(function(global_upgrade){
-                console.log(self.world.getGlobalFeatureForValue(global_upgrade));
-                if(self.world.getGlobalFeatureForValue(global_upgrade).price <= self.world.money){
+                var global_upgrade_obj = self.world.getGlobalFeatureForValue(global_upgrade)
+                if(!global_upgrade_obj.active && global_upgrade_obj.price <= self.world.money){
                     self.world.buyGlobalUpgrade(global_upgrade);
                 } else {
                     self.openMessageBox('cannot buy not enough money');
                 }
 
-            }, this.world.globalUpgradesArray, this.world.globalUpgradesArray);
+            }, global_feature_texts, global_feature_type);
         }, this, 2, 1, 0);
         buyUpgradeButton.scale.x = 3.6;
         buyUpgradeButton.scale.y = scalY;
