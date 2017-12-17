@@ -1074,7 +1074,7 @@ var gameState = {
         var message_text = game.add.text(textPosX, textPosY, text, text_style);
         bubbleGroup.add(bubble_sprite);
         bubbleGroup.add(message_text);
-        var fadeOutTween = game.add.tween(bubbleGroup).to({alpha: 0}, 2500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        var fadeOutTween = game.add.tween(bubbleGroup).to({alpha: 0}, 2500, Phaser.Easing.Linear.None, true, big ? 500 : 2000, 0, false);
         fadeOutTween.onComplete.add(function () {
             bubbleGroup.destroy();
             bubbleGroup = null;
