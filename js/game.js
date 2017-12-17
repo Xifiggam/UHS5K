@@ -258,7 +258,7 @@ var gameState = {
                 toLobbyTag.start();
             } else {
                 game.add.tween(character.sprite).to({x: lobbyX, y: 2000}, 2000, Phaser.Easing.Quadratic.InOut, true);
-                game.add.tween(nameTag).to({x: lobbyX, y: 1000}, 2000, Phaser.Easing.Quadratic.InOut, true);
+                game.add.tween(nameTag).to({x: lobbyX, y: 2000}, 2000, Phaser.Easing.Quadratic.InOut, true);
             }
 
         }
