@@ -10,7 +10,7 @@ var gameWorld = {
     reviewList: [],
     globalUpgradesArray: ["wifi_room", "wifi_lobby", "seminarRoom", "massageParlor", "sauna", "saunaPlus", "pool", "outdoorPool", "fitnessStudio", "hotelBar", "restaurant"],
     localUpgradesArray: [SINGLE_FEATURE_TYPE.SINGLE_BED, SINGLE_FEATURE_TYPE.DOUBLE_BED, SINGLE_FEATURE_TYPE.CHILD_BED, SINGLE_FEATURE_TYPE.LUXURY_BED, SINGLE_FEATURE_TYPE.PLANT, SINGLE_FEATURE_TYPE.VIEW, SINGLE_FEATURE_TYPE.ENTERTAINMENT, SINGLE_FEATURE_TYPE.BATH, SINGLE_FEATURE_TYPE.MINIBAR, SINGLE_FEATURE_TYPE.ACUNIT],
-    money: 100000,
+    money: 10000,
     stars: 1,
     guestToDelete: null,
     toDelete: false,
@@ -51,8 +51,8 @@ var gameWorld = {
             this.init = true;
         }
 
-        if (this.reviewList.length > 20) {
-            countingReviewsNo = (this.reviewList.length / 2 + 10);
+        if (this.reviewList.length > 8) {
+            countingReviewsNo = (this.reviewList.length / 2 + 4);
             reviewCount = 0;
             for (var i = countingReviewsNo - 1; i >= 0; i--) {
                 reviewCount += this.reviewList[i];
@@ -243,7 +243,7 @@ function Guest(name) {
                 customer(this);
                 if (this.statetime >= this.comingTime) {
                     this.statusCurrent = "going";
-                    this.statisfaction = 1;
+                    this.statisfaction = 0.1;
                     this.statetime = 0;
                     if (Math.random() < 0.10) {
                         this.writeReview();
@@ -300,7 +300,8 @@ function Guest(name) {
     };
 
     this.writeReview = function () {
-        this.starsForReview = Math.round(this.statisfaction * 5);
+        console.log("Statisfaction: " + this.statisfaction);
+        this.starsForReview = Math.round(this.statisfaction * 0.2);
         someTempVariable = Math.random();
         if (someTempVariable > 0.7) {
             if (this.starsForReview < 5) {
@@ -308,7 +309,7 @@ function Guest(name) {
             }
         }
         else if (someTempVariable < 0.2) {
-            if (this.starsForReview > 1) {
+            if (this.starsForReview > 2) {
                 this.starsForReview--;
             }
         }
@@ -317,6 +318,7 @@ function Guest(name) {
         if (gameWorld.newReviewCallback) {
             gameWorld.newReviewCallback("a new review was send - " + this.starsForReview + " Stars");
         }
+        console.log("Review: " + this.starsForReview);
     };
 
 }
