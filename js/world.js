@@ -193,12 +193,12 @@ function Guest(name) {
     this.statetime = 0;
     this.chosenRoom = null;
     this.alreadySaidSomething = false;
-    this.reviewChance = 0.7;
+    this.reviewChance = 0.95;
     this.statisfaction = 0;
-    this.comingTime = Math.random() * 3000;
+    this.comingTime = Math.random() * 5500;
     this.goingTime = Math.random() * 3000;
     this.daysToStay = Math.floor((Math.random() * 3) + 1);
-    this.noOfRequirements = Math.floor((Math.random() * 10) + 1);
+    this.noOfRequirements = Math.floor((Math.random() * 8) + 1);
     this.requirementArrayChoose = gameWorld.globalUpgradesArray.concat(gameWorld.localUpgradesArray);
     this.requirementArray = [];
     for (i = 0; i < this.noOfRequirements; i++) {
@@ -218,10 +218,10 @@ function Guest(name) {
     }
     if (!bedchosen) {
         x = Math.random();
-        if (x > 0.75) {
+        if (x > 0.96) {
             this.requirementArray.push(SINGLE_FEATURE_TYPE.LUXURY_BED);
         }
-        else if (x > 0.45) {
+        else if (x > 0.60) {
             this.requirementArray.push(SINGLE_FEATURE_TYPE.DOUBLE_BED);
         }
         else if (x > 0.1) {
@@ -578,7 +578,7 @@ function Room() {
     this.length = 0;
     this.height = 0;
     this.name = "No Room Name";
-    this.price = 50;
+    this.price = 120;
     this.singleBed = false;
     this.doubleBed = false;
     this.childBed = false;
@@ -590,7 +590,7 @@ function Room() {
     this.minibar = false;
     this.acUnit = false;
     this.activated = false;
-    this.price_to_buy = 10;
+    this.price_to_buy = 1200;
     this.statusArray = ["free", "taken", "dirty", "cleaning"];
     this.statusCurrent = "free";
 
