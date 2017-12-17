@@ -7,6 +7,7 @@ var gameWorld = {
     guestList: [],
     roomList: [],
     workerList: [],
+    reviewList: [],
     globalUpgradesArray: ["wifi_room", "wifi_lobby", "seminarRoom", "massageParlor", "sauna", "saunaPlus", "pool", "outdoorPool", "fitnessStudio", "hotelBar", "restaurant"],
     localUpgradesArray: [SINGLE_FEATURE_TYPE.SINGLE_BED, SINGLE_FEATURE_TYPE.DOUBLE_BED, SINGLE_FEATURE_TYPE.CHILD_BED, SINGLE_FEATURE_TYPE.LUXURY_BED, SINGLE_FEATURE_TYPE.PLANT, SINGLE_FEATURE_TYPE.VIEW, SINGLE_FEATURE_TYPE.ENTERTAINMENT, SINGLE_FEATURE_TYPE.BATH, SINGLE_FEATURE_TYPE.MINIBAR, SINGLE_FEATURE_TYPE.ACUNIT],
     money: 1000,
@@ -163,6 +164,7 @@ function Guest (name) {
     this.name = name;
     this.statetime = 0;
     this.chosenRoom = null;
+    this.reviewChance = 0.7;
     this.statisfaction = 0;
     this.comingTime = Math.random()*3000;
     this.goingTime = Math.random()*3000;
@@ -219,11 +221,13 @@ function Guest (name) {
                         else{
                             this.chosenRoom.statusCurrent = "free";
                         }
-                        console.log("LUKAS VERTSCHÜSS DICH");
                         if(gameWorld.customerLeaveCallback){
                             gameWorld.customerLeaveCallback(this);
                         }
-                        //TODO HIER STERNE BEWERTUNGSCHANCE UND SO
+                        if(Math.random()<this.reviewChance){
+                            this.writeReview();
+                            //TODO LUKAS CALLBACK HERE
+                        }
                     }
                     this.statetime = 0;
                 }
@@ -231,6 +235,11 @@ function Guest (name) {
 
         }
     };
+
+    this.writeReview = function() {
+
+    };
+
 }
 
 // gets ["receptionist", "cleaning", "kitchen","bar", "masseur", "Chief Onanating Officer"] and randomly generates price and quality
@@ -556,18 +565,16 @@ function customer (guestObj) {
         satisfactionArray[k] = satisfiedRequirements/guestObj.noOfRequirements;
         satisfiedRequirements = 0;
     }
-    //console.log(satisfactionArray)
     var roomChosen = indexOfMax(satisfactionArray);
+    guestObj.statisfaction = satisfactionArray[roomChosen];
     if(satisfactionArray[roomChosen] <= 0.3){
 
     }
     else {
         gameWorld.roomList[roomChosen].statusCurrent = "taken";
         guestObj.statusCurrent = "staying";
-        console.log("LUKAS KOMM DICH");
         guestObj.chosenRoom = gameWorld.roomList[roomChosen];
         guestObj.statisfaction = satisfactionArray[roomChosen];
-        //LUKAS KOMM DICH
         if(gameWorld.customerArrivalCallback && guestObj.chosenRoom){
             gameWorld.customerArrivalCallback(guestObj);
         }
@@ -615,8 +622,9 @@ function generateName(quantity){
         'Gal',
         'Gloria',
         'Vix',
-        'Sterling', 'Obi', 'Lukas',
-        'John'
+        'Sterling',
+        'Obi',
+        'Lukas'
 
     ];
         var middleNames = [
@@ -630,15 +638,7 @@ function generateName(quantity){
         'Ruth',
         'Roald',
         'Linus',
-        'Mallory', 'Wan', 'Zelle',
-        'Lorenz',
-        'Veit',
-        'Adolf',
-        'Achmed',
-        'Bilbo',
-        'Barabossa'
-
-
+        'Mallory', 'Wan', 'Zelle'
 
     ];
         var lastNames = [
@@ -654,10 +654,7 @@ function generateName(quantity){
         'Kenobi',
         'Skywalker',
         'Archer',
-            'Anexia',
-            'Schuerzenbacher',
-            'Schwazenegger',
-
+        'Schuerzenbacher'
 
     ];
 
